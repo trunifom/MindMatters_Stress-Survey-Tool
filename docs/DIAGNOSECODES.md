@@ -107,3 +107,21 @@ Fehlende Verweisziele werden gebündelt: ein Befund je Ziel mit Anzahl der Vorko
 | `SCORE_ROLE_MISMATCH` | error | `missing`-Option in `rawToScore` oder `substantive`-Option in `missingCodes` |
 
 Hinweis: Reine `metadata`-Extensions brauchen kein Feature, bleiben erhalten und werden nie ausgeführt (T08).
+
+## Stufe `selection` (Auswahl und Projekte)
+
+Diese Befunde tragen `context`: `initial` für die Anfangsauswahl des Katalogs (ein Fehler dort ist ein Konfigurationsfehler des Katalogs und wird nicht erst beim Export gemeldet), `project` für ein geladenes Projekt.
+
+| Code | Severity | Bedeutung |
+|---|---|---|
+| `MANDATORY_ITEM_MISSING` | error | ein Pflichtitem (eigenes Flag oder Pflichtmodul) ist nicht ausgewählt |
+| `MANDATORY_ITEM_ADDED` | info | beim Laden eines Projekts fehlte ein Pflichtitem und wurde ergänzt und gemeldet (T12). Nur Pflichtitems werden ergänzt, nichts sonst |
+| `SCALE_PARTIAL_NOT_ALLOWED` | error | `wholeScale`: nichtleere Teilmenge. Es wird nicht still ergänzt (T17) |
+| `PARTIAL_SCALE` | warning | `partialWithWarning`: Teilmenge, kein Original-Score, keine Berechtigung zur Originalauswertung (T18) |
+| `MODULE_PARTIAL` | error | `allOrNothing`-Modul nur teilweise ausgewählt |
+| `DEPENDENCY_NOT_SELECTED` | error | Folgefrage ausgewählt, ihr Auslöser nicht. Erwarteter Code für Testdatei 92 |
+| `PROJECT_CATALOG_MISMATCH` | error | Projekt gehört zu einer anderen Katalog-ID oder -Version. Genaue Übereinstimmung ist Pflicht, es wird nichts geraten (T28) |
+| `PROJECT_QUESTIONNAIRE_MISMATCH` | error | `questionnaireRef` passt nicht zur Vorlage des Katalogs |
+| `PROJECT_LANGUAGE_UNKNOWN` | error | Projektsprache gehört nicht zu den Katalogsprachen |
+| `UNKNOWN_ITEM_ID` | error | das Projekt wählt ein Item, das der Katalog nicht kennt. Wird gemeldet und ignoriert, nicht repariert |
+
