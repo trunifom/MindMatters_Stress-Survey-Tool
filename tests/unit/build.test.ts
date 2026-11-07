@@ -52,9 +52,17 @@ describe("single-file build (A02, T01, T02)", () => {
     expect(csp).not.toMatch(/https?:/);
   });
 
+  it("needs no eval: the validators are generated at build time, so the policy has no 'unsafe-eval' and the bundle no eval", () => {
+    const csp = /http-equiv="Content-Security-Policy" content="([^"]+)"/.exec(html)?.[1] ?? "";
+    expect(csp).toContain("script-src 'unsafe-inline'");
+    expect(csp).not.toContain("unsafe-eval");
+    const js = /<script>([\s\S]*)<\/script>/.exec(html)?.[1] ?? "";
+    expect(js).not.toMatch(/new Function|eval\s*\(/);
+  });
+
   it("targets ES2019 syntax: no optional chaining, nullish coalescing or class fields in the bundle", () => {
     const js = /<script>([\s\S]*)<\/script>/.exec(html)?.[1] ?? "";
-    expect(js.length).toBeGreaterThan(100_000); // ajv, the validator and the application are really inside
+    expect(js.length).toBeGreaterThan(100_000); // the generated validators and the application are really inside
     expect(js).not.toMatch(/\?\.\w/); // a?.b (the ternary form `a ? .5 : 1` has a space)
     expect(js).not.toMatch(/\?\?[^=]/);
     expect(js).not.toContain("structuredClone");

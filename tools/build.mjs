@@ -7,13 +7,30 @@
 import { build } from "esbuild";
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { generateValidatorSource } from "./gen-validators.mjs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
 
+// Pre-generated validators: the page then needs no 'unsafe-eval' (see tools/gen-validators.mjs).
+const genDir = join(root, "dist", ".gen");
+mkdirSync(genDir, { recursive: true });
+const genFile = join(genDir, "validators.cjs");
+writeFileSync(genFile, generateValidatorSource(), "utf8");
+const standalone = {
+  name: "mm-standalone-validators",
+  setup(b) {
+    b.onResolve({ filter: /^mm-generated-validators$/ }, () => ({ path: genFile }));
+    b.onResolve({ filter: /(^|\/)schemas$/ }, (args) =>
+      args.importer.endsWith("schemaCheck.ts") ? { path: join(root, "src/core/schemas.standalone.ts") } : undefined,
+    );
+  },
+};
+
 const result = await build({
+  plugins: [standalone],
   entryPoints: [join(root, "src/ui/main.ts")],
   bundle: true,
   minify: true,

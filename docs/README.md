@@ -5,6 +5,7 @@
 | [BENUTZERHANDBUCH.md](BENUTZERHANDBUCH.md) | Bedienung für Schulen und Organisationen, Grenzen des heutigen Stands | Schulen, Projektleitung |
 | [ARCHITEKTUR.md](ARCHITEKTUR.md) | Gesamtkonzept: ein universelles HTML, Build, Schichten, Repo-Struktur | Entwickler |
 | [ENTSCHEIDUNGEN.md](ENTSCHEIDUNGEN.md) | Entscheidungsprotokoll (ADR) mit Begründung und Alternativen | Entwickler, Projektleitung |
+| [IDEEN.md](IDEEN.md) | Sammlung aller Ideen und Verbesserungen mit Nutzen, Aufwand und Stand | alle |
 | [ROADMAP.md](ROADMAP.md) | Meilensteine und Stand | alle |
 | [ABNAHMETESTS.md](ABNAHMETESTS.md) | Rückverfolgbarkeit T01–T45: welcher Test belegt was, was fehlt | Entwickler, Projektleitung |
 | [AUSGABEN.md](AUSGABEN.md) | Projektdatei, Prüfbericht, Codebuch: Inhalt, Regeln, Format | Entwickler, Katalogpfleger |

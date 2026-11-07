@@ -1,19 +1,14 @@
 import { resolveText } from "../../core/localized";
 import { createProject, projectFileName, serializeProject } from "../../model/project";
 import { Action, ActionDecision, evaluateAction } from "../../model/rights";
-import type { Catalog } from "../../core/types";
-import type { Selection } from "../../model/selection";
+import { documentedDuration, scaleOverview, scoreAvailability } from "../../model/selection";
 import { buildCodebook } from "../../output/codebook";
-import { buildLimeSurvey } from "../../output/limesurvey";
-import { buildQualtrics } from "../../output/qualtrics";
-import { buildRedcap } from "../../output/redcap";
-import { buildGoogleForms } from "../../output/googleforms";
-import { buildBauplan } from "../../output/bauplan";
-import { buildNeutralCsv } from "../../output/csvtable";
 import type { AdapterResult } from "../../output/mapping";
+import { buildPackage } from "../../output/package";
+import { ADAPTERS } from "../../output/registry";
 import { buildCheckReport, isReportStale, reportFileName, serializeReport, stateFingerprint } from "../../output/report";
 import { diagnosticsList } from "../components";
-import { downloadText, h } from "../dom";
+import { downloadBytes, downloadText, h } from "../dom";
 import { t, TextKey } from "../i18n";
 import { counts, markSaved, rememberReport, selectionDiagnostics, setCodebookNotes, setMeta } from "../state";
 import type { AppState, Store } from "../state";
@@ -52,10 +47,46 @@ export function renderCheck({ state: s, store }: ViewContext): HTMLElement {
     ),
     h("h3", null, t("diagnostics.title")),
     diagnosticsList(findings),
+    overviewSection(s),
     metaForm(s, store),
     filesSection(s, store),
     rightsSection(s),
     exportSection(s, store),
+  );
+}
+
+// --- selection by scale ---------------------------------------------------------------------------------
+
+function overviewSection(s: AppState): HTMLElement {
+  const c = s.loaded!.catalog;
+  const rows = scaleOverview(c, s.selection);
+  const dur = documentedDuration(c, s.selection);
+  const scores = scoreAvailability(c, s.selection);
+  const titleOf = (id: string) => resolveText(c.scales.find((x) => x.id === id)?.title, s.language, c.catalog.defaultLanguage)?.text ?? id;
+  return h(
+    "section",
+    { class: "out-block", id: "scale-overview", "aria-labelledby": "overview-h" },
+    h("h3", { id: "overview-h" }, t("overview.title")),
+    h("p", { class: "muted" }, t("overview.hint")),
+    h(
+      "ul",
+      { class: "scale-list" },
+      ...rows.map((r) =>
+        h(
+          "li",
+          { class: `scale-row is-${r.state}`, "data-scale": r.id },
+          h("strong", null, titleOf(r.id)),
+          ": ",
+          t("summary.scaleCount", { n: r.selected, total: r.total }),
+          " ",
+          h("span", { class: `badge ${r.state === "partial" ? "sev-warning" : "sev-info"}` }, t(`overview.${r.state}` as TextKey)),
+          " ",
+          h("span", { class: "muted" }, "(" + t(r.policy === "wholeScale" ? "overview.whole" : "overview.warn") + ")"),
+        ),
+      ),
+    ),
+    h("p", { class: "muted", id: "duration" }, dur.instruments.length > 0 ? t("overview.duration", { min: dur.minMinutes, max: dur.maxMinutes, n: dur.instruments.length, unknown: dur.unknownItems }) : t("overview.durationNone")),
+    scores.length > 0 ? h("p", { class: "muted", id: "score-availability" }, t("overview.scores", { n: scores.filter((x) => x.available).length, m: scores.length })) : null,
   );
 }
 
@@ -128,6 +159,23 @@ function saveCodebook(s: AppState, store: Store): void {
   store.set({ notice: { kind: "info", text: t("out.saved", { file }) } });
 }
 
+function savePackage(s: AppState, store: Store): void {
+  const loaded = s.loaded!;
+  const r = buildPackage({
+    catalog: loaded.catalog,
+    loadDiagnostics: loaded.loadDiagnostics,
+    selection: s.selection,
+    language: s.language,
+    ...(s.targetPlatform ? { targetPlatform: s.targetPlatform } : {}),
+    ...(s.schoolLabel ? { schoolLabel: s.schoolLabel } : {}),
+    ...(s.internalNotes ? { internalNotes: s.internalNotes } : {}),
+    codebookNotes: s.codebookNotes,
+  });
+  downloadBytes(r.fileName, r.bytes, "application/zip");
+  markSaved(store);
+  store.set({ notice: { kind: "info", text: t("out.packageDone", { file: r.fileName, n: r.included.length, m: r.skipped.length }) } });
+}
+
 function filesSection(s: AppState, store: Store): HTMLElement {
   const c = s.loaded!.catalog;
   const codebook = evaluateAction(c, "codebookWithTexts", { selection: s.selection });
@@ -146,6 +194,7 @@ function filesSection(s: AppState, store: Store): HTMLElement {
     "section",
     { class: "out-block", "aria-labelledby": "files-h" },
     h("h3", { id: "files-h" }, t("out.files")),
+    block(t("out.package"), t("out.packageHint"), h("button", { type: "button", class: "btn btn-primary", id: "save-package", "data-focus": "save-package", on: { click: () => savePackage(s, store) } }, t("out.package"))),
     block(t("out.project"), t("out.projectHint"), h("button", { type: "button", class: "btn btn-primary", id: "save-project", "data-focus": "save-project", on: { click: () => saveProject(s, store) } }, t("out.project"))),
     block(
       t("out.report"),
@@ -196,24 +245,6 @@ function rightsSection(s: AppState): HTMLElement {
   );
 }
 
-type Build = (c: Catalog, selection: Selection, opts: { language: string; mode: "native" | "test" }) => AdapterResult;
-/**
- * Everything the tool can write. `tier` tells the school how far to trust it:
- *  adapter   = writes a file the system imports, not yet tested on a real instance
- *  prototype = written from documentation or general knowledge, never run (REDCap, Google Forms),
- *              or a build plan for a person because the system imports nothing (Unipark, SurveyMonkey)
- *  table     = a neutral table for people, not for any system
- */
-const ADAPTERS: Record<string, { build: Build; tier: "adapter" | "prototype" | "table"; label: string }> = {
-  limesurvey: { build: buildLimeSurvey, tier: "adapter", label: "LimeSurvey" },
-  qualtrics: { build: buildQualtrics, tier: "adapter", label: "Qualtrics" },
-  redcap: { build: buildRedcap, tier: "prototype", label: "REDCap" },
-  googleForms: { build: buildGoogleForms, tier: "prototype", label: "Google Forms (Apps Script)" },
-  surveymonkey: { build: (c, s, o) => buildBauplan("surveymonkey", c, s, o), tier: "prototype", label: "SurveyMonkey (Bauplan)" },
-  unipark: { build: (c, s, o) => buildBauplan("unipark", c, s, o), tier: "prototype", label: "Unipark (Bauplan)" },
-  csv: { build: buildNeutralCsv, tier: "table", label: "Neutrale Tabelle (CSV)" },
-};
-
 function runExport(s: AppState, store: Store, platform: string, name: string, mode: "native" | "test"): void {
   const adapter = ADAPTERS[platform]?.build;
   if (!adapter) return;
@@ -225,7 +256,7 @@ function runExport(s: AppState, store: Store, platform: string, name: string, mo
 
 function adapterBlock(s: AppState, store: Store, platform: string, name: string): HTMLElement {
   const c = s.loaded!.catalog;
-  const adapter = (ADAPTERS[platform] as (typeof ADAPTERS)[string]).build;
+  const adapter = (ADAPTERS[platform] as NonNullable<(typeof ADAPTERS)[string]>).build;
   const native = adapter(c, s.selection, { language: s.language, mode: "native" });
   const test = adapter(c, s.selection, { language: s.language, mode: "test" });
   const blockedDiagnostics = (r: AdapterResult) => r.diagnostics.filter((d) => d.severity !== "info");
@@ -284,7 +315,7 @@ function adapterBlock(s: AppState, store: Store, platform: string, name: string)
 
 /** Platforms and the neutral table, with the name shown to the school. */
 function exportList(): Array<[string, string]> {
-  return [...PLATFORMS.map(([id, name]): [string, string] => [id, ADAPTERS[id]?.label ?? name]), ["csv", ADAPTERS["csv"]!.label]];
+  return Object.entries(ADAPTERS).map(([id, e]): [string, string] => [id, e.label]);
 }
 
 function tierKey(id: string): TextKey {

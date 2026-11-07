@@ -212,6 +212,31 @@ describe.skipIf(!executablePath)(`real browser (${executablePath ?? "none found"
     await context.close();
   });
 
+  it("the ZIP package downloads as a real archive with the README and the exports", async () => {
+    const { context, page } = await open();
+    await loadExample(page);
+    await page.click("[data-focus=tab-check]");
+    const [download] = await Promise.all([page.waitForEvent("download"), page.click("#save-package")]);
+    const bytes = readFileSync((await download.path())!);
+    expect(download.suggestedFilename()).toBe("example_rich_1.0.0_paket.zip");
+    expect([...bytes.subarray(0, 4)]).toEqual([0x50, 0x4b, 0x03, 0x04]);
+    const text = bytes.toString("latin1");
+    for (const name of ["LIESMICH.txt", "_project.json", "_check-report.json", "_codebook.en.md", "export/"]) expect(text, name).toContain(name);
+    await context.close();
+  });
+
+  it("the print layout hides the controls and keeps the preview", async () => {
+    const { context, page } = await open();
+    await loadExample(page);
+    await page.click("[data-focus=tab-preview]");
+    await page.emulateMedia({ media: "print" });
+    expect(await page.evaluate(() => getComputedStyle(document.querySelector(".tabs") as Element).display)).toBe("none");
+    expect(await page.evaluate(() => getComputedStyle(document.querySelector(".skip-link") as Element).display)).toBe("none");
+    expect(await page.evaluate(() => document.querySelectorAll(".pv-item").length)).toBeGreaterThan(0);
+    expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe("rgb(255, 255, 255)");
+    await context.close();
+  });
+
   it("a saved project can be loaded again through the project file input", async () => {
     const { context, page } = await open();
     await loadExample(page);

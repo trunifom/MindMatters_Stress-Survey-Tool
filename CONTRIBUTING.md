@@ -35,3 +35,6 @@ Versioniert: Quellcode, Schemas, Dokumentation, Beispiele, Test-Fixtures. Nicht 
 
 ## Sprache
 Dokumentation und Commit-Nachrichten auf Deutsch. Code, Bezeichner und Diagnosecodes auf Englisch.
+
+## Hinweis zum Build
+`npm run build` erzeugt zuerst die Schema-Prüfer als JavaScript (`tools/gen-validators.mjs`, Ablage `dist/.gen/`, nicht versioniert) und bündelt dann die Einzeldatei. Ändert sich ein Schema, genügt ein neuer Build; `tests/unit/standalone.test.ts` stellt sicher, dass die erzeugten Prüfer wie die Laufzeit-Prüfer urteilen.

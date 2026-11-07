@@ -54,3 +54,22 @@ Regeln:
 - **Verwaltungsinformationen** sind als solche gekennzeichnet.
 
 Sprachen der Beschriftungen im Codebuch: Deutsch bei Sprachen, die mit `de` beginnen, sonst Englisch.
+
+## ZIP-Paket
+
+Der Knopf *Alles als ZIP-Paket speichern* (Tab «Prüfung und Ausgabe») erzeugt `<katalog>_<version>_paket.zip` mit:
+
+| Datei | Inhalt |
+|---|---|
+| `LIESMICH.txt` | Katalog, Version, Status, Sprache, Datum; Liste der Dateien mit Stufe (Adapter, Prototyp, Tabelle) und Kennzeichnung von Testexporten; **Liste der nicht enthaltenen Ausgaben mit Diagnosecodes**; Hinweis, dass nichts an einem echten Zielsystem getestet ist |
+| Projektdatei, Prüfbericht, Codebuch | wie bei den Einzel-Downloads, mit denselben Regeln für Rechte und Schulnotizen |
+| `export/…` | je Ziel die reguläre Ausgabe, sonst (nur bei Entwurf und ähnlichem) der gekennzeichnete Testexport. Was nicht möglich ist, fehlt hier und steht in `LIESMICH.txt` |
+
+Das Paket ist ein ZIP ohne Kompression (Methode «stored», UTF-8-Dateinamen), erzeugt im Browser ohne Bibliothek (`src/output/zip.ts`). Es wird ohne Pfadtricks gebaut: doppelte, leere, absolute Namen und `..` werden abgelehnt. Getestet mit einem eigenen Leser samt CRC-Prüfung und mit Pythons `zipfile` als unabhängigem Leser.
+
+## Auswahl nach Skala und dokumentierte Bearbeitungszeit
+
+Im Tab «Prüfung und Ausgabe» zeigt die Übersicht je Skala `n von m Items`, Zustand (vollständig, Teilauswahl, nicht gewählt) und Auswahlregel. Sie ändert nie die Auswahl.
+
+Die **Bearbeitungszeit** wird nie geschätzt. Gezählt werden nur Instrumente, die vollständig gewählt sind und eine dokumentierte `administrationTime` mit Quelle tragen. Items ohne belegte Zeit werden als «nicht dokumentiert» genannt, das ist nicht null. Sonst steht «für Ihre Auswahl ist keine Zeit dokumentiert».
+

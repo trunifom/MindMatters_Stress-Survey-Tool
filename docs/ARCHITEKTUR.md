@@ -24,7 +24,7 @@ Das HTML ist ein **Build-Ergebnis**. Gepflegt wird modularer TypeScript-Code mit
 ## Schichten
 
 ```
-src/core/       Laden (Syntax, doppelte Schlüssel, Grössenlimits), Schema-Prüfung (ajv),
+src/core/       Laden (Syntax, doppelte Schlüssel, Grössenlimits), Schema-Prüfung (ajv, im Browser vorab erzeugt),
                 semantische Prüfung, Migration, Diagnosen
 src/model/      Auswahlzustand, wirksame Pflichtmenge, Exportmodell
 src/adapters/   je Zielsystem ein Ordner, reine Funktion: Exportmodell → {artifacts, diagnostics, mapping}
@@ -40,7 +40,7 @@ Abhängigkeitsrichtung: `ui → model → core`. `adapters` hängen nur von `mod
 
 - **Kein Netzwerk:** keine externen Skripte, Stylesheets, Schriften, Bilder oder Frames. Im Bundle kommt keine Netzwerk-API vor (`fetch`, `XMLHttpRequest`, `WebSocket`, `sendBeacon` …). Ein Test prüft das.
 - **Content-Security-Policy** als zweite Verteidigungslinie (Meta-Tag): `default-src 'none'`, `connect-src 'none'`, `frame-src 'none'`, `object-src 'none'`, `base-uri 'none'`, `form-action 'none'`. Verbindungen wären damit auch bei einem Fehler im Code verboten.
-- **Bekannte Schwäche:** Die Schema-Prüfung (ajv) übersetzt Schemas zur Laufzeit mit `new Function`. Deshalb braucht die CSP `'unsafe-eval'`. Es werden nur eigene, eingebettete Schemas übersetzt, nie Daten aus Dateien. Ein Build mit vorab erzeugten Validatoren (ajv standalone) würde das beseitigen und ist eine mögliche spätere Verbesserung.
+- **Kein `unsafe-eval`:** Die Schema-Prüfer werden beim Build mit ajv standalone als reines JavaScript erzeugt (`tools/gen-validators.mjs`), der Build tauscht `src/core/schemas.ts` gegen `src/core/schemas.standalone.ts`. Die Seite führt keinen Code aus Zeichenketten aus, die CSP erlaubt nur `script-src 'unsafe-inline'`. Ein Test vergleicht die erzeugten Prüfer mit den zur Laufzeit übersetzten (`tests/unit/standalone.test.ts`), ein weiterer prüft, dass Bundle und CSP kein `eval` enthalten. Die Unit-Tests selbst laufen weiter mit den Laufzeit-Prüfern in Node.
 - **Browser:** Syntaxziel ES2019. `structuredClone` und `<dialog>` werden bewusst nicht verwendet. Welche Browser tatsächlich geprüft sind, steht in [BROWSER.md](BROWSER.md); alles dort nicht Genannte ist nur ein Ziel.
 - **Typprüfung:** `core`, `model` und `output` werden zusätzlich mit einer Konfiguration ohne DOM-Bibliothek geprüft (`tsconfig.core.json`), damit sie nie versehentlich den Browser voraussetzen.
 
@@ -82,10 +82,10 @@ Ein Python-Test (`tests/conformance/`) prüft die Schemas unabhängig vom TypeSc
 ├── schema/            0.3.0/  0.4.0/  README.md
 ├── docs/              Dokumentation, Index in docs/README.md
 ├── examples/          Beispielkataloge
-├── src/               core/  model/  adapters/  ui/  i18n/
+├── src/               core/  model/  output/ (Codebuch, Bericht, Adapter, ZIP)  ui/
 ├── tests/
 │   ├── unit/          Vitest, läuft in Node
-│   ├── e2e/           Playwright gegen das gebaute HTML (später)
+│   ├── e2e/           Browser-Tests gegen das gebaute HTML (playwright-core, installierter Edge/Chrome)
 │   ├── conformance/   Python-Schema-Gegencheck
 │   └── fixtures/      v0.3.0/ (11 Dateien, wie ursprünglich geliefert)
 └── tools/             Build und Hilfsskripte

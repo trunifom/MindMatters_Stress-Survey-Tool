@@ -163,6 +163,61 @@ export function scoreAvailability(c: Catalog, selected: Selection): ScoreAvailab
 }
 
 // ---------------------------------------------------------------------------
+// Overview by scale
+// ---------------------------------------------------------------------------
+
+export interface ScaleOverview {
+  id: string;
+  selected: number;
+  total: number;
+  state: "complete" | "partial" | "none";
+  policy: "wholeScale" | "partialWithWarning";
+}
+
+/** How much of each scale is in the selection. Informational only: it never changes the selection. */
+export function scaleOverview(c: Catalog, selected: Selection): ScaleOverview[] {
+  return c.scales.map((s) => {
+    const n = s.itemRefs.filter((id) => selected.has(id)).length;
+    return { id: s.id, selected: n, total: s.itemRefs.length, state: n === 0 ? "none" : n === s.itemRefs.length ? "complete" : "partial", policy: s.selectionPolicy };
+  });
+}
+
+export interface DocumentedDuration {
+  /** Sum over instruments whose items are all selected and whose time has a source. */
+  minMinutes: number;
+  maxMinutes: number;
+  /** Instruments counted. */
+  instruments: string[];
+  /** Selected items that belong to no counted instrument: their time is unknown, not zero. */
+  unknownItems: number;
+}
+
+/**
+ * Documented administration time (B6). Only instruments that are completely selected and carry a documented
+ * `administrationTime` (with source) are counted. Everything else is reported as unknown. Never estimated.
+ */
+export function documentedDuration(c: Catalog, selected: Selection): DocumentedDuration {
+  let min = 0;
+  let max = 0;
+  const counted: string[] = [];
+  const covered = new Set<string>();
+  for (const inst of c.instruments) {
+    const at = inst.administrationTime;
+    if (!at || (at.minMinutes === undefined && at.maxMinutes === undefined)) continue;
+    const own = c.items.filter((i) => i.instrumentRef === inst.id);
+    if (own.length === 0 || !own.every((i) => selected.has(i.id))) continue;
+    const lo = at.minMinutes ?? at.maxMinutes ?? 0;
+    const hi = at.maxMinutes ?? at.minMinutes ?? 0;
+    min += lo;
+    max += hi;
+    counted.push(inst.id);
+    for (const i of own) covered.add(i.id);
+  }
+  const unknownItems = [...selected].filter((id) => !covered.has(id) && c.items.find((i) => i.id === id)?.response.kind !== "note").length;
+  return { minMinutes: min, maxMinutes: max, instruments: counted, unknownItems };
+}
+
+// ---------------------------------------------------------------------------
 // Projects
 // ---------------------------------------------------------------------------
 

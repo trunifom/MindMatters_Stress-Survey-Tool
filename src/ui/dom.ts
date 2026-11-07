@@ -110,6 +110,17 @@ export function downloadText(fileName: string, text: string, mime: string): void
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+/** Offer binary content (for example a ZIP package) as a download. */
+export function downloadBytes(fileName: string, bytes: Uint8Array, mime: string): void {
+  const blob = new Blob([bytes as BlobPart], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = h("a", { href: url, download: fileName, class: "visually-hidden" });
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 /** Read a user-selected file as text (FileReader works in every browser). */
 export function readFileText(file: File): Promise<string> {
   return new Promise((resolve, reject) => {

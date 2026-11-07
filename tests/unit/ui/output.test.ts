@@ -369,6 +369,47 @@ describe("export for LimeSurvey", () => {
   });
 });
 
+describe("selection by scale and package", () => {
+  it("shows how much of each scale is selected, with the policy, and changes nothing", () => {
+    const m = loaded(CAT10);
+    const before = [...m.store.get().selection];
+    const rows = m.qa("#scale-overview li.scale-row");
+    expect(rows.length).toBeGreaterThan(0);
+    expect(m.q("#scale-overview").textContent).toContain("A partial scale is not the original scale");
+    for (const r of rows) expect(r.textContent).toMatch(/\d+ of \d+ items/);
+    expect([...m.store.get().selection]).toEqual(before);
+  });
+
+  it("says honestly when no administration time is documented, and shows the documented one otherwise", () => {
+    expect(loaded(CAT10).q("#duration").textContent).toContain("Nothing is estimated");
+    const m = loaded(exampleText());
+    for (const id of ["demo_01", "demo_02", "demo_03", "demo_04"]) toggleItem(m.store, id, true);
+    expect(m.q("#duration").textContent).toContain("2 to 4 minutes");
+    expect(m.q("#duration").textContent).toContain("not documented, which is not zero");
+  });
+
+  it("the overview follows the selection", () => {
+    const m = loaded(CAT10);
+    const before = m.q("#scale-overview ul.scale-list").textContent;
+    toggleItem(m.store, "conscientiousness_01", true);
+    toggleItem(m.store, "self_efficacy_08", true);
+    expect(m.q("#scale-overview ul.scale-list").textContent).not.toBe(before);
+    toggleItem(m.store, "conscientiousness_01", false);
+    toggleItem(m.store, "self_efficacy_08", false);
+    expect(m.q("#scale-overview ul.scale-list").textContent).toBe(before);
+  });
+
+  it("downloads one ZIP package with README, project, report, codebook and the possible exports", async () => {
+    const m = loaded(exampleText());
+    click(m.q("#save-package"));
+    const d = (downloads[downloads.length - 1] as Download & { blob: Blob });
+    expect(d.name).toMatch(/_paket\.zip$/);
+    expect(await firstBytes(d.blob)).toEqual([0x50, 0x4b, 0x03]); // "PK" local file header
+    expect(m.q("#notices").textContent).toContain("was created");
+    expect(m.store.get().dirty).toBe(false);
+  });
+});
+
 describe("unsaved changes", () => {
   it("the badge appears after a change and everything that changes the state marks it", () => {
     const m = loaded(CAT10);

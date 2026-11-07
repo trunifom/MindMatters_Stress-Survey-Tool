@@ -108,3 +108,11 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - Oberfläche: sieben Exportblöcke mit Stufenangabe je Ziel und Begründung, warum ein Export nicht möglich ist.
 - 27 neue Tests, darunter ein Ausführungstest des Google-Skripts mit feindlichem Text. **Nicht belegt:** jedes Zielsystem.
 
+### Hinzugefügt (Verbesserungen, siehe docs/IDEEN.md)
+- **ZIP-Paket** (`src/output/zip.ts`, `package.ts`, `registry.ts`): Projekt, Prüfbericht, Codebuch, alle möglichen Ausgaben und `LIESMICH.txt` mit den nicht möglichen Ausgaben samt Gründen. ZIP ohne Bibliothek (stored, UTF-8-Namen, CRC32), gegen Pythons `zipfile` geprüft.
+- **Auswahl nach Skala** und **dokumentierte Bearbeitungszeit** (nur belegte Werte, nie geschätzt) im Tab «Prüfung und Ausgabe».
+- **Druckansicht** (`@media print`): ohne Bedienelemente, Links mit Adresse.
+- **Kein `unsafe-eval` mehr:** Schema-Prüfer werden beim Build erzeugt (`tools/gen-validators.mjs`, ajv standalone). Die Content-Security-Policy erlaubt nur noch `script-src 'unsafe-inline'`. Paritätstest gegen die Laufzeit-Prüfer, Test auf `eval` in Bundle und Richtlinie, Browser-Tests grün.
+- `docs/IDEEN.md`: alle Ideen mit Nutzen, Aufwand und Stand.
+- 25 neue Unit-Tests und 2 Browser-Tests (ZIP-Download, Druckmodus). Die Datei ist von 370 auf rund 525 KiB gewachsen, weil erzeugte Prüffunktionen mehr Platz brauchen als die Laufzeit-Variante (Verbesserung D4 offen).
+
