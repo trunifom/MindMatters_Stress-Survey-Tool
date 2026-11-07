@@ -1,8 +1,9 @@
 import { resolveText } from "../core/localized";
 import { APP_VERSION } from "../version";
-import { banner } from "./components";
+import { banner, statusChips } from "./components";
 import { clear, h, readFileText } from "./dom";
 import { setUiLang, t, UiLang } from "./i18n";
+import { renderInfoDialog } from "./views/info";
 import {
   AppState,
   cancelMigration,
@@ -13,7 +14,10 @@ import {
   setUiLanguage,
   setView,
   Store,
+  currentStatus,
   dismissNotice,
+  closeInfo,
+  InfoTarget,
 } from "./state";
 import { renderStart } from "./views/start";
 import { VIEWS } from "./views/registry";
@@ -26,6 +30,8 @@ export interface AppEnv {
 
 /** Mount the application into `root`. Re-renders on every state change and keeps focus and caret. */
 export function mountApp(root: HTMLElement, store: Store, env: AppEnv): () => void {
+  let prevInfo: InfoTarget | undefined;
+
   const render = () => {
     const state = store.get();
     setUiLang(state.uiLang);
@@ -34,10 +40,59 @@ export function mountApp(root: HTMLElement, store: Store, env: AppEnv): () => vo
     clear(root);
     root.appendChild(buildApp(state, store, env));
     restoreFocus(focus);
+
+    // Dialog focus: move into the dialog when it opens, back to its trigger when it closes.
+    if (state.info && !prevInfo) {
+      root.querySelector<HTMLElement>("#info-close")?.focus();
+    } else if (!state.info && prevInfo) {
+      const trigger = Array.from(root.querySelectorAll<HTMLElement>("[data-focus]")).find(
+        (e) => e.getAttribute("data-focus") === `info-${prevInfo!.kind}-${prevInfo!.id}`,
+      );
+      (trigger ?? root.querySelector<HTMLElement>("#content"))?.focus();
+    }
+    prevInfo = state.info;
   };
+
+  const onKey = (ev: KeyboardEvent) => {
+    if (!store.get().info) return;
+    if (ev.key === "Escape") {
+      ev.preventDefault();
+      closeInfo(store);
+    } else if (ev.key === "Tab") {
+      trapTab(root, ev);
+    }
+  };
+  document.addEventListener("keydown", onKey);
+
   const unsubscribe = store.subscribe(render);
   render();
-  return unsubscribe;
+  return () => {
+    unsubscribe();
+    document.removeEventListener("keydown", onKey);
+  };
+}
+
+/** Keep Tab inside the open dialog. */
+function trapTab(root: HTMLElement, ev: KeyboardEvent): void {
+  const dialog = root.querySelector<HTMLElement>(".modal");
+  if (!dialog) return;
+  const focusable = Array.from(
+    dialog.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'),
+  );
+  if (focusable.length === 0) return;
+  const first = focusable[0] as HTMLElement;
+  const last = focusable[focusable.length - 1] as HTMLElement;
+  const active = document.activeElement as HTMLElement | null;
+  if (!active || !dialog.contains(active)) {
+    ev.preventDefault();
+    first.focus();
+  } else if (ev.shiftKey && active === first) {
+    ev.preventDefault();
+    last.focus();
+  } else if (!ev.shiftKey && active === last) {
+    ev.preventDefault();
+    first.focus();
+  }
 }
 
 interface FocusInfo {
@@ -85,14 +140,14 @@ function buildApp(s: AppState, store: Store, env: AppEnv): HTMLElement {
 
   const content = s.loaded ? loadedContent(s, store, env) : renderStart(s, handlers, env.appVersion ?? APP_VERSION);
 
+  const modal = renderInfoDialog(s, store);
+  const bg = modal ? { "aria-hidden": "true", inert: true } : {};
   return h(
     "div",
     { class: "app" },
     h("a", { class: "skip-link", href: "#content" }, t("skip")),
-    header,
-    h("div", { id: "notices", role: "status", "aria-live": "polite", "aria-label": t("notice.label") }, noticeBanner(s, store)),
-    h("main", { id: "content", tabindex: "-1" }, content),
-    h("footer", { class: "app-footer muted" }, `MindMatters ${env.appVersion ?? APP_VERSION}`),
+    h("div", { class: "app-bg", ...bg }, header, h("div", { id: "notices", role: "status", "aria-live": "polite", "aria-label": t("notice.label") }, noticeBanner(s, store)), h("main", { id: "content", tabindex: "-1" }, content), h("footer", { class: "app-footer muted" }, `MindMatters ${env.appVersion ?? APP_VERSION}`)),
+    modal,
   );
 }
 
@@ -133,6 +188,7 @@ function loadedContent(s: AppState, store: Store, env: AppEnv): HTMLElement {
       cat.catalog.publisher ? fact(t("header.publisher"), cat.catalog.publisher) : null,
       cat.languages.length > 1 ? fact(t("header.language"), languageSelect(s, store)) : fact(t("header.language"), h("code", null, s.language)),
     ),
+    statusChips(currentStatus(s)),
     h(
       "div",
       { class: "toolbar" },

@@ -1,6 +1,7 @@
 import type { AppState, Store, View } from "../state";
 import type { TextKey } from "../i18n";
 import { renderCheck } from "./check";
+import { renderItems } from "./items";
 
 export interface ViewContext {
   state: AppState;
@@ -14,4 +15,7 @@ export interface ViewDef {
 }
 
 /** Views offered as tabs, in order. */
-export const VIEWS: ViewDef[] = [{ id: "check", label: "tab.check", render: renderCheck }];
+export const VIEWS: ViewDef[] = [
+  { id: "items", label: "tab.items", render: renderItems },
+  { id: "check", label: "tab.check", render: renderCheck },
+];

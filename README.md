@@ -4,7 +4,7 @@ Offline-Konfigurator für psychometrische Fragebogen. Eine **einzige, eigenstän
 
 Kein Server, keine Installation, kein Konto, keine Internetverbindung. Das Tool erhebt **keine** Teilnehmerantworten.
 
-> **Status: frühe Entwicklung.** Fertig sind das JSON-Schema (0.4.0), der Validierungskern (strikter Leser, Schema- und semantische Prüfung, Migration), das Auswahlmodell mit Pflichtmenge und Projekten sowie die Dokumentation. **Noch nicht vorhanden:** Benutzeroberfläche, Einzeldatei-Build und alle Export-Adapter. Das Tool ist heute also nicht benutzbar. Details: [docs/ABNAHMETESTS.md](docs/ABNAHMETESTS.md) (18 von 45 Abnahmetests abgedeckt), [docs/ROADMAP.md](docs/ROADMAP.md), [CHANGELOG.md](CHANGELOG.md).
+> **Status: frühe Entwicklung.** Fertig sind das JSON-Schema (0.4.0), der Validierungskern (strikter Leser, Schema- und semantische Prüfung, Migration), das Auswahlmodell mit Pflichtmenge und Projekten sowie die Dokumentation. **Noch nicht vorhanden:** Benutzeroberfläche, Einzeldatei-Build und alle Export-Adapter. Das Tool ist heute also nicht benutzbar. Details: [docs/ABNAHMETESTS.md](docs/ABNAHMETESTS.md) (23 von 45 Abnahmetests abgedeckt), [docs/ROADMAP.md](docs/ROADMAP.md), [CHANGELOG.md](CHANGELOG.md).
 
 ## Grundidee
 
@@ -34,7 +34,7 @@ Voraussetzungen: Node.js ≥ 20, Python ≥ 3.10 (nur für den Konformanz-Gegenc
 
 ```bash
 npm install
-npm test                                         # Unit-Tests (Vitest, 327 Tests)
+npm test                                         # Unit-Tests (Vitest, 395 Tests)
 npm run typecheck                                # TypeScript-Prüfung
 python -I tests/conformance/validate_schema.py   # Schema-Konformanz
 ```

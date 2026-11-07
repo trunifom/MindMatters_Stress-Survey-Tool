@@ -1,8 +1,8 @@
 import { resolveText } from "../../core/localized";
-import { diagnosticsList, statusChips } from "../components";
+import { diagnosticsList } from "../components";
 import { h } from "../dom";
 import { t } from "../i18n";
-import { counts, currentStatus, selectionDiagnostics } from "../state";
+import { counts, selectionDiagnostics } from "../state";
 import type { ViewContext } from "./registry";
 
 /** Check and output view. This step: status, counts and findings; outputs follow. */
@@ -26,7 +26,6 @@ export function renderCheck({ state: s }: ViewContext): HTMLElement {
       h("li", null, t("summary.modules", { n: c.modules })),
       h("li", null, t("summary.mandatory", { n: c.mandatory })),
     ),
-    statusChips(currentStatus(s)),
     h("h3", null, t("diagnostics.title")),
     diagnosticsList(findings),
   );

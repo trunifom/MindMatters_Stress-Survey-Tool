@@ -54,3 +54,13 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - `loadProject` gibt das gelesene Projekt mit zurück.
 - jsdom-Tests der Oberfläche (`tests/unit/ui`), statische Sicherheitsregel (kein innerHTML, eval, localStorage, fetch in `src/ui`).
 
+### Hinzugefügt (Oberfläche, Teil 2)
+- Fragen und Module: Auswahl per Checkbox (Standardumfang gesperrt und beschriftet, Pflichtmodul sperrt alle Mitglieder, optionale Ganzmodule schalten gemeinsam), Modulknöpfe, «Alles abwählen» behält den Standardumfang, Standardauswahl wiederherstellen, Zähler, Hinweise zur Auswahl (Teilskala, Abhängigkeit).
+- Suche und Filter (Text, Titel, Tags, Dimension samt Unterdimensionen, Skala, Instrument, Modul; Auswahlumfang) ändern weder Auswahl noch Ausgabereihenfolge. Gesperrte Wortlaute sind nicht durchsuchbar.
+- Gesperrte Texte (Rechte) erscheinen nur als ID mit Sperrhinweis, nirgends im DOM.
+- Textblöcke (Titel, Untertitel, Text, Hinweis) als wählbare oder verpflichtende Einträge.
+- Info-Fenster je Item und Modul: Abschnitte in der Reihenfolge der Spezifikation, «nicht dokumentiert» statt Raten, getrennte direkte und Instrumentquellen, wirksamer Bezugszeitraum mit Herkunft, wirksame Anweisung, Rechte mit Herkunft, Exportbesonderheiten. Modal mit Fokusführung, Escape, Tab-Falle, Fokus zurück zum Auslöser.
+- Statuschips im Kopfbereich auf jedem Tab.
+
+### Behoben
+- Typmodell um Felder ergänzt, die das Info-Fenster anzeigt (Quellen, Rechte-Details, Instrument- und Item-Zusatzfelder).

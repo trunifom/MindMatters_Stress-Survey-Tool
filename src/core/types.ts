@@ -35,7 +35,20 @@ export interface Source {
   id: string;
   type: string;
   title: string;
+  authors?: string[];
+  year?: number;
+  doi?: string;
+  url?: string;
+  edition?: string;
   accessedAt?: string;
+  citationText?: string;
+}
+
+export interface ReferencePeriod {
+  kind: "unspecified" | "current" | "general" | "relative";
+  amount?: number;
+  unit?: "day" | "week" | "month" | "year";
+  label?: LocalizedText;
 }
 
 export interface RightsProfile {
@@ -47,6 +60,10 @@ export interface RightsProfile {
   >;
   evidenceSourceRef?: string;
   attribution?: LocalizedText;
+  rightsHolder?: string;
+  licenseName?: string;
+  licenseUrl?: string;
+  notes?: LocalizedText;
 }
 
 export interface Construct {
@@ -55,6 +72,8 @@ export interface Construct {
   description: LocalizedText;
   parentRef?: string;
   sourceLinks?: SourceLink[];
+  documentation?: Documentation;
+  tags?: string[];
 }
 
 export interface InstrumentForm {
@@ -62,9 +81,17 @@ export interface InstrumentForm {
   title: LocalizedText;
   formName?: string;
   versionLabel?: string;
+  familyName?: string;
+  originalLanguage?: string;
+  language?: string;
+  respondentRole?: "self" | "parent" | "teacher" | "other";
+  targetPopulation?: LocalizedText;
+  referencePeriod?: ReferencePeriod;
+  instruction?: LocalizedText;
+  documentation?: Documentation;
   rightsRef?: string;
   sourceLinks?: SourceLink[];
-  translation?: { status: string; sourceLinks?: SourceLink[] };
+  translation?: { status: string; language?: string; method?: string; revision?: string; notes?: LocalizedText; sourceLinks?: SourceLink[] };
   administrationTime?: { minMinutes?: number; maxMinutes?: number; sourceLinks: SourceLink[] };
   ageRange?: { minYears?: number; maxYears?: number };
   extensions?: Extensions;
@@ -152,6 +179,10 @@ export interface Item {
   instruction?: LocalizedText;
   respondentHelp?: LocalizedText;
   organizerHelp?: LocalizedText;
+  referencePeriod?: ReferencePeriod;
+  documentation?: Documentation;
+  tags?: string[];
+  exportHints?: Record<string, { variableName?: string; label?: LocalizedText; notes?: LocalizedText }>;
   requiredMessage?: LocalizedText;
   originalItemNumber?: string;
   displayNumber?: string;
@@ -181,10 +212,14 @@ export interface Scale {
   instrumentRef?: string;
   scoreDefinitionRefs?: string[];
   sourceLinks?: SourceLink[];
+  documentation?: Documentation;
 }
 
 export interface Module {
   id: string;
+  title?: LocalizedText;
+  description?: LocalizedText;
+  documentation?: Documentation;
   itemRefs: string[];
   selectionMode: "independent" | "allOrNothing";
   inclusionRequired: boolean;
@@ -228,6 +263,7 @@ export interface ScoreMapping {
 
 export interface ScoreDefinition {
   id: string;
+  title?: LocalizedText;
   itemRefs: string[];
   method: "sum" | "mean";
   itemMappings: ScoreMapping[];
