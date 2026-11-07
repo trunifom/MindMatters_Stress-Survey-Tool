@@ -153,3 +153,32 @@ input[type="search"], input[type="text"], select, textarea { font: inherit; colo
 /* --- rich text (note items) -------------------------------------------- */
 .rt-p { margin: .4rem 0; white-space: pre-line; }
 .rt-ul { margin: .4rem 0 .4rem 1.2rem; padding: 0; }
+
+/* --- preview ------------------------------------------------------------ */
+.pv { max-width: 46rem; margin: 1rem auto; }
+.pv-title { font-size: 1.5rem; }
+.pv-block { margin: .6rem 0; }
+.pv-callout { border: 1px solid var(--border); border-left: .4rem solid var(--info); background: var(--info-bg); border-radius: .4rem; padding: .5rem .9rem; margin: .8rem 0; }
+.pv-sensitive { border-left-color: var(--warn); background: var(--warn-bg); }
+.pv-section { margin: 1.5rem 0; }
+.pv-section-title { border-bottom: 2px solid var(--border); padding-bottom: .25rem; }
+.pv-item { margin: 1rem 0; }
+fieldset.pv-question { border: 1px solid var(--border); border-radius: .4rem; padding: .6rem .9rem .8rem; }
+fieldset.pv-question legend { padding: 0 .35rem; font-weight: 600; white-space: pre-line; }
+.pv-req { font-weight: 400; color: var(--muted); font-size: .85rem; }
+.pv-answers { display: flex; flex-direction: column; gap: .3rem; margin-top: .4rem; }
+.pv-horizontal { flex-direction: row; flex-wrap: wrap; gap: .4rem 1.2rem; }
+.pv-opt { display: flex; gap: .4rem; align-items: baseline; }
+.pv-hint { font-size: .85rem; margin: .2rem 0; }
+.pv-slider { display: flex; gap: .75rem; align-items: center; }
+.pv-slider input { flex: 1; }
+.pv-rank { margin: .2rem 0; padding-left: 1.4rem; }
+.pv-locked { border: 1px dashed var(--border); padding: .6rem; color: var(--muted); }
+.pv-matrix { width: 100%; border-collapse: collapse; margin: .75rem 0; }
+.pv-matrix th, .pv-matrix td { border: 1px solid var(--border); padding: .35rem .5rem; text-align: center; vertical-align: middle; }
+.pv-matrix th[scope="row"] { text-align: left; font-weight: 500; width: 40%; }
+.pv-matrix thead th { font-size: .85rem; }
+.pv-note-title { font-size: 1.3rem; margin: 1rem 0 .3rem; }
+.pv-note-subtitle { font-size: 1.1rem; margin: .8rem 0 .2rem; }
+.pv-end { text-align: center; margin-top: 2rem; }
+.pv input:disabled, .pv select:disabled, .pv textarea:disabled { opacity: 1; cursor: not-allowed; }

@@ -64,3 +64,12 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 
 ### Behoben
 - Typmodell um Felder ergänzt, die das Info-Fenster anzeigt (Quellen, Rechte-Details, Instrument- und Item-Zusatzfelder).
+
+### Hinzugefügt (Oberfläche, Teil 3)
+- Vorschau: gewählte Items in Fragebogenreihenfolge mit Einleitung, Einwilligung, Datenschutz, Hilfsangeboten und Schlusstext. Textblöcke (Titel, Untertitel, Text, Hinweis mit Aufzählung) als echte Elemente. Alle Antworttypen mit ihren Grenzen (Auswahl, Mehrfachauswahl mit Hinweis, Zahl, Text, Datum, Slider, Ranking, Dropdown), Pflicht- und Freiwillig-Kennzeichnung, Bedingungen als Strukturhinweis, Zufallsreihenfolge als Hinweis, Warnung und Hilfe bei sensiblen Items, Matrix für Items mit gemeinsamen Antworten.
+- Alle Steuerelemente sind gesperrt, es gibt kein Formular: Es werden keine Antworten erfasst oder gespeichert.
+- Leere Abschnitte entfallen mit ihrer Anweisung. Gesperrte Items erscheinen nur als Platzhalter mit ID. Fehlende Übersetzungen werden markiert statt still gemischt.
+
+### Behoben
+- Die Matrixdarstellung konnte Inhalte eines Items verschlucken (Warnung eines sensiblen Items, Anweisung, Hilfe, Bedingung). Solche Items werden jetzt als Liste gezeigt.
+- Beispielkatalog: Matrixabschnitt mit drei gleichartigen Items, das sensible Item steht eigenständig.

@@ -476,6 +476,60 @@
       "constructRefs": [],
       "origin": "own",
       "rightsRef": "rights_own"
+    },
+    {
+      "id": "demo_03",
+      "version": "1.0.0",
+      "text": {
+        "en": "I get along well with my classmates.",
+        "de-CH": "Ich verstehe mich gut mit meinen Mitschülerinnen und Mitschülern."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "agree_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "demo_03",
+      "keyDirection": "positive",
+      "origin": "own",
+      "constructRefs": [
+        "wellbeing_demo"
+      ],
+      "instrumentRef": "form_demo",
+      "rightsRef": "rights_own",
+      "presentation": {
+        "widget": "radio",
+        "orientation": "horizontal"
+      }
+    },
+    {
+      "id": "demo_04",
+      "version": "1.0.0",
+      "text": {
+        "en": "I like going to school.",
+        "de-CH": "Ich gehe gerne zur Schule."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "agree_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "demo_04",
+      "keyDirection": "positive",
+      "origin": "own",
+      "constructRefs": [
+        "wellbeing_demo"
+      ],
+      "instrumentRef": "form_demo",
+      "rightsRef": "rights_own",
+      "presentation": {
+        "widget": "radio",
+        "orientation": "horizontal"
+      }
     }
   ],
   "scales": [],
@@ -561,7 +615,8 @@
         "pageBreakBefore": true,
         "itemRefs": [
           "demo_01",
-          "demo_02"
+          "demo_03",
+          "demo_04"
         ]
       },
       {
@@ -572,6 +627,7 @@
         },
         "pageBreakBefore": true,
         "itemRefs": [
+          "demo_02",
           "mood_slider",
           "rank_topics",
           "wants_help",
