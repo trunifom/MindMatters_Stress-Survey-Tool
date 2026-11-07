@@ -1,0 +1,34 @@
+# --- Lokale Ausgangsunterlagen (nicht Teil des Repos) -------------------
+# Die Original-Entwurfsunterlagen (Pflichtenheft, Datenvertrag v0.3 etc.)
+# bleiben lokal. Die fuer Tests benoetigten JSON-Dateien liegen versioniert
+# unter tests/fixtures/.
+Dokumente_Start/
+
+# --- Node / TypeScript / Build ------------------------------------------
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+.vite/
+playwright-report/
+test-results/
+
+# --- Python (nur Entwicklungswerkzeuge) ---------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# --- Editor / OS / lokale Werkzeuge -------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+.claude/settings.local.json
+
+# --- Lokale Arbeitsdateien ----------------------------------------------
+*.local.*
+tmp/
