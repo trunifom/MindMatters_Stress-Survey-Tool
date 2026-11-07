@@ -1,0 +1,24 @@
+{
+  "name": "mindmatters-stress-survey-tool",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Offline-Konfigurator fuer psychometrische Fragebogen (eine HTML-Datei).",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
+  }
+}
