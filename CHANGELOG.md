@@ -24,4 +24,6 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - `src/model/selection.ts`: wirksame Pflichtmenge (inkl. Pflichtmodule), Anfangsauswahl, Sammelaktionen (Item, Modul, «alles abwählen» behält Pflichtmenge), Auswahlregeln (wholeScale, Teilskalen-Warnung, Module, Abhängigkeiten), Score-Verfügbarkeit, Projekt laden mit Pflichtergänzung und Meldung.
 - `src/core/loader.ts`: Lade-Pipeline `loadCatalog`/`loadProject` (alles oder nichts, getrennte Prüfstatus, optionale ausdrückliche Migration) und `replaceCatalog` (transaktional, alter Zustand bleibt bei Fehler). Die Fixtures liefern genau die Befunde des Lieferberichts.
 - `src/model/project.ts`: Projekt erzeugen (`createProject`), deterministisch serialisieren (`serializeProject`), neutraler Dateiname (`projectFileName`). Speichern ist trotz Konflikten erlaubt, Konflikte werden dokumentiert.
+- Leistungstest T40 (`tests/unit/performance.test.ts`): 1.007 Items bei 5,12 MB werden auf dem Entwicklungsrechner in 1,36 s geladen und geprüft (Ziel 5 s; Referenzgerät offen).
+- `docs/ABNAHMETESTS.md`: Rückverfolgbarkeit der 45 Abnahmetests (14 abgedeckt, 14 teilweise, 17 offen).
 

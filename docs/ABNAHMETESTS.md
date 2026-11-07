@@ -1,0 +1,55 @@
+# Abnahmetests: Rückverfolgbarkeit
+
+Die 45 Abnahmetests T01–T45 stammen aus den Ausgangsunterlagen (lokal, nicht im Repo). Diese Tabelle zeigt, welcher automatische Test den jeweiligen Punkt belegt. Sie ist die einzige Stelle, die den Stand ehrlich ausweist: **«abgedeckt»** heisst, der Test läuft und besteht auf dem Entwicklungsrechner. **«teilweise»** heisst, die Datenseite (Validator, Modell) ist getestet, die Benutzeroberfläche oder der Export fehlt noch. **«offen»** heisst, nichts davon existiert.
+
+Stand: 7. November 2026 · 268 Unit-Tests (Vitest) · 59 Konformanzprüfungen (Python)
+
+| ID | Test | Stand | Nachweis / fehlender Teil |
+|---|---|---|---|
+| T01 | HTML ohne Netz öffnen | offen | braucht Build und Oberfläche (M3) |
+| T02 | Netzwerkprotokoll | offen | braucht Oberfläche (E2E mit Playwright) |
+| T03 | unterstützte Browser | offen | Versionsmatrix noch zu definieren |
+| T04 | Syntaxfehler, doppelte Schlüssel, alter Zustand bleibt | abgedeckt | `strictJson.test.ts`, `pipeline.test.ts` (Transaktion) |
+| T05 | ungültige IDs/Referenzen | abgedeckt | `schemaCheck.test.ts`, `semanticRegisters.test.ts`, Fixtures 90/91 |
+| T06 | falsche `schemaVersion` | abgedeckt | `schemaCheck.test.ts`, `pipeline.test.ts` |
+| T07 | unbekanntes kritisches Feature | teilweise | Validator blockiert (`UNKNOWN_FEATURE`); Sperre der Oberfläche fehlt |
+| T08 | unbekannte reine Metadaten | teilweise | bleiben im geladenen Katalog, keine Ausführung; Zusatzansicht fehlt |
+| T09 | vier Pflichtkombinationen | teilweise | Aufnahmepflicht im Modell getestet; Antwortpflicht-Verhalten gehört zur Oberfläche |
+| T10 | Sammelabwahl mit Filter | teilweise | Pflichtmenge bleibt (`selection.test.ts`); Filter fehlen |
+| T11 | Pflichtmodul mit Item-Flags false | abgedeckt | `selection.test.ts` |
+| T12 | Projekt lässt Pflichtmodul weg | abgedeckt | `selection.test.ts`: 10 Items ergänzt und gemeldet |
+| T13 | Pflichtitem in optionalem Ganzmodul | abgedeckt | `semanticStructure.test.ts` |
+| T14 | ungültige Standardauswahl | abgedeckt | `selection.test.ts`, `pipeline.test.ts` |
+| T15 | versteckte antwortpflichtige Frage | offen | Formular-/Vorschau-Logik fehlt |
+| T16 | `allOrNothing` schalten | abgedeckt | `selection.test.ts` |
+| T17 | `wholeScale` teilweise | abgedeckt | `selection.test.ts` (`SCALE_PARTIAL_NOT_ALLOWED`) |
+| T18 | `partialWithWarning` teilweise | abgedeckt | `selection.test.ts` (`PARTIAL_SCALE`, ohne Scorezusage) |
+| T19 | überlappende Skalen | teilweise | Konflikte erkannt; verständliche Anzeige fehlt |
+| T20 | Suche/Filter ändern Auswahl nicht | offen | Suche und Filter fehlen |
+| T21 | Nullwert, Grenzen, Ganzzahlen | teilweise | Katalogseite (`semanticResponses.test.ts`); Eingabeprüfung fehlt |
+| T22 | exklusive Option und Auswahlgrenzen | teilweise | Katalogprüfung vollständig; Eingabeprüfung fehlt |
+| T23 | Leerzeichen, Unicode, Minimallänge | offen | Eingabeprüfung fehlt |
+| T24 | Missing gegen Neutral, Code 01 | teilweise | Codes bleiben Strings (Strikter Leser), Rollenprüfung im Scoring; Export fehlt |
+| T25 | Infoansicht | offen | Oberfläche fehlt |
+| T26 | Sprachwechsel, fehlende Übersetzung | teilweise | `MISSING_TRANSLATION` im Validator; Sprachwechsel fehlt |
+| T27 | Projekt speichern/laden | abgedeckt | `project.test.ts` (Round-Trip über Datei-Text); Download im Browser fehlt |
+| T28 | falscher Katalog/Version | abgedeckt | `selection.test.ts`, `pipeline.test.ts` |
+| T29 | Schulnotizen nicht ungefragt veröffentlicht | teilweise | Dateiname ohne Notizen; Ausgaben (Codebuch/Export) fehlen |
+| T30 | echter Importtest je Adapter | offen | Adapter fehlen (M5/M6) |
+| T31 | Namens-/Codeabbildung | offen | Adapter fehlen |
+| T32 | nicht übertragbarer Constraint | offen | Adapter fehlen |
+| T33 | Bedingungen und Ausblendung | teilweise | Bedingungen im Katalog geprüft; Export-Semantik fehlt |
+| T34 | Testantwortdaten exportieren | offen | Adapter fehlen |
+| T35 | erlaubte Nutzung, verbotene Änderung | offen | Rechte-Handlungsmatrix nicht implementiert |
+| T36 | unbekannte Darstellungsrechte | offen | Rechte-Handlungsmatrix nicht implementiert |
+| T37 | Codebuch gegen nativer Export | offen | beide Ausgaben fehlen |
+| T38 | CSV-Import | offen | spätere Stufe (M8) |
+| T39 | Tastatur, Dialogfokus | offen | Oberfläche fehlt |
+| T40 | 1.000 Items / 5 MB | teilweise | `performance.test.ts`: 5,12 MB, 1.007 Items, Laden und Prüfen 1,36 s auf dem Entwicklungsrechner (Ziel 5 s). Referenzgerät noch nicht festgelegt |
+| T41 | Skriptzeichenfolge, gefährlicher Link | teilweise | Text bleibt Text, `javascript:`-URL abgelehnt (`pipeline.test.ts`); sicheres Rendern gehört zur Oberfläche |
+| T42 | ungesicherter Zustand bei Wechsel | teilweise | `replaceCatalog` behält den alten Zustand; Bestätigungsdialog fehlt |
+| T43 | doppelte Itemverwendung | abgedeckt | `semanticStructure.test.ts` (`TEMPLATE_ITEM_DUPLICATE`) |
+| T44 | Scorevoraussetzungen | abgedeckt | `selection.test.ts` (`scoreAvailability`) |
+| T45 | `withdrawn`/`draft` | offen | Status-Sperrpolitik nicht implementiert |
+
+**Zusammenfassung:** 14 abgedeckt, 14 teilweise, 17 offen (von 45). Die offenen Punkte hängen an der Oberfläche (M3), den Ausgaben (M4), den Adaptern (M5/M6) und der Rechte-Handlungsmatrix.

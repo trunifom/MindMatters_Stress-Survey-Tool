@@ -4,7 +4,7 @@ Offline-Konfigurator für psychometrische Fragebogen. Eine **einzige, eigenstän
 
 Kein Server, keine Installation, kein Konto, keine Internetverbindung. Das Tool erhebt **keine** Teilnehmerantworten.
 
-> **Status: frühe Entwicklung.** Vorhanden sind das JSON-Schema (Version 0.4.0), Beispieldaten, Recherche und Konzept sowie der Validierungskern. Die Benutzeroberfläche ist noch nicht implementiert. Siehe [CHANGELOG.md](CHANGELOG.md) und [docs/ROADMAP.md](docs/ROADMAP.md).
+> **Status: frühe Entwicklung.** Fertig sind das JSON-Schema (0.4.0), der Validierungskern (strikter Leser, Schema- und semantische Prüfung, Migration), das Auswahlmodell mit Pflichtmenge und Projekten sowie die Dokumentation. **Noch nicht vorhanden:** Benutzeroberfläche, Einzeldatei-Build, Rechtematrix, Codebuch und alle Export-Adapter. Das Tool ist heute also nicht benutzbar. Details: [docs/ABNAHMETESTS.md](docs/ABNAHMETESTS.md) (14 von 45 Abnahmetests abgedeckt), [docs/ROADMAP.md](docs/ROADMAP.md), [CHANGELOG.md](CHANGELOG.md).
 
 ## Grundidee
 
@@ -34,14 +34,14 @@ Voraussetzungen: Node.js ≥ 20, Python ≥ 3.10 (nur für den Konformanz-Gegenc
 
 ```bash
 npm install
-npm test                                         # Unit-Tests (Vitest)
+npm test                                         # Unit-Tests (Vitest, 268 Tests)
 npm run typecheck                                # TypeScript-Prüfung
 python -I tests/conformance/validate_schema.py   # Schema-Konformanz
 ```
 
 ## Dokumentation
 
-Alles liegt unter [docs/](docs/README.md): Architektur, Entscheidungsprotokoll, Recherche zu den Zielsystemen, Diagnosecodes, Roadmap. Das JSON-Format ist unter [schema/README.md](schema/README.md) beschrieben.
+Alles liegt unter [docs/](docs/README.md): Architektur, Entscheidungsprotokoll, Recherche zu den Zielsystemen, Diagnosecodes, Abnahmetests, Roadmap. Das JSON-Format ist unter [schema/README.md](schema/README.md) beschrieben.
 
 ## Versionierung
 
