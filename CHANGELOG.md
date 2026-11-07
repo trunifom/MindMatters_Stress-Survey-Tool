@@ -12,3 +12,5 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - Test-Fixtures (11 Dateien, Schema 0.3.0) unter `tests/fixtures/v0.3.0/`.
 - Python-Konformanztest (Fixtures, Beispiel, 35 Mutationen).
 - Recherche zu den Importmöglichkeiten der Zielsysteme.
+- TypeScript-Gerüst (Vitest, ajv, strict), Versionskonstanten.
+- `src/core`: Diagnose-Typen (JSON-Pointer-Pfade), Limits und strikter JSON-Leser (doppelte Schlüssel, Grössen-/Tiefen-/Stringlimits, Zeile/Spalte in Fehlern). Diagnosecode-Register `docs/DIAGNOSECODES.md`.
