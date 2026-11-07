@@ -21,4 +21,4 @@ Stand der Abnahmetests: [ABNAHMETESTS.md](ABNAHMETESTS.md).
 1. Importtest des LimeSurvey-Exports an einer echten Instanz (Anleitung in [LIMESURVEY.md](LIMESURVEY.md)); danach Annahmenliste und Adapter korrigieren.
 2. Importtest des Qualtrics-Exports ([QUALTRICS.md](QUALTRICS.md)).
 3. REDCap-Adapter: **blockiert**, bis die Kopfzeile des Datenwörterbuchs aus einem echten REDCap-Projekt vorliegt (siehe [RECHERCHE_Zielsysteme.md](RECHERCHE_Zielsysteme.md), offener Punkt 3). Danach SurveyMonkey, Google Forms, Unipark.
-3. Browsernachweis über Edge hinaus (Firefox, Safari), Screenreader-Prüfung.
+4. Browsernachweis über Edge hinaus (Firefox, Safari), Screenreader-Prüfung.
