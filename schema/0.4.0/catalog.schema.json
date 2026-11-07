@@ -1885,7 +1885,7 @@
       }
     },
     "RespNote": {
-      "description": "Display-only text block (no answer). The item text is the content. Feature: noteItems.",
+      "description": "Display-only text block (no answer): title, subtitle, paragraph text or notice. The item text is the content. Feature: noteItems.",
       "type": "object",
       "required": [
         "kind"
@@ -1894,6 +1894,15 @@
       "properties": {
         "kind": {
           "const": "note"
+        },
+        "style": {
+          "enum": [
+            "text",
+            "title",
+            "subtitle",
+            "notice"
+          ],
+          "description": "Presentation role. Default: text. Content is plain text: paragraphs separated by a blank line, lines starting with '- ' form a list. No HTML."
         }
       }
     },

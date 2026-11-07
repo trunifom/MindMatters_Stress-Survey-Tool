@@ -150,6 +150,19 @@ describe("structure check on catalogs", () => {
     expect(validateStructure(doc, "catalog").length).toBeGreaterThan(0);
   });
 
+  it("text blocks: note styles title, subtitle, text and notice are accepted, others are not", () => {
+    for (const style of ["text", "title", "subtitle", "notice"]) {
+      const doc = example040();
+      doc.items.find((i: any) => i.id === "anon_note").response.style = style;
+      expect(validateStructure(doc, "catalog"), style).toEqual([]);
+    }
+    const bad = example040();
+    bad.items.find((i: any) => i.id === "anon_note").response.style = "headline";
+    const ds = validateStructure(bad, "catalog");
+    expect(codes(ds)).toEqual(["INVALID_VALUE"]);
+    expect(ds[0]!.itemRef).toBe("anon_note");
+  });
+
   it("inclusionRequired without defaultSelected is rejected", () => {
     const doc = clone(example040());
     doc.items[1].defaultSelected = false;

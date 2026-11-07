@@ -115,6 +115,7 @@ def mutations(rich):
             extensions={"thing": {"kind": "metadata", "version": "1", "data": {}}})),
         "relative period without amount": m(lambda d: item(d, "demo_01").update(referencePeriod={"kind": "relative", "unit": "week"})),
         "current period with amount": m(lambda d: item(d, "demo_01").update(referencePeriod={"kind": "current", "amount": 1})),
+        "bad note style": m(lambda d: item(d, "anon_note")["response"].update(style="headline")),
         "bad date": m(lambda d: d["catalog"].update(createdAt="2026-13-45")),
     }
 

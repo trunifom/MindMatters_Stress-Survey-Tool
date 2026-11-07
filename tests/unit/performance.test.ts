@@ -46,7 +46,7 @@ describe("performance (T40)", () => {
     const loadMs = performance.now() - t0;
     expect(r.diagnostics.filter((d) => d.severity === "error")).toEqual([]);
     expect(r.ok).toBe(true);
-    expect(r.catalog!.items.length).toBe(1007);
+    expect(r.catalog!.items.length).toBe(1000 + example040().items.length);
 
     const all = {
       schemaVersion: "0.4.0",

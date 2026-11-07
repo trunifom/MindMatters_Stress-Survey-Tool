@@ -27,3 +27,6 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - Leistungstest T40 (`tests/unit/performance.test.ts`): 1.007 Items bei 5,12 MB werden auf dem Entwicklungsrechner in 1,36 s geladen und geprüft (Ziel 5 s; Referenzgerät offen).
 - `docs/ABNAHMETESTS.md`: Rückverfolgbarkeit der 45 Abnahmetests (14 abgedeckt, 14 teilweise, 17 offen).
 
+### Geändert
+- Schema 0.4.0 (vor erster Auslieferung): `note`-Items haben `style` (`text`, `title`, `subtitle`, `notice`) für Titel, Untertitel, Textabschnitte und Hinweise (ADR-006). Beispielkatalog um Titel und Anonymitätshinweis erweitert.
+

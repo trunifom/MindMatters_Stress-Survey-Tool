@@ -4,92 +4,229 @@
   "catalog": {
     "id": "example_rich",
     "version": "1.0.0",
-    "title": { "en": "Rich 0.4.0 feature example", "de-CH": "Beispiel für die Funktionen von 0.4.0" },
+    "title": {
+      "en": "Rich 0.4.0 feature example",
+      "de-CH": "Beispiel für die Funktionen von 0.4.0"
+    },
     "defaultLanguage": "en",
     "status": "draft",
-    "description": { "en": "Technical fixture with own invented content. Demonstrates every 0.4.0 field. Not a validated instrument." }
+    "description": {
+      "en": "Technical fixture with own invented content. Demonstrates every 0.4.0 field. Not a validated instrument."
+    }
   },
-  "languages": ["en", "de-CH"],
+  "languages": [
+    "en",
+    "de-CH"
+  ],
   "requiredFeatures": [
-    "coreQuestions", "requiredInclusion", "requiredAnswer", "selectionModules", "simpleVisibility",
-    "compoundVisibility", "sliderResponse", "rankingResponse", "noteItems", "randomization"
+    "coreQuestions",
+    "requiredInclusion",
+    "requiredAnswer",
+    "selectionModules",
+    "simpleVisibility",
+    "compoundVisibility",
+    "sliderResponse",
+    "rankingResponse",
+    "noteItems",
+    "randomization"
   ],
   "sources": [
-    { "id": "src_own", "type": "originalContent", "title": "Own technical questions" }
+    {
+      "id": "src_own",
+      "type": "originalContent",
+      "title": "Own technical questions"
+    }
   ],
   "rights": [
     {
       "id": "rights_own",
       "reviewStatus": "reviewed",
       "permissions": {
-        "redistribution": "permitted", "electronicDisplay": "permitted",
-        "electronicAdministration": "permitted", "modification": "permitted", "export": "permitted"
+        "redistribution": "permitted",
+        "electronicDisplay": "permitted",
+        "electronicAdministration": "permitted",
+        "modification": "permitted",
+        "export": "permitted"
       },
-      "notes": { "en": "Newly authored fixture content." }
+      "notes": {
+        "en": "Newly authored fixture content."
+      }
     }
   ],
   "constructs": [
     {
       "id": "wellbeing_demo",
-      "label": { "en": "Demo wellbeing construct" },
-      "description": { "en": "Placeholder construct for fixtures; measures nothing real." }
+      "label": {
+        "en": "Demo wellbeing construct"
+      },
+      "description": {
+        "en": "Placeholder construct for fixtures; measures nothing real."
+      }
     }
   ],
   "instruments": [
     {
       "id": "form_demo",
-      "title": { "en": "Demo form" },
+      "title": {
+        "en": "Demo form"
+      },
       "formName": "Invented demo form",
       "versionLabel": "0.4.0 example",
       "originalLanguage": "en",
       "language": "en",
       "respondentRole": "self",
-      "ageRange": { "minYears": 12, "maxYears": 16 },
+      "ageRange": {
+        "minYears": 12,
+        "maxYears": 16
+      },
       "administrationTime": {
         "minMinutes": 2,
         "maxMinutes": 4,
-        "sourceLinks": [{ "sourceRef": "src_own", "relation": "background", "locator": "Fixture author estimate" }]
+        "sourceLinks": [
+          {
+            "sourceRef": "src_own",
+            "relation": "background",
+            "locator": "Fixture author estimate"
+          }
+        ]
       },
       "rightsRef": "rights_own",
-      "translation": { "status": "draft", "language": "de-CH", "method": "Own test translation" },
-      "documentation": { "limitations": { "en": "Not validated; for software tests only." } }
+      "translation": {
+        "status": "draft",
+        "language": "de-CH",
+        "method": "Own test translation"
+      },
+      "documentation": {
+        "limitations": {
+          "en": "Not validated; for software tests only."
+        }
+      }
     }
   ],
   "optionSets": [
     {
       "id": "agree_5",
-      "label": { "en": "Agreement" },
+      "label": {
+        "en": "Agreement"
+      },
       "codeType": "string",
       "orderPolicy": "fixed",
       "measurementLevel": "ordinal",
       "options": [
-        { "code": "1", "label": { "en": "Disagree strongly", "de-CH": "Stimme gar nicht zu" }, "role": "substantive", "ordinalPosition": 1 },
-        { "code": "2", "label": { "en": "Disagree", "de-CH": "Stimme eher nicht zu" }, "role": "substantive", "ordinalPosition": 2 },
-        { "code": "3", "label": { "en": "Neutral", "de-CH": "Teils/teils" }, "role": "substantive", "ordinalPosition": 3 },
-        { "code": "4", "label": { "en": "Agree", "de-CH": "Stimme eher zu" }, "role": "substantive", "ordinalPosition": 4 },
-        { "code": "5", "label": { "en": "Agree strongly", "de-CH": "Stimme voll zu" }, "role": "substantive", "ordinalPosition": 5 },
-        { "code": "refused", "label": { "en": "Prefer not to answer", "de-CH": "Keine Angabe" }, "role": "missing", "missingReason": "refused" }
+        {
+          "code": "1",
+          "label": {
+            "en": "Disagree strongly",
+            "de-CH": "Stimme gar nicht zu"
+          },
+          "role": "substantive",
+          "ordinalPosition": 1
+        },
+        {
+          "code": "2",
+          "label": {
+            "en": "Disagree",
+            "de-CH": "Stimme eher nicht zu"
+          },
+          "role": "substantive",
+          "ordinalPosition": 2
+        },
+        {
+          "code": "3",
+          "label": {
+            "en": "Neutral",
+            "de-CH": "Teils/teils"
+          },
+          "role": "substantive",
+          "ordinalPosition": 3
+        },
+        {
+          "code": "4",
+          "label": {
+            "en": "Agree",
+            "de-CH": "Stimme eher zu"
+          },
+          "role": "substantive",
+          "ordinalPosition": 4
+        },
+        {
+          "code": "5",
+          "label": {
+            "en": "Agree strongly",
+            "de-CH": "Stimme voll zu"
+          },
+          "role": "substantive",
+          "ordinalPosition": 5
+        },
+        {
+          "code": "refused",
+          "label": {
+            "en": "Prefer not to answer",
+            "de-CH": "Keine Angabe"
+          },
+          "role": "missing",
+          "missingReason": "refused"
+        }
       ]
     },
     {
       "id": "yes_no",
-      "label": { "en": "Yes / No" },
+      "label": {
+        "en": "Yes / No"
+      },
       "codeType": "string",
       "orderPolicy": "fixed",
       "options": [
-        { "code": "yes", "label": { "en": "Yes", "de-CH": "Ja" }, "role": "substantive" },
-        { "code": "no", "label": { "en": "No", "de-CH": "Nein" }, "role": "substantive" }
+        {
+          "code": "yes",
+          "label": {
+            "en": "Yes",
+            "de-CH": "Ja"
+          },
+          "role": "substantive"
+        },
+        {
+          "code": "no",
+          "label": {
+            "en": "No",
+            "de-CH": "Nein"
+          },
+          "role": "substantive"
+        }
       ]
     },
     {
       "id": "support_topics",
-      "label": { "en": "Support topics" },
+      "label": {
+        "en": "Support topics"
+      },
       "codeType": "string",
       "orderPolicy": "fixed",
       "options": [
-        { "code": "sleep", "label": { "en": "Sleep", "de-CH": "Schlaf" }, "role": "substantive" },
-        { "code": "school", "label": { "en": "School work", "de-CH": "Schule" }, "role": "substantive" },
-        { "code": "friends", "label": { "en": "Friends", "de-CH": "Freunde" }, "role": "substantive" }
+        {
+          "code": "sleep",
+          "label": {
+            "en": "Sleep",
+            "de-CH": "Schlaf"
+          },
+          "role": "substantive"
+        },
+        {
+          "code": "school",
+          "label": {
+            "en": "School work",
+            "de-CH": "Schule"
+          },
+          "role": "substantive"
+        },
+        {
+          "code": "friends",
+          "label": {
+            "en": "Friends",
+            "de-CH": "Freunde"
+          },
+          "role": "substantive"
+        }
       ]
     }
   ],
@@ -97,8 +234,14 @@
     {
       "id": "intro_note",
       "version": "1.0.0",
-      "text": { "en": "The next questions are about how you feel at school.", "de-CH": "Die nächsten Fragen handeln davon, wie du dich in der Schule fühlst." },
-      "response": { "kind": "note" },
+      "text": {
+        "en": "How do you feel at school?",
+        "de-CH": "Wie fühlst du dich in der Schule?"
+      },
+      "response": {
+        "kind": "note",
+        "style": "title"
+      },
       "inclusionRequired": true,
       "answerRequired": false,
       "defaultSelected": true,
@@ -110,62 +253,116 @@
     {
       "id": "demo_01",
       "version": "1.0.0",
-      "text": { "en": "I feel comfortable in my class.", "de-CH": "Ich fühle mich in meiner Klasse wohl." },
-      "response": { "kind": "singleChoice", "optionSetRef": "agree_5" },
+      "text": {
+        "en": "I feel comfortable in my class.",
+        "de-CH": "Ich fühle mich in meiner Klasse wohl."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "agree_5"
+      },
       "inclusionRequired": true,
       "answerRequired": true,
       "defaultSelected": true,
       "variableName": "demo_01",
-      "exportLabel": { "en": "Comfortable in class" },
+      "exportLabel": {
+        "en": "Comfortable in class"
+      },
       "displayNumber": "1",
-      "requiredMessage": { "en": "Please choose one answer.", "de-CH": "Bitte wähle eine Antwort." },
+      "requiredMessage": {
+        "en": "Please choose one answer.",
+        "de-CH": "Bitte wähle eine Antwort."
+      },
       "keyDirection": "positive",
       "origin": "own",
-      "constructRefs": ["wellbeing_demo"],
+      "constructRefs": [
+        "wellbeing_demo"
+      ],
       "instrumentRef": "form_demo",
       "rightsRef": "rights_own",
-      "presentation": { "widget": "radio", "orientation": "horizontal", "optionOrder": "fixed" },
+      "presentation": {
+        "widget": "radio",
+        "orientation": "horizontal",
+        "optionOrder": "fixed"
+      },
       "exportHints": {
-        "limesurvey": { "variableName": "demo01" },
-        "redcap": { "variableName": "demo_01", "notes": { "en": "Matrix group demo_matrix." } }
+        "limesurvey": {
+          "variableName": "demo01"
+        },
+        "redcap": {
+          "variableName": "demo_01",
+          "notes": {
+            "en": "Matrix group demo_matrix."
+          }
+        }
       },
       "documentation": {
-        "summary": { "en": "Single agreement item." },
-        "measurementExplanation": { "en": "Placeholder; measures nothing real." }
+        "summary": {
+          "en": "Single agreement item."
+        },
+        "measurementExplanation": {
+          "en": "Placeholder; measures nothing real."
+        }
       }
     },
     {
       "id": "demo_02",
       "version": "1.0.0",
-      "text": { "en": "I often feel alone at school.", "de-CH": "Ich fühle mich in der Schule oft allein." },
-      "response": { "kind": "singleChoice", "optionSetRef": "agree_5" },
+      "text": {
+        "en": "I often feel alone at school.",
+        "de-CH": "Ich fühle mich in der Schule oft allein."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "agree_5"
+      },
       "inclusionRequired": false,
       "answerRequired": false,
       "defaultSelected": true,
       "variableName": "demo_02",
-      "exportLabel": { "en": "Alone at school" },
+      "exportLabel": {
+        "en": "Alone at school"
+      },
       "keyDirection": "negative",
       "origin": "own",
-      "constructRefs": ["wellbeing_demo"],
+      "constructRefs": [
+        "wellbeing_demo"
+      ],
       "instrumentRef": "form_demo",
       "rightsRef": "rights_own",
       "sensitivity": {
         "level": "sensitive",
-        "warningText": { "en": "Some students may find this question upsetting." },
-        "helpResourcesText": { "en": "Talk to a teacher or the school counselling service." },
+        "warningText": {
+          "en": "Some students may find this question upsetting."
+        },
+        "helpResourcesText": {
+          "en": "Talk to a teacher or the school counselling service."
+        },
         "excludeFromExportByDefault": false
       }
     },
     {
       "id": "mood_slider",
       "version": "1.0.0",
-      "text": { "en": "How is your mood today?", "de-CH": "Wie ist deine Stimmung heute?" },
+      "text": {
+        "en": "How is your mood today?",
+        "de-CH": "Wie ist deine Stimmung heute?"
+      },
       "response": {
         "kind": "slider",
         "minimum": 0,
         "maximum": 100,
         "step": 1,
-        "labels": { "min": { "en": "Very bad", "de-CH": "Sehr schlecht" }, "max": { "en": "Very good", "de-CH": "Sehr gut" } },
+        "labels": {
+          "min": {
+            "en": "Very bad",
+            "de-CH": "Sehr schlecht"
+          },
+          "max": {
+            "en": "Very good",
+            "de-CH": "Sehr gut"
+          }
+        },
         "showValue": true
       },
       "inclusionRequired": false,
@@ -175,13 +372,22 @@
       "origin": "own",
       "constructRefs": [],
       "rightsRef": "rights_own",
-      "presentation": { "widget": "slider" }
+      "presentation": {
+        "widget": "slider"
+      }
     },
     {
       "id": "rank_topics",
       "version": "1.0.0",
-      "text": { "en": "Rank the topics by importance.", "de-CH": "Ordne die Themen nach Wichtigkeit." },
-      "response": { "kind": "ranking", "optionSetRef": "support_topics", "maxRanks": 3 },
+      "text": {
+        "en": "Rank the topics by importance.",
+        "de-CH": "Ordne die Themen nach Wichtigkeit."
+      },
+      "response": {
+        "kind": "ranking",
+        "optionSetRef": "support_topics",
+        "maxRanks": 3
+      },
       "inclusionRequired": false,
       "answerRequired": false,
       "defaultSelected": false,
@@ -189,13 +395,21 @@
       "origin": "own",
       "constructRefs": [],
       "rightsRef": "rights_own",
-      "presentation": { "optionOrder": "random" }
+      "presentation": {
+        "optionOrder": "random"
+      }
     },
     {
       "id": "wants_help",
       "version": "1.0.0",
-      "text": { "en": "Would you like to talk to someone?", "de-CH": "Möchtest du mit jemandem sprechen?" },
-      "response": { "kind": "singleChoice", "optionSetRef": "yes_no" },
+      "text": {
+        "en": "Would you like to talk to someone?",
+        "de-CH": "Möchtest du mit jemandem sprechen?"
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "yes_no"
+      },
       "inclusionRequired": false,
       "answerRequired": false,
       "defaultSelected": true,
@@ -207,8 +421,18 @@
     {
       "id": "contact_email",
       "version": "1.0.0",
-      "text": { "en": "E-mail for a reply (optional).", "de-CH": "E-Mail für eine Antwort (freiwillig)." },
-      "response": { "kind": "shortText", "format": "email", "maxLength": 200, "validationMessage": { "en": "Please enter a valid e-mail address." } },
+      "text": {
+        "en": "E-mail for a reply (optional).",
+        "de-CH": "E-Mail für eine Antwort (freiwillig)."
+      },
+      "response": {
+        "kind": "shortText",
+        "format": "email",
+        "maxLength": 200,
+        "validationMessage": {
+          "en": "Please enter a valid e-mail address."
+        }
+      },
       "inclusionRequired": false,
       "answerRequired": false,
       "defaultSelected": true,
@@ -218,36 +442,128 @@
       "rightsRef": "rights_own",
       "visibleWhen": {
         "all": [
-          { "itemRef": "wants_help", "operator": "equals", "value": "yes" },
-          { "itemRef": "mood_slider", "operator": "lessThan", "value": "30" }
+          {
+            "itemRef": "wants_help",
+            "operator": "equals",
+            "value": "yes"
+          },
+          {
+            "itemRef": "mood_slider",
+            "operator": "lessThan",
+            "value": "30"
+          }
         ]
       }
+    },
+    {
+      "id": "anon_note",
+      "version": "1.0.0",
+      "text": {
+        "en": "This survey is about how students feel at school. Taking part is voluntary and all answers are anonymous.\n\n- Nobody will see your name.\n- You can skip any question.\n- You can stop at any time.",
+        "de-CH": "In dieser Umfrage geht es darum, wie sich Schülerinnen und Schüler in der Schule fühlen. Die Teilnahme ist freiwillig und alle Antworten sind anonym.\n\n- Niemand sieht deinen Namen.\n- Du kannst jede Frage überspringen.\n- Du kannst jederzeit aufhören."
+      },
+      "response": {
+        "kind": "note",
+        "style": "notice"
+      },
+      "inclusionRequired": true,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "anon_note",
+      "constructRefs": [],
+      "origin": "own",
+      "rightsRef": "rights_own"
     }
   ],
   "scales": [],
   "modules": [],
   "questionnaire": {
     "id": "rich_template",
-    "title": { "en": "Rich example questionnaire" },
-    "introduction": { "en": "Software test only." },
-    "closingText": { "en": "Thank you." },
+    "title": {
+      "en": "Rich example questionnaire"
+    },
+    "introduction": {
+      "en": "Software test only."
+    },
+    "closingText": {
+      "en": "Thank you."
+    },
     "consent": {
-      "title": { "en": "Consent" },
-      "text": { "en": "Taking part is voluntary. You can stop at any time." },
-      "parentalConsentText": { "en": "Parents or guardians were informed." },
+      "title": {
+        "en": "Consent"
+      },
+      "text": {
+        "en": "Taking part is voluntary. You can stop at any time."
+      },
+      "parentalConsentText": {
+        "en": "Parents or guardians were informed."
+      },
       "requiresParentalConsent": true
     },
-    "privacyNotice": { "en": "No names are stored. Answers are evaluated for the whole class only." },
-    "helpResources": { "en": "If you need support, contact your school counselling service." },
-    "delivery": { "pageMode": "perSection", "showProgress": true, "allowBackNavigation": true, "anonymity": "pseudonymous" },
+    "privacyNotice": {
+      "en": "No names are stored. Answers are evaluated for the whole class only."
+    },
+    "helpResources": {
+      "en": "If you need support, contact your school counselling service."
+    },
+    "delivery": {
+      "pageMode": "perSection",
+      "showProgress": true,
+      "allowBackNavigation": true,
+      "anonymity": "pseudonymous"
+    },
     "hiddenFields": [
-      { "id": "hf_school", "variableName": "school_code", "source": "urlParameter", "label": { "en": "School code" } },
-      { "id": "hf_wave", "variableName": "wave", "source": "constant", "constantValue": "1" }
+      {
+        "id": "hf_school",
+        "variableName": "school_code",
+        "source": "urlParameter",
+        "label": {
+          "en": "School code"
+        }
+      },
+      {
+        "id": "hf_wave",
+        "variableName": "wave",
+        "source": "constant",
+        "constantValue": "1"
+      }
     ],
     "sections": [
-      { "id": "intro", "title": { "en": "Introduction" }, "itemRefs": ["intro_note"] },
-      { "id": "battery", "title": { "en": "School" }, "layout": "matrix", "pageBreakBefore": true, "itemRefs": ["demo_01", "demo_02"] },
-      { "id": "extras", "title": { "en": "More" }, "pageBreakBefore": true, "itemRefs": ["mood_slider", "rank_topics", "wants_help", "contact_email"] }
+      {
+        "id": "intro",
+        "title": {
+          "en": "Introduction"
+        },
+        "itemRefs": [
+          "intro_note",
+          "anon_note"
+        ]
+      },
+      {
+        "id": "battery",
+        "title": {
+          "en": "School"
+        },
+        "layout": "matrix",
+        "pageBreakBefore": true,
+        "itemRefs": [
+          "demo_01",
+          "demo_02"
+        ]
+      },
+      {
+        "id": "extras",
+        "title": {
+          "en": "More"
+        },
+        "pageBreakBefore": true,
+        "itemRefs": [
+          "mood_slider",
+          "rank_topics",
+          "wants_help",
+          "contact_email"
+        ]
+      }
     ]
   },
   "scoringDefinitions": [],

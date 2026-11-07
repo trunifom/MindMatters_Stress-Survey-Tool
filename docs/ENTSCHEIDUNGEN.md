@@ -31,6 +31,14 @@ Jeder Eintrag: Kontext, Entscheidung, Alternativen, Folgen. Neue Entscheidungen 
 - **Datum:** 2026-11-07, **Status:** angenommen
 - **Entscheidung:** Ein Commit pro abgeschlossener Funktion, mit Code, Tests, Dokumentation und Changelog-Eintrag. Ausführliche Commit-Texte (Was, Warum, Tests, Grenzen). Details in [../CONTRIBUTING.md](../CONTRIBUTING.md).
 
+## ADR-006: Textabschnitte als `note`-Items mit `style`
+- **Datum:** 2026-11-07, **Status:** angenommen
+- **Kontext:** Neben Fragen sollen Titel und Textabschnitte erscheinen können (Ziel der Umfrage, Anonymität, Freiwilligkeit).
+- **Entscheidung:** Es gibt keinen neuen Registertyp. Das vorhandene `note`-Item (reiner Text, keine Antwort) bekommt `style`: `text`, `title`, `subtitle`, `notice`. Inhalt ist reiner Text: Absätze durch Leerzeile, Zeilen mit `- ` als Liste, kein HTML. Dazu kommen die vorhandenen Felder `introduction`, `closingText`, `consent`, `privacyNotice`, `helpResources` am Fragebogen.
+- **Gründe:** Notizen sind frei zwischen Fragen platzierbar, über die Vorlage geordnet, als Pflicht oder wählbar deklarierbar und werden vom Auswahlmodell, Projekt und Validator bereits korrekt behandelt. Alle Zielsysteme kennen Textblöcke (LimeSurvey Typ `X`, REDCap `descriptive`, Qualtrics `DB`, Google `textItem`, SurveyMonkey `descriptive_text`). Kein HTML schliesst Skript-Einschleusung aus.
+- **Alternativen:** eigenes Register `textBlocks` (verworfen: doppelte Ordnungs- und Auswahllogik); HTML/Markdown in Texten (verworfen: Sicherheit, Zielsysteme unterstützen es unterschiedlich).
+- **Folgen:** Schema 0.4.0 wurde vor der ersten Auslieferung erweitert (ADR-003 bleibt unberührt, weil 0.4.0 noch nirgends verwendet wird). Exporter ignorieren `variableName` von Notizen und erzeugen keine Datenspalte.
+
 ## Offene Entscheidungen
 - Lizenz des Repositories.
 - Erste Plattform-Reihenfolge der Adapter (Vorschlag: LimeSurvey, REDCap, Qualtrics).

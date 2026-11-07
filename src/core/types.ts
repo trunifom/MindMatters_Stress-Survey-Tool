@@ -109,6 +109,8 @@ export interface Response {
   step?: number;
   maxRanks?: number;
   format?: "email" | "url" | "phone";
+  /** note items only */
+  style?: "text" | "title" | "subtitle" | "notice";
   unit?: { code: string; label: LocalizedText };
   labels?: { min?: LocalizedText; mid?: LocalizedText; max?: LocalizedText };
   validationMessage?: LocalizedText;

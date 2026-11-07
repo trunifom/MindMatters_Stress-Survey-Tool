@@ -34,7 +34,7 @@ Voraussetzungen: Node.js ≥ 20, Python ≥ 3.10 (nur für den Konformanz-Gegenc
 
 ```bash
 npm install
-npm test                                         # Unit-Tests (Vitest, 268 Tests)
+npm test                                         # Unit-Tests (Vitest, 269 Tests)
 npm run typecheck                                # TypeScript-Prüfung
 python -I tests/conformance/validate_schema.py   # Schema-Konformanz
 ```
