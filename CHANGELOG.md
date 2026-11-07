@@ -43,3 +43,9 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - Beschriftungen versteckter Felder galten fälschlich als Teilnehmertext (`MISSING_TRANSLATION`).
 - `examples/catalog_rich_0_4_0.json` ist jetzt vollständig zweisprachig (en/de-CH).
 
+### Hinzugefügt (Build)
+- `tools/build.mjs`: Einzeldatei-Build `dist/mindmatters.html` (esbuild, ES2019, reproduzierbar, Prüfsumme), Vorlage `src/ui/index.html` mit Content-Security-Policy ohne Verbindungen. `npm run build`.
+- `tsconfig.core.json`: Typprüfung von core, model, output ohne DOM.
+- `src/core/clone.ts`: `structuredClone` ersetzt (fehlt in älteren Browsern).
+- Build-Test (`tests/unit/build.test.ts`): keine externen Ressourcen, keine Netzwerk-API, CSP, ES2019, Prüfsumme, Reproduzierbarkeit.
+

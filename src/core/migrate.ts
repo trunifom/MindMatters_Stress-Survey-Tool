@@ -1,3 +1,4 @@
+import { deepClone } from "./clone";
 import { Diagnostic, diag } from "./diagnostics";
 
 /**
@@ -36,7 +37,7 @@ export function migrateToCurrent(input: unknown): MigrationResult {
       ],
     };
   }
-  const doc = structuredClone(input);
+  const doc = deepClone(input);
   doc.schemaVersion = "0.4.0";
   return {
     ok: true,

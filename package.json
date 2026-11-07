@@ -10,10 +10,14 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.core.json",
+    "build": "node tools/build.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
+    "esbuild": "^0.28.2",
+    "jsdom": "^29.1.1",
+    "playwright-core": "^1.65.0",
     "typescript": "^7.0.2",
     "vitest": "^5.1.0"
   },

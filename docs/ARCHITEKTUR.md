@@ -34,6 +34,16 @@ src/i18n/       UI-Texte (später)
 
 Abhängigkeitsrichtung: `ui → model → core`. `adapters` hängen nur von `model` und `core` ab. `core` kennt weder DOM noch Browser, läuft also identisch in Node (Tests) und im Browser.
 
+## Build zur Einzeldatei (`tools/build.mjs`)
+
+`npm run build` bündelt `src/ui/main.ts` mit esbuild (IIFE, minifiziert, Syntax auf ES2019 abgesenkt), fügt CSS und JavaScript in die Vorlage `src/ui/index.html` ein und schreibt `dist/mindmatters.html` samt `.sha256`. Der Build ist reproduzierbar (zweimal gebaut, gleiche Prüfsumme).
+
+- **Kein Netzwerk:** keine externen Skripte, Stylesheets, Schriften, Bilder oder Frames. Im Bundle kommt keine Netzwerk-API vor (`fetch`, `XMLHttpRequest`, `WebSocket`, `sendBeacon` …). Ein Test prüft das.
+- **Content-Security-Policy** als zweite Verteidigungslinie (Meta-Tag): `default-src 'none'`, `connect-src 'none'`, `frame-src 'none'`, `object-src 'none'`, `base-uri 'none'`, `form-action 'none'`. Verbindungen wären damit auch bei einem Fehler im Code verboten.
+- **Bekannte Schwäche:** Die Schema-Prüfung (ajv) übersetzt Schemas zur Laufzeit mit `new Function`. Deshalb braucht die CSP `'unsafe-eval'`. Es werden nur eigene, eingebettete Schemas übersetzt, nie Daten aus Dateien. Ein Build mit vorab erzeugten Validatoren (ajv standalone) würde das beseitigen und ist eine mögliche spätere Verbesserung.
+- **Browser:** Syntaxziel ES2019. `structuredClone` und `<dialog>` werden bewusst nicht verwendet. Ohne Test in realen Browsern ist die Unterstützung nur ein Ziel (siehe [BROWSER.md](BROWSER.md), sobald vorhanden).
+- **Typprüfung:** `core`, `model` und `output` werden zusätzlich mit einer Konfiguration ohne DOM-Bibliothek geprüft (`tsconfig.core.json`), damit sie nie versehentlich den Browser voraussetzen.
+
 ## Lade-Pipeline (`src/core/loader.ts`)
 
 ```
