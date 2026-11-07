@@ -44,10 +44,11 @@ Oben sehen Sie Titel, Katalog-ID, Version, Status und die Sprache der Fragen. Vi
 Beim Schliessen des Tabs oder beim Laden einer anderen Datei fragt der Browser nach, wenn Sie ungesicherte Änderungen haben.
 
 - **Export für LimeSurvey:** Tasten *Export für LimeSurvey* und *Testexport für LimeSurvey* im Bereich «Export für Umfragetools». Der reguläre Export ist nur bei Katalogstatus «released» und bestätigten Rechten aller gewählten Items möglich. Der Testexport gilt auch für Entwürfe, trägt «TEST» im Titel und umgeht kein Rechteverbot. Ist ein Export nicht möglich, steht darunter, warum (zum Beispiel ein Code, den LimeSurvey nicht annimmt, mit dem Hinweis, was der Katalogpfleger ergänzen muss). Die **Zuordnung zum Zielsystem** zeigt, was genau übernommen wird und was Sie nach dem Import von Hand einstellen müssen (zum Beispiel das Einwilligungsfeld). Es wird eine Sprache pro Datei exportiert. Fehlt ein Text in dieser Sprache, gibt es keine Datei.
+- **Export für Qualtrics (TXT):** gleiche Tasten und Regeln. Das Format kann **keine Bedingungen und keinen Slider**. Enthält Ihre Auswahl solche Items, ist der Export gesperrt, und die Begründung nennt die betroffenen Items. Pflichtantworten, Zahlen- und Textgrenzen müssen Sie in Qualtrics von Hand setzen, die Zuordnung führt sie auf. Details: [QUALTRICS.md](QUALTRICS.md).
 
 ## Was noch nicht geht
-- **Der LimeSurvey-Export ist an keiner echten LimeSurvey-Instanz getestet.** Prüfen Sie importierte Umfragen vor dem Einsatz sorgfältig (Anleitung in [LIMESURVEY.md](LIMESURVEY.md)).
-- **Export für REDCap, Qualtrics, SurveyMonkey, Google Forms und Unipark** ist in Entwicklung und steht in der Übersicht als «geplant».
+- **Die Exporte für LimeSurvey und Qualtrics sind an keiner echten Instanz getestet.** Prüfen Sie importierte Umfragen vor dem Einsatz sorgfältig (Anleitung in [LIMESURVEY.md](LIMESURVEY.md)).
+- **Export für REDCap, SurveyMonkey, Google Forms und Unipark** ist in Entwicklung und steht in der Übersicht als «geplant».
 - Es gibt keine Kataloge zum Bearbeiten im Browser und keinen CSV-Import.
 - Das Tool berechnet keine Scores, Normen oder Diagnosen. Es prüft nicht, ob ein Instrument fachlich für Ihre Schule geeignet ist, und es ersetzt keine Rechteklärung. Die Rechteangaben sind Erklärungen des Herausgebers.
 - Welche Browser tatsächlich getestet sind, steht in [BROWSER.md](BROWSER.md). Alles dort nicht Genannte ist nur ein Ziel, kein Nachweis.

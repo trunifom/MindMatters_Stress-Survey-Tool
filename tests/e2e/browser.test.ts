@@ -200,8 +200,8 @@ describe.skipIf(!executablePath)(`real browser (${executablePath ?? "none found"
     const { context, page } = await open();
     await loadExample(page);
     await page.click("[data-focus=tab-check]");
-    expect(await page.isDisabled("#native-export")).toBe(true); // the example is a draft
-    const [download] = await Promise.all([page.waitForEvent("download"), page.click("#test-export")]);
+    expect(await page.isDisabled("#native-export-limesurvey")).toBe(true); // the example is a draft
+    const [download] = await Promise.all([page.waitForEvent("download"), page.click("#test-export-limesurvey")]);
     const bytes = readFileSync((await download.path())!);
     expect(download.suggestedFilename()).toBe("example_rich_1.0.0_limesurvey_TEST.txt");
     expect([...bytes.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);

@@ -10,7 +10,7 @@ Kein Zielsystem nimmt ein vollständiges Fragebogenformat mit allen Einstellunge
 |---|---|---|
 | LimeSurvey | Tab-separierte Strukturdatei (`.txt`, UTF-8) oder `.lss` (XML), Upload im UI | TSV [V] (14 Spalten und Klassen am 7. November 2026 gelesen, Details und Lücken in [LIMESURVEY.md](LIMESURVEY.md)), `.lss`-Schema [?] |
 | REDCap | Data-Dictionary-CSV (18 Spalten), Upload im Projekt | nur [S], offizielle Doku ohne Login nicht lesbar |
-| Qualtrics | TXT im Advanced Format (`[[AdvancedFormat]]`), Upload im UI | [V]; `.qsf` nicht empfohlen |
+| Qualtrics | TXT im Advanced Format (`[[AdvancedFormat]]`), Upload im UI | [V] (am 7. November 2026 gelesen, Einzelheiten und Lücken in [QUALTRICS.md](QUALTRICS.md)); `.qsf` nicht empfohlen |
 | SurveyMonkey | kein Datei-Import; Text zum Einfügen (nur Multiple Choice und Textbox) oder API v3 mit OAuth | [V] |
 | Google Forms | kein Datei-Import; Apps-Script-Text zum Einfügen oder Forms API mit OAuth | [V]; Apps-Script-Weg [?] |
 | Unipark/EFS | kein öffentlich dokumentierter Fragebogen-Import; nur «Paste from Word» und Projekt-Export in unbekanntem Format | wichtigste offene Frage an Tivian |

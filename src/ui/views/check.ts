@@ -5,6 +5,7 @@ import type { Catalog } from "../../core/types";
 import type { Selection } from "../../model/selection";
 import { buildCodebook } from "../../output/codebook";
 import { buildLimeSurvey } from "../../output/limesurvey";
+import { buildQualtrics } from "../../output/qualtrics";
 import type { AdapterResult } from "../../output/mapping";
 import { buildCheckReport, isReportStale, reportFileName, serializeReport, stateFingerprint } from "../../output/report";
 import { diagnosticsList } from "../components";
@@ -194,6 +195,7 @@ function rightsSection(s: AppState): HTMLElement {
 /** Platforms with an adapter. The others stay listed as planned. */
 const ADAPTERS: Record<string, (c: Catalog, selection: Selection, opts: { language: string; mode: "native" | "test" }) => AdapterResult> = {
   limesurvey: buildLimeSurvey,
+  qualtrics: buildQualtrics,
 };
 
 function runExport(s: AppState, store: Store, platform: string, name: string, mode: "native" | "test"): void {
@@ -211,8 +213,14 @@ function adapterBlock(s: AppState, store: Store, platform: string, name: string)
   const native = adapter(c, s.selection, { language: s.language, mode: "native" });
   const test = adapter(c, s.selection, { language: s.language, mode: "test" });
   const blockedDiagnostics = (r: AdapterResult) => r.diagnostics.filter((d) => d.severity !== "info");
-  // The regular export explains itself first; if only the test export works, its findings are shown instead.
-  const reasons = native.ok ? [] : blockedDiagnostics(native);
+  // The regular export explains itself first; if the test export fails too, its additional findings follow.
+  const seen = new Set<string>();
+  const reasons = [...(native.ok ? [] : blockedDiagnostics(native)), ...(test.ok ? [] : blockedDiagnostics(test))].filter((d) => {
+    const key = `${d.code}|${d.itemRef ?? ""}|${d.message}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
   const source = test.ok ? test : native;
   const levelOrder = { manual: 0, unsupported: 1, transformed: 2, exact: 3 } as const;
   const mapping = [...source.mapping].sort((a, b) => levelOrder[a.level] - levelOrder[b.level]);
@@ -223,15 +231,15 @@ function adapterBlock(s: AppState, store: Store, platform: string, name: string)
     h(
       "div",
       { class: "toolbar" },
-      h("button", { type: "button", class: "btn btn-primary", id: "native-export", disabled: !native.ok, "aria-describedby": "native-reason", "data-focus": "native-export", on: { click: () => runExport(s, store, platform, name, "native") } }, t("out.exportFor", { name })),
-      h("button", { type: "button", class: "btn", id: "test-export", disabled: !test.ok, "aria-describedby": "native-reason", "data-focus": "test-export", on: { click: () => runExport(s, store, platform, name, "test") } }, t("out.testExportFor", { name })),
+      h("button", { type: "button", class: "btn btn-primary", id: `native-export-${platform}`, disabled: !native.ok, "aria-describedby": `native-reason-${platform}`, "data-focus": `native-export-${platform}`, on: { click: () => runExport(s, store, platform, name, "native") } }, t("out.exportFor", { name })),
+      h("button", { type: "button", class: "btn", id: `test-export-${platform}`, disabled: !test.ok, "aria-describedby": `native-reason-${platform}`, "data-focus": `test-export-${platform}`, on: { click: () => runExport(s, store, platform, name, "test") } }, t("out.testExportFor", { name })),
     ),
-    h("p", { id: "native-reason", class: "muted" }, t("out.responsibility")),
-    reasons.length > 0 ? h("div", { id: "export-why" }, h("h5", null, t("out.exportWhy")), diagnosticsList(reasons)) : null,
+    h("p", { id: `native-reason-${platform}`, class: "muted" }, t("out.responsibility")),
+    reasons.length > 0 ? h("div", { id: `export-why-${platform}` }, h("h5", null, t("out.exportWhy")), diagnosticsList(reasons)) : null,
     source.mapping.length > 0
       ? h(
           "details",
-          { class: "mapping", id: "mapping-report" },
+          { class: "mapping", id: `mapping-report-${platform}` },
           h("summary", null, t("out.mapping")),
           h("p", { class: "muted" }, t("out.mappingHint")),
           h(

@@ -168,4 +168,6 @@ Gilt für die Export-Adapter (`targetPlatform` nennt das Zielsystem). Ein Fehler
 | `EXPORT_CONDITION_TARGET_MISSING` | error | eine Bedingung verweist auf ein Item, das nicht im Fragebogen ist |
 | `EXPORT_CONDITION_UNSUPPORTED` | error | die Bedingung ist im Zielsystem nicht ausdrückbar (sie wird nie weggelassen) |
 | `EXPORT_SENSITIVE_INCLUDED` | info | ein standardmässig vom Export ausgeschlossenes sensibles Item ist ausdrücklich gewählt |
-
+| `EXPORT_TEXT_RESERVED` | error | ein Text enthält `[[` oder `]]`, die das Zielsystem als Tag liest (Qualtrics) |
+| `EXPORT_RESPONSE_UNSUPPORTED` | error | das Zielformat kennt den Antworttyp nicht (Qualtrics TXT: Slider); es gibt keinen Ersatz |
+| `EXPORT_HIDDEN_FIELD_INVALID` | error | ein verstecktes Feld hat einen Namen oder Wert, den das Zielsystem nicht annimmt |

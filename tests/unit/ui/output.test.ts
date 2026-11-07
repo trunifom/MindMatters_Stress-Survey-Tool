@@ -273,49 +273,71 @@ describe("rights per action and export overview", () => {
     expect(m.root.textContent).toContain("withdrawal notice");
   });
 
-  it("without confirmed rights no export is offered, the reason is shown and only LimeSurvey has an adapter", () => {
+  it("without confirmed rights no export is offered, the reason is shown and only LimeSurvey and Qualtrics have an adapter", () => {
     const m = loaded(CAT10);
-    expect(m.q<HTMLButtonElement>("#native-export").disabled).toBe(true);
-    expect(m.q<HTMLButtonElement>("#test-export").disabled).toBe(true);
-    expect(m.q("#export-why").textContent).toContain("CATALOG_NOT_RELEASED");
+    expect(m.q<HTMLButtonElement>("#native-export-limesurvey").disabled).toBe(true);
+    expect(m.q<HTMLButtonElement>("#test-export-limesurvey").disabled).toBe(true);
+    expect(m.q("#export-why-limesurvey").textContent).toContain("CATALOG_NOT_RELEASED");
     expect(m.qa("ul.adapters li").map((li) => li.textContent)).toEqual([
       "LimeSurvey: adapter available, untested on a real instance",
       "REDCap: planned",
-      "Qualtrics: planned",
+      "Qualtrics: adapter available, untested on a real instance",
       "SurveyMonkey: planned",
       "Google Forms: planned",
       "Unipark: planned",
     ]);
-    expect(m.q(".out-block .banner-info").textContent).toContain("has not been tested on a real LimeSurvey instance");
-    expect(m.q("#native-reason").textContent).toContain("does not bypass any rights prohibition");
+    expect(m.q(".out-block .banner-info").textContent).toContain("Neither has been tested on a real instance");
+    expect(m.q("#native-reason-limesurvey").textContent).toContain("does not bypass any rights prohibition");
   });
 });
 
 describe("export for LimeSurvey", () => {
   it("a draft catalog offers only the labelled test export, which downloads a file with BOM, TEST label and the mapping", async () => {
     const m = loaded(exampleText());
-    expect(m.q<HTMLButtonElement>("#native-export").disabled).toBe(true);
-    expect(m.q<HTMLButtonElement>("#test-export").disabled).toBe(false);
-    expect(m.q("#export-why").textContent).toContain("CATALOG_NOT_RELEASED");
-    click(m.q("#test-export"));
+    expect(m.q<HTMLButtonElement>("#native-export-limesurvey").disabled).toBe(true);
+    expect(m.q<HTMLButtonElement>("#test-export-limesurvey").disabled).toBe(false);
+    expect(m.q("#export-why-limesurvey").textContent).toContain("CATALOG_NOT_RELEASED");
+    click(m.q("#test-export-limesurvey"));
     const d = await last();
     expect(d.name).toMatch(/_limesurvey_TEST\.txt$/);
     expect(await firstBytes((downloads[downloads.length - 1] as Download & { blob: Blob }).blob)).toEqual([0xef, 0xbb, 0xbf]); // UTF-8 byte order mark
     expect(d.text).toContain("surveyls_title");
     expect(d.text).toContain("TEST");
     expect(m.q("#notices").textContent).toContain("was created");
-    expect(m.q("#mapping-report").textContent).toContain("response.slider");
-    expect(m.q("#mapping-report").textContent).toContain("Unverified assumptions");
+    expect(m.q("#mapping-report-limesurvey").textContent).toContain("response.slider");
+    expect(m.q("#mapping-report-limesurvey").textContent).toContain("Unverified assumptions");
   });
 
   it("a released catalog offers the regular export", async () => {
     const m = loaded(exampleText(), (d) => (d.catalog.status = "released"));
-    expect(m.q<HTMLButtonElement>("#native-export").disabled).toBe(false);
-    expect(m.root.querySelector("#export-why")).toBeNull();
-    click(m.q("#native-export"));
+    expect(m.q<HTMLButtonElement>("#native-export-limesurvey").disabled).toBe(false);
+    expect(m.root.querySelector("#export-why-limesurvey")).toBeNull();
+    click(m.q("#native-export-limesurvey"));
     const d = await last();
     expect(d.name).toMatch(/_limesurvey\.txt$/);
     expect(d.text).not.toContain("[TEST");
+  });
+
+  it("Qualtrics: the rich example cannot be exported because the format has no slider and no display logic, and says so", () => {
+    const m = loaded(exampleText());
+    expect(m.q<HTMLButtonElement>("#test-export-qualtrics").disabled).toBe(true);
+    const why = m.q("#export-why-qualtrics").textContent as string;
+    expect(why).toContain("EXPORT_RESPONSE_UNSUPPORTED");
+    expect(why).toContain("EXPORT_CONDITION_UNSUPPORTED");
+  });
+
+  it("Qualtrics: without slider and conditions the test export downloads a TXT in the Advanced Format", async () => {
+    const m = loaded(exampleText(), (d) => {
+      d.items = d.items.filter((i: any) => i.id !== "mood_slider");
+      for (const s of d.questionnaire.sections) s.itemRefs = s.itemRefs.filter((x: string) => x !== "mood_slider");
+      for (const mod of d.modules) mod.itemRefs = mod.itemRefs.filter((x: string) => x !== "mood_slider");
+      for (const i of d.items) delete i.visibleWhen;
+    });
+    expect(m.q<HTMLButtonElement>("#test-export-qualtrics").disabled).toBe(false);
+    click(m.q("#test-export-qualtrics"));
+    const d = await last();
+    expect(d.name).toMatch(/_qualtrics_TEST\.txt$/);
+    expect(d.text.startsWith("[[AdvancedFormat]]")).toBe(true);
   });
 
   it("an option code LimeSurvey cannot take blocks the export and names the remedy", () => {
@@ -323,8 +345,8 @@ describe("export for LimeSurvey", () => {
       d.catalog.status = "released";
       delete d.optionSets[0].options.find((o: any) => o.code === "refused").exportHints;
     });
-    expect(m.q<HTMLButtonElement>("#native-export").disabled).toBe(true);
-    expect(m.q("#export-why").textContent).toContain("EXPORT_OPTION_CODE_INVALID");
+    expect(m.q<HTMLButtonElement>("#native-export-limesurvey").disabled).toBe(true);
+    expect(m.q("#export-why-limesurvey").textContent).toContain("EXPORT_OPTION_CODE_INVALID");
   });
 });
 

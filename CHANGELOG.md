@@ -96,3 +96,9 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - Tests: 29 neue Unit-Tests (Adapter, UI), 1 Browser-Test (echter Download mit Byte-Order-Mark), 2 Schema-Mutationen.
 - **Nicht belegt:** Import in eine echte LimeSurvey-Instanz.
 
+### Hinzugefügt (M6: Qualtrics-Export)
+- Adapter `src/output/qualtrics.ts`: TXT im Advanced Format (Blöcke je Abschnitt, Einfach- und Mehrfachauswahl mit ganzzahligen Recodes, Rangfolge, Text, Textblöcke, Embedded Data aus versteckten Feldern). Dieselben Zugangsregeln und Grundsätze wie bei LimeSurvey. Das Format kann keine Bedingungen und keinen Slider: beide sind Fehler (`EXPORT_CONDITION_UNSUPPORTED`, `EXPORT_RESPONSE_UNSUPPORTED`), Pflichtantworten und Validierung stehen als «von Hand» im Zuordnungsbericht.
+- `docs/QUALTRICS.md` mit belegten und unbelegten Quellenaussagen und Importtest-Anleitung. Neue Diagnosecodes `EXPORT_TEXT_RESERVED`, `EXPORT_RESPONSE_UNSUPPORTED`, `EXPORT_HIDDEN_FIELD_INVALID`.
+- Oberfläche: Exportbereich je Plattform mit eigenen Element-IDs. Bei gesperrtem regulärem Export werden auch die Gründe des Testexports gezeigt. `Option.exportHints.qualtrics.code` im Beispielkatalog.
+- 20 neue Unit-Tests. **Nicht belegt:** Import in eine echte Qualtrics-Instanz.
+

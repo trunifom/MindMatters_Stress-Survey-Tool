@@ -49,7 +49,7 @@ Jeder Eintrag: Kontext, Entscheidung, Alternativen, Folgen. Neue Entscheidungen 
   4. Texte werden so maskiert, dass keine Zelle Tabulator, Zeilenumbruch oder doppelte Anführungszeichen enthält. Dadurch braucht der Adapter keine Escape-Regel, die nicht belegt ist.
   5. Der Adapter heisst «ungetestet», bis ein Importtest an einer echten Instanz in `docs/LIMESURVEY.md` protokolliert ist.
 - **Alternativen:** Codes automatisch kürzen (verworfen: Kollisionen und stille Änderung der Identität); Export mit Warnung trotz unzulässigem Code (verworfen: die Datei wäre im Zielsystem falsch oder nicht importierbar).
-- **Folgen:** Schema 0.4.0 erhält `Option.exportHints` (additiv, 0.4.0 ist noch nicht ausgeliefert, ADR-003 bleibt unberührt). Kataloge für LimeSurvey brauchen kurze Exportcodes für Optionen mit langen Codes.
+- **Folgen:** Qualtrics (TXT) kann weder Bedingungen noch Slider. Nach Punkt 3 sind beide dort Fehler. Ein Katalog mit Bedingungen ist dort ohne Weiteres nicht exportierbar, bis ein Verfahren mit ausdrücklicher Zustimmung der Schule (Bedingung von Hand nachbauen) vorliegt. Schema 0.4.0 erhält `Option.exportHints` (additiv, 0.4.0 ist noch nicht ausgeliefert, ADR-003 bleibt unberührt). Kataloge für LimeSurvey brauchen kurze Exportcodes für Optionen mit langen Codes.
 
 ## Offene Entscheidungen
 - Lizenz des Repositories.
