@@ -23,11 +23,16 @@ describe("single-file build (A02, T01, T02)", () => {
   });
 
   it("loads nothing from outside: no script src, stylesheet link, import, iframe, image or font URL", () => {
-    expect(html).not.toMatch(/<script[^>]+src=/i);
-    expect(html).not.toMatch(/<link\b/i);
-    expect(html).not.toMatch(/<iframe|<object|<embed|<img[^>]+src=["']https?:/i);
-    expect(html).not.toMatch(/@import/i);
-    expect(html).not.toMatch(/url\(\s*["']?https?:/i);
+    // Markup and CSS are checked separately from the bundled JavaScript: library code contains
+    // strings such as new URL("http://" + host) for parsing, which never produce a request.
+    const css = /<style>([\s\S]*?)<\/style>/.exec(html)?.[1] ?? "";
+    const markup = html.replace(/<script>[\s\S]*<\/script>/, "<script></script>").replace(/<style>[\s\S]*?<\/style>/, "<style></style>");
+    expect(markup).not.toMatch(/<script[^>]+src=/i);
+    expect(markup).not.toMatch(/<link/i);
+    expect(markup).not.toMatch(/<iframe|<object|<embed|<img|<audio|<video|<source/i);
+    expect(markup).not.toMatch(/(?:src|href|action|poster)\s*=\s*["']?https?:/i);
+    expect(css).not.toMatch(/@import/i);
+    expect(css).not.toMatch(/url\(/i);
   });
 
   it("contains no network API at all", () => {
@@ -49,8 +54,7 @@ describe("single-file build (A02, T01, T02)", () => {
 
   it("targets ES2019 syntax: no optional chaining, nullish coalescing or class fields in the bundle", () => {
     const js = /<script>([\s\S]*)<\/script>/.exec(html)?.[1] ?? "";
-    // TODO(M3 UI): raise to > 50_000 once the UI imports the core (ajv and the validator must be inside).
-    expect(js.length).toBeGreaterThan(100);
+    expect(js.length).toBeGreaterThan(100_000); // ajv, the validator and the application are really inside
     expect(js).not.toMatch(/\?\.\w/); // a?.b (the ternary form `a ? .5 : 1` has a space)
     expect(js).not.toMatch(/\?\?[^=]/);
     expect(js).not.toContain("structuredClone");

@@ -252,6 +252,9 @@ export interface Catalog {
     title: LocalizedText;
     defaultLanguage: string;
     status: "draft" | "reviewed" | "released" | "withdrawn";
+    description?: LocalizedText;
+    publisher?: string;
+    contact?: string;
     createdAt?: string;
     updatedAt?: string;
   };

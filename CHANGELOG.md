@@ -49,3 +49,8 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - `src/core/clone.ts`: `structuredClone` ersetzt (fehlt in älteren Browsern).
 - Build-Test (`tests/unit/build.test.ts`): keine externen Ressourcen, keine Netzwerk-API, CSP, ES2019, Prüfsumme, Reproduzierbarkeit.
 
+### Hinzugefügt (Oberfläche, Teil 1)
+- `src/ui`: Gerüst der Oberfläche ohne Framework. Sichere DOM-Hilfen (nur Text, nie HTML; nur http(s)-Links auf Klick; Textblöcke ohne HTML), Oberflächensprachen Deutsch/Englisch (vollständigkeitsgeprüft), Zustandsverwaltung ohne DOM (Laden, transaktionales Ersetzen, Migration nur auf ausdrücklichen Klick, Bestätigung vor Verwerfen ungesicherter Änderungen), Startseite, Katalogkopf mit Statuschips (Text und Symbol, nie nur Farbe), Entwurfs- und Rückzugsbanner, Befundliste, Skip-Link, sichtbarer Fokus, Hell/Dunkel.
+- `loadProject` gibt das gelesene Projekt mit zurück.
+- jsdom-Tests der Oberfläche (`tests/unit/ui`), statische Sicherheitsregel (kein innerHTML, eval, localStorage, fetch in `src/ui`).
+

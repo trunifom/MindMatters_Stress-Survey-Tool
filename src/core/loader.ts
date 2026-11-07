@@ -97,6 +97,8 @@ export interface ProjectLoad {
   ok: boolean;
   /** Present whenever the project belongs to the catalog, even with errors, so the user can edit the intermediate state. */
   result?: ProjectResult;
+  /** The project document as read (after an explicit migration), for its language and local labels. */
+  project?: Project;
   diagnostics: Diagnostic[];
 }
 
@@ -121,7 +123,7 @@ export function loadProject(text: string, catalog: Catalog, options: LoadOptions
   const result = applyProject(catalog, doc as Project);
   diagnostics.push(...result.diagnostics);
   const mismatch = result.diagnostics.some((d) => d.code === "PROJECT_CATALOG_MISMATCH");
-  return { ok: !hasErrors(diagnostics), ...(mismatch ? {} : { result }), diagnostics };
+  return { ok: !hasErrors(diagnostics), ...(mismatch ? {} : { result, project: doc as Project }), diagnostics };
 }
 
 // ---------------------------------------------------------------------------
