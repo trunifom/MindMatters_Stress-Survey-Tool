@@ -1,0 +1,989 @@
+{
+  "schemaVersion": "0.3.0",
+  "documentType": "questionnaireCatalog",
+  "catalog": {
+    "id": "school_test_bilingual",
+    "version": "1.0.0",
+    "title": {
+      "en": "Small mixed IPIP excerpts",
+      "de-CH": "Zweisprachige Testauszüge – eigene, nicht validierte Übersetzungen"
+    },
+    "defaultLanguage": "de-CH",
+    "status": "draft",
+    "description": {
+      "en": "Software fixture only, not an approved school survey. Obligation and default-selection settings are artificial test settings.",
+      "de-CH": "Testinformation: Software fixture only, not an approved school survey. Obligation and default-selection settings are artificial test settings."
+    }
+  },
+  "languages": [
+    "en",
+    "de-CH"
+  ],
+  "requiredFeatures": [
+    "coreQuestions",
+    "requiredInclusion",
+    "requiredAnswer",
+    "selectionModules"
+  ],
+  "sources": [
+    {
+      "id": "src_broad",
+      "type": "website",
+      "title": "IPIP Big-Five Factor Markers",
+      "url": "https://ipip.ori.org/newBigFive5broadKey.htm",
+      "accessedAt": "2026-11-07"
+    },
+    {
+      "id": "src_facets",
+      "type": "website",
+      "title": "Preliminary IPIP scales: C1 Self-Efficacy (not Schwarzer/Jerusalem GSE)",
+      "url": "https://ipip.ori.org/newNEOKey.htm",
+      "accessedAt": "2026-11-07"
+    },
+    {
+      "id": "src_permissions",
+      "type": "website",
+      "title": "IPIP permission: public domain",
+      "url": "https://ipip.ori.org/newPermission.htm",
+      "accessedAt": "2026-11-07"
+    },
+    {
+      "id": "src_response",
+      "type": "website",
+      "title": "IPIP example administration and response format",
+      "url": "https://ipip.ori.org/new_ipip-50-item-scale.htm",
+      "accessedAt": "2026-11-07"
+    },
+    {
+      "id": "src_own",
+      "type": "originalContent",
+      "title": "Own technical questions and unofficial test translations"
+    }
+  ],
+  "rights": [
+    {
+      "id": "rights_ipip",
+      "reviewStatus": "reviewed",
+      "permissions": {
+        "redistribution": "permitted",
+        "electronicDisplay": "permitted",
+        "electronicAdministration": "permitted",
+        "modification": "permitted",
+        "export": "permitted"
+      },
+      "licenseName": "Public domain according to IPIP",
+      "evidenceSourceRef": "src_permissions",
+      "notes": {
+        "en": "IPIP content only; not proprietary NEO-PI-R content. Recorded source declaration, not automated legal verification.",
+        "de-CH": "Testinformation: IPIP content only; not proprietary NEO-PI-R content. Recorded source declaration, not automated legal verification."
+      }
+    },
+    {
+      "id": "rights_own",
+      "reviewStatus": "reviewed",
+      "permissions": {
+        "redistribution": "permitted",
+        "electronicDisplay": "permitted",
+        "electronicAdministration": "permitted",
+        "modification": "permitted",
+        "export": "permitted"
+      },
+      "notes": {
+        "en": "Permission declaration applies only to newly authored technical fixture content in this package.",
+        "de-CH": "Testinformation: Permission declaration applies only to newly authored technical fixture content in this package."
+      }
+    }
+  ],
+  "constructs": [
+    {
+      "id": "extraversion",
+      "label": {
+        "en": "Extraversion",
+        "de-CH": "Testinformation: Extraversion"
+      },
+      "description": {
+        "en": "Source construct; suitability for a school population is not established by this test file.",
+        "de-CH": "Testinformation: Source construct; suitability for a school population is not established by this test file."
+      }
+    },
+    {
+      "id": "conscientiousness",
+      "label": {
+        "en": "Conscientiousness",
+        "de-CH": "Testinformation: Conscientiousness"
+      },
+      "description": {
+        "en": "Source construct; suitability for a school population is not established by this test file.",
+        "de-CH": "Testinformation: Source construct; suitability for a school population is not established by this test file."
+      }
+    },
+    {
+      "id": "self_efficacy",
+      "label": {
+        "en": "IPIP C1 Self-Efficacy",
+        "de-CH": "Testinformation: IPIP C1 Self-Efficacy"
+      },
+      "description": {
+        "en": "Source construct; suitability for a school population is not established by this test file.",
+        "de-CH": "Testinformation: Source construct; suitability for a school population is not established by this test file."
+      }
+    }
+  ],
+  "instruments": [
+    {
+      "id": "form_extraversion",
+      "title": {
+        "en": "Extraversion",
+        "de-CH": "Testinformation: Extraversion"
+      },
+      "formName": "Four-item software-test excerpt, not a validated short form",
+      "versionLabel": "Source-key page recorded 2026-11-07",
+      "familyName": "IPIP",
+      "originalLanguage": "en",
+      "language": "en",
+      "respondentRole": "self",
+      "rightsRef": "rights_ipip",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original"
+        }
+      ],
+      "documentation": {
+        "limitations": {
+          "en": "No school-population endorsement, norms or diagnostic cutoffs. C1 Self-Efficacy is not the Schwarzer/Jerusalem GSE.",
+          "de-CH": "Testinformation: No school-population endorsement, norms or diagnostic cutoffs. C1 Self-Efficacy is not the Schwarzer/Jerusalem GSE."
+        }
+      },
+      "translation": {
+        "status": "draft",
+        "language": "de-CH",
+        "method": "Own translation for software tests only",
+        "notes": {
+          "en": "Not an authorized or validated German instrument version.",
+          "de-CH": "Keine autorisierte oder validierte deutsche Instrumentfassung."
+        }
+      }
+    },
+    {
+      "id": "form_conscientiousness",
+      "title": {
+        "en": "Conscientiousness",
+        "de-CH": "Testinformation: Conscientiousness"
+      },
+      "formName": "Four-item software-test excerpt, not a validated short form",
+      "versionLabel": "Source-key page recorded 2026-11-07",
+      "familyName": "IPIP",
+      "originalLanguage": "en",
+      "language": "en",
+      "respondentRole": "self",
+      "rightsRef": "rights_ipip",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original"
+        }
+      ],
+      "documentation": {
+        "limitations": {
+          "en": "No school-population endorsement, norms or diagnostic cutoffs. C1 Self-Efficacy is not the Schwarzer/Jerusalem GSE.",
+          "de-CH": "Testinformation: No school-population endorsement, norms or diagnostic cutoffs. C1 Self-Efficacy is not the Schwarzer/Jerusalem GSE."
+        }
+      },
+      "translation": {
+        "status": "draft",
+        "language": "de-CH",
+        "method": "Own translation for software tests only",
+        "notes": {
+          "en": "Not an authorized or validated German instrument version.",
+          "de-CH": "Keine autorisierte oder validierte deutsche Instrumentfassung."
+        }
+      }
+    },
+    {
+      "id": "form_self_efficacy",
+      "title": {
+        "en": "IPIP C1 Self-Efficacy",
+        "de-CH": "Testinformation: IPIP C1 Self-Efficacy"
+      },
+      "formName": "Four-item software-test excerpt, not a validated short form",
+      "versionLabel": "Source-key page recorded 2026-11-07",
+      "familyName": "IPIP",
+      "originalLanguage": "en",
+      "language": "en",
+      "respondentRole": "self",
+      "rightsRef": "rights_ipip",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original"
+        }
+      ],
+      "documentation": {
+        "limitations": {
+          "en": "No school-population endorsement, norms or diagnostic cutoffs. C1 Self-Efficacy is not the Schwarzer/Jerusalem GSE.",
+          "de-CH": "Testinformation: No school-population endorsement, norms or diagnostic cutoffs. C1 Self-Efficacy is not the Schwarzer/Jerusalem GSE."
+        }
+      },
+      "translation": {
+        "status": "draft",
+        "language": "de-CH",
+        "method": "Own translation for software tests only",
+        "notes": {
+          "en": "Not an authorized or validated German instrument version.",
+          "de-CH": "Keine autorisierte oder validierte deutsche Instrumentfassung."
+        }
+      }
+    }
+  ],
+  "optionSets": [
+    {
+      "id": "accuracy_5",
+      "label": {
+        "en": "Five-category accuracy",
+        "de-CH": "Testinformation: Five-category accuracy"
+      },
+      "codeType": "string",
+      "orderPolicy": "fixed",
+      "measurementLevel": "ordinal",
+      "options": [
+        {
+          "code": "1",
+          "label": {
+            "en": "Very Inaccurate",
+            "de-CH": "Trifft überhaupt nicht zu"
+          },
+          "role": "substantive",
+          "ordinalPosition": 1
+        },
+        {
+          "code": "2",
+          "label": {
+            "en": "Moderately Inaccurate",
+            "de-CH": "Trifft eher nicht zu"
+          },
+          "role": "substantive",
+          "ordinalPosition": 2
+        },
+        {
+          "code": "3",
+          "label": {
+            "en": "Neither Accurate Nor Inaccurate",
+            "de-CH": "Weder noch"
+          },
+          "role": "substantive",
+          "ordinalPosition": 3
+        },
+        {
+          "code": "4",
+          "label": {
+            "en": "Moderately Accurate",
+            "de-CH": "Trifft eher zu"
+          },
+          "role": "substantive",
+          "ordinalPosition": 4
+        },
+        {
+          "code": "5",
+          "label": {
+            "en": "Very Accurate",
+            "de-CH": "Trifft völlig zu"
+          },
+          "role": "substantive",
+          "ordinalPosition": 5
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "extraversion_01",
+      "version": "1.0.0",
+      "text": {
+        "en": "Am the life of the party.",
+        "de-CH": "Ich bin der Mittelpunkt auf Partys."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": true,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "extraversion_01",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 1; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings.",
+        "de-CH": "Eigene, nicht validierte Testübersetzung. Englischer Quellwortlaut bleibt erhalten."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "extraversion_02",
+      "version": "1.0.0",
+      "text": {
+        "en": "Feel comfortable around people.",
+        "de-CH": "Ich fühle mich in Gesellschaft anderer wohl."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": true,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "extraversion_02",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 2; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings.",
+        "de-CH": "Eigene, nicht validierte Testübersetzung. Englischer Quellwortlaut bleibt erhalten."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "extraversion_07",
+      "version": "1.0.0",
+      "text": {
+        "en": "Keep in the background.",
+        "de-CH": "Ich halte mich im Hintergrund."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": false,
+      "variableName": "extraversion_07",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 7; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings.",
+        "de-CH": "Eigene, nicht validierte Testübersetzung. Englischer Quellwortlaut bleibt erhalten."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "extraversion_08",
+      "version": "1.0.0",
+      "text": {
+        "en": "Have little to say.",
+        "de-CH": "Ich habe wenig zu sagen."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": false,
+      "variableName": "extraversion_08",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 8; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings.",
+        "de-CH": "Eigene, nicht validierte Testübersetzung. Englischer Quellwortlaut bleibt erhalten."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_01",
+      "version": "1.0.0",
+      "text": {
+        "en": "Am always prepared.",
+        "de-CH": "Ich bin immer vorbereitet."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": false,
+      "variableName": "conscientiousness_01",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 1; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings.",
+        "de-CH": "Eigene, nicht validierte Testübersetzung. Englischer Quellwortlaut bleibt erhalten."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_02",
+      "version": "1.0.0",
+      "text": {
+        "en": "Pay attention to details.",
+        "de-CH": "Ich achte auf Einzelheiten."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": false,
+      "variableName": "conscientiousness_02",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 2; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings.",
+        "de-CH": "Eigene, nicht validierte Testübersetzung. Englischer Quellwortlaut bleibt erhalten."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_07",
+      "version": "1.0.0",
+      "text": {
+        "en": "Leave my belongings around.",
+        "de-CH": "Ich lasse meine Sachen herumliegen."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": false,
+      "variableName": "conscientiousness_07",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 7; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings.",
+        "de-CH": "Eigene, nicht validierte Testübersetzung. Englischer Quellwortlaut bleibt erhalten."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_08",
+      "version": "1.0.0",
+      "text": {
+        "en": "Make a mess of things.",
+        "de-CH": "Ich bringe Dinge durcheinander."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": false,
+      "variableName": "conscientiousness_08",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 8; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings.",
+        "de-CH": "Eigene, nicht validierte Testübersetzung. Englischer Quellwortlaut bleibt erhalten."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_01",
+      "version": "1.0.0",
+      "text": {
+        "en": "Complete tasks successfully.",
+        "de-CH": "Ich erledige Aufgaben erfolgreich."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": false,
+      "variableName": "self_efficacy_01",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 1; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings.",
+        "de-CH": "Eigene, nicht validierte Testübersetzung. Englischer Quellwortlaut bleibt erhalten."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_02",
+      "version": "1.0.0",
+      "text": {
+        "en": "Excel in what I do.",
+        "de-CH": "Ich bin sehr gut in dem, was ich tue."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": false,
+      "variableName": "self_efficacy_02",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 2; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings.",
+        "de-CH": "Eigene, nicht validierte Testübersetzung. Englischer Quellwortlaut bleibt erhalten."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_07",
+      "version": "1.0.0",
+      "text": {
+        "en": "Misjudge situations.",
+        "de-CH": "Ich schätze Situationen falsch ein."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": false,
+      "variableName": "self_efficacy_07",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 7; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings.",
+        "de-CH": "Eigene, nicht validierte Testübersetzung. Englischer Quellwortlaut bleibt erhalten."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_08",
+      "version": "1.0.0",
+      "text": {
+        "en": "Don't understand things.",
+        "de-CH": "Ich verstehe Dinge nicht."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": false,
+      "variableName": "self_efficacy_08",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 8; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings.",
+        "de-CH": "Eigene, nicht validierte Testübersetzung. Englischer Quellwortlaut bleibt erhalten."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "id": "scale_extraversion",
+      "title": {
+        "en": "Extraversion — test excerpt",
+        "de-CH": "Testinformation: Extraversion — test excerpt"
+      },
+      "description": {
+        "en": "Four actual source items, no validated short-form claim.",
+        "de-CH": "Testinformation: Four actual source items, no validated short-form claim."
+      },
+      "itemRefs": [
+        "extraversion_01",
+        "extraversion_02",
+        "extraversion_07",
+        "extraversion_08"
+      ],
+      "constructRefs": [
+        "extraversion"
+      ],
+      "selectionPolicy": "partialWithWarning",
+      "instrumentRef": "form_extraversion",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original"
+        }
+      ]
+    },
+    {
+      "id": "scale_conscientiousness",
+      "title": {
+        "en": "Conscientiousness — test excerpt",
+        "de-CH": "Testinformation: Conscientiousness — test excerpt"
+      },
+      "description": {
+        "en": "Four actual source items, no validated short-form claim.",
+        "de-CH": "Testinformation: Four actual source items, no validated short-form claim."
+      },
+      "itemRefs": [
+        "conscientiousness_01",
+        "conscientiousness_02",
+        "conscientiousness_07",
+        "conscientiousness_08"
+      ],
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "selectionPolicy": "partialWithWarning",
+      "instrumentRef": "form_conscientiousness",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original"
+        }
+      ]
+    },
+    {
+      "id": "scale_self_efficacy",
+      "title": {
+        "en": "IPIP C1 Self-Efficacy — test excerpt",
+        "de-CH": "Testinformation: IPIP C1 Self-Efficacy — test excerpt"
+      },
+      "description": {
+        "en": "Four actual source items, no validated short-form claim.",
+        "de-CH": "Testinformation: Four actual source items, no validated short-form claim."
+      },
+      "itemRefs": [
+        "self_efficacy_01",
+        "self_efficacy_02",
+        "self_efficacy_07",
+        "self_efficacy_08"
+      ],
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "selectionPolicy": "partialWithWarning",
+      "instrumentRef": "form_self_efficacy",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original"
+        }
+      ]
+    }
+  ],
+  "modules": [
+    {
+      "id": "module_extraversion",
+      "title": {
+        "en": "Extraversion",
+        "de-CH": "Testinformation: Extraversion"
+      },
+      "description": {
+        "en": "Independent excerpt items.",
+        "de-CH": "Testinformation: Independent excerpt items."
+      },
+      "itemRefs": [
+        "extraversion_01",
+        "extraversion_02",
+        "extraversion_07",
+        "extraversion_08"
+      ],
+      "selectionMode": "independent",
+      "inclusionRequired": false,
+      "defaultSelected": false,
+      "scaleRefs": [
+        "scale_extraversion"
+      ]
+    },
+    {
+      "id": "module_conscientiousness",
+      "title": {
+        "en": "Conscientiousness",
+        "de-CH": "Testinformation: Conscientiousness"
+      },
+      "description": {
+        "en": "Independent excerpt items.",
+        "de-CH": "Testinformation: Independent excerpt items."
+      },
+      "itemRefs": [
+        "conscientiousness_01",
+        "conscientiousness_02",
+        "conscientiousness_07",
+        "conscientiousness_08"
+      ],
+      "selectionMode": "independent",
+      "inclusionRequired": false,
+      "defaultSelected": false,
+      "scaleRefs": [
+        "scale_conscientiousness"
+      ]
+    },
+    {
+      "id": "module_self_efficacy",
+      "title": {
+        "en": "IPIP C1 Self-Efficacy",
+        "de-CH": "Testinformation: IPIP C1 Self-Efficacy"
+      },
+      "description": {
+        "en": "Independent excerpt items.",
+        "de-CH": "Testinformation: Independent excerpt items."
+      },
+      "itemRefs": [
+        "self_efficacy_01",
+        "self_efficacy_02",
+        "self_efficacy_07",
+        "self_efficacy_08"
+      ],
+      "selectionMode": "independent",
+      "inclusionRequired": false,
+      "defaultSelected": false,
+      "scaleRefs": [
+        "scale_self_efficacy"
+      ]
+    }
+  ],
+  "questionnaire": {
+    "id": "test_template",
+    "title": {
+      "en": "Small mixed IPIP excerpts",
+      "de-CH": "Technischer Sprachtest"
+    },
+    "introduction": {
+      "en": "Software test only. Rate how accurately each statement describes you. No real participant data are collected by the planned preview.",
+      "de-CH": "Nur Softwaretest. Deutsche Items und Antwortanker sind eigene, nicht validierte Übersetzungen. Keine echte Datenerhebung."
+    },
+    "closingText": {
+      "en": "End of technical fixture.",
+      "de-CH": "Ende des technischen Tests."
+    },
+    "sections": [
+      {
+        "id": "mixed",
+        "title": {
+          "en": "Interleaved source items",
+          "de-CH": "Gemischte Beispielitems"
+        },
+        "itemRefs": [
+          "extraversion_01",
+          "conscientiousness_01",
+          "self_efficacy_01",
+          "extraversion_02",
+          "conscientiousness_02",
+          "self_efficacy_02",
+          "extraversion_07",
+          "conscientiousness_07",
+          "self_efficacy_07",
+          "extraversion_08",
+          "conscientiousness_08",
+          "self_efficacy_08"
+        ]
+      }
+    ]
+  },
+  "scoringDefinitions": [],
+  "evidence": []
+}

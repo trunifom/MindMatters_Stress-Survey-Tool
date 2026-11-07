@@ -1,0 +1,2551 @@
+{
+  "schemaVersion": "0.3.0",
+  "documentType": "questionnaireCatalog",
+  "catalog": {
+    "id": "school_test_complete",
+    "version": "1.0.0",
+    "title": {
+      "en": "Three complete mixed IPIP scales"
+    },
+    "defaultLanguage": "en",
+    "status": "draft",
+    "description": {
+      "en": "Software fixture only, not an approved school survey. Obligation and default-selection settings are artificial test settings."
+    }
+  },
+  "languages": [
+    "en"
+  ],
+  "requiredFeatures": [
+    "coreQuestions",
+    "requiredInclusion",
+    "requiredAnswer",
+    "selectionModules",
+    "wholeScaleSelection"
+  ],
+  "sources": [
+    {
+      "id": "src_broad",
+      "type": "website",
+      "title": "IPIP Big-Five Factor Markers",
+      "url": "https://ipip.ori.org/newBigFive5broadKey.htm",
+      "accessedAt": "2026-11-07"
+    },
+    {
+      "id": "src_facets",
+      "type": "website",
+      "title": "Preliminary IPIP scales: C1 Self-Efficacy (not Schwarzer/Jerusalem GSE)",
+      "url": "https://ipip.ori.org/newNEOKey.htm",
+      "accessedAt": "2026-11-07"
+    },
+    {
+      "id": "src_permissions",
+      "type": "website",
+      "title": "IPIP permission: public domain",
+      "url": "https://ipip.ori.org/newPermission.htm",
+      "accessedAt": "2026-11-07"
+    },
+    {
+      "id": "src_response",
+      "type": "website",
+      "title": "IPIP example administration and response format",
+      "url": "https://ipip.ori.org/new_ipip-50-item-scale.htm",
+      "accessedAt": "2026-11-07"
+    },
+    {
+      "id": "src_own",
+      "type": "originalContent",
+      "title": "Own technical questions and unofficial test translations"
+    }
+  ],
+  "rights": [
+    {
+      "id": "rights_ipip",
+      "reviewStatus": "reviewed",
+      "permissions": {
+        "redistribution": "permitted",
+        "electronicDisplay": "permitted",
+        "electronicAdministration": "permitted",
+        "modification": "permitted",
+        "export": "permitted"
+      },
+      "licenseName": "Public domain according to IPIP",
+      "evidenceSourceRef": "src_permissions",
+      "notes": {
+        "en": "IPIP content only; not proprietary NEO-PI-R content. Recorded source declaration, not automated legal verification."
+      }
+    },
+    {
+      "id": "rights_own",
+      "reviewStatus": "reviewed",
+      "permissions": {
+        "redistribution": "permitted",
+        "electronicDisplay": "permitted",
+        "electronicAdministration": "permitted",
+        "modification": "permitted",
+        "export": "permitted"
+      },
+      "notes": {
+        "en": "Permission declaration applies only to newly authored technical fixture content in this package."
+      }
+    }
+  ],
+  "constructs": [
+    {
+      "id": "extraversion",
+      "label": {
+        "en": "Extraversion"
+      },
+      "description": {
+        "en": "Source construct; suitability for a school population is not established by this test file."
+      }
+    },
+    {
+      "id": "conscientiousness",
+      "label": {
+        "en": "Conscientiousness"
+      },
+      "description": {
+        "en": "Source construct; suitability for a school population is not established by this test file."
+      }
+    },
+    {
+      "id": "self_efficacy",
+      "label": {
+        "en": "IPIP C1 Self-Efficacy"
+      },
+      "description": {
+        "en": "Source construct; suitability for a school population is not established by this test file."
+      }
+    }
+  ],
+  "instruments": [
+    {
+      "id": "form_extraversion",
+      "title": {
+        "en": "Extraversion"
+      },
+      "formName": "Source 10-item set",
+      "versionLabel": "Source-key page recorded 2026-11-07",
+      "familyName": "IPIP",
+      "originalLanguage": "en",
+      "language": "en",
+      "respondentRole": "self",
+      "rightsRef": "rights_ipip",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original"
+        }
+      ],
+      "documentation": {
+        "limitations": {
+          "en": "No school-population endorsement, norms or diagnostic cutoffs. C1 Self-Efficacy is not the Schwarzer/Jerusalem GSE."
+        }
+      }
+    },
+    {
+      "id": "form_conscientiousness",
+      "title": {
+        "en": "Conscientiousness"
+      },
+      "formName": "Source 10-item set",
+      "versionLabel": "Source-key page recorded 2026-11-07",
+      "familyName": "IPIP",
+      "originalLanguage": "en",
+      "language": "en",
+      "respondentRole": "self",
+      "rightsRef": "rights_ipip",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original"
+        }
+      ],
+      "documentation": {
+        "limitations": {
+          "en": "No school-population endorsement, norms or diagnostic cutoffs. C1 Self-Efficacy is not the Schwarzer/Jerusalem GSE."
+        }
+      }
+    },
+    {
+      "id": "form_self_efficacy",
+      "title": {
+        "en": "IPIP C1 Self-Efficacy"
+      },
+      "formName": "Source 10-item set",
+      "versionLabel": "Source-key page recorded 2026-11-07",
+      "familyName": "IPIP",
+      "originalLanguage": "en",
+      "language": "en",
+      "respondentRole": "self",
+      "rightsRef": "rights_ipip",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original"
+        }
+      ],
+      "documentation": {
+        "limitations": {
+          "en": "No school-population endorsement, norms or diagnostic cutoffs. C1 Self-Efficacy is not the Schwarzer/Jerusalem GSE."
+        }
+      }
+    }
+  ],
+  "optionSets": [
+    {
+      "id": "accuracy_5",
+      "label": {
+        "en": "Five-category accuracy"
+      },
+      "codeType": "string",
+      "orderPolicy": "fixed",
+      "measurementLevel": "ordinal",
+      "options": [
+        {
+          "code": "1",
+          "label": {
+            "en": "Very Inaccurate"
+          },
+          "role": "substantive",
+          "ordinalPosition": 1
+        },
+        {
+          "code": "2",
+          "label": {
+            "en": "Moderately Inaccurate"
+          },
+          "role": "substantive",
+          "ordinalPosition": 2
+        },
+        {
+          "code": "3",
+          "label": {
+            "en": "Neither Accurate Nor Inaccurate"
+          },
+          "role": "substantive",
+          "ordinalPosition": 3
+        },
+        {
+          "code": "4",
+          "label": {
+            "en": "Moderately Accurate"
+          },
+          "role": "substantive",
+          "ordinalPosition": 4
+        },
+        {
+          "code": "5",
+          "label": {
+            "en": "Very Accurate"
+          },
+          "role": "substantive",
+          "ordinalPosition": 5
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "extraversion_01",
+      "version": "1.0.0",
+      "text": {
+        "en": "Am the life of the party."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "extraversion_01",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 1; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "extraversion_02",
+      "version": "1.0.0",
+      "text": {
+        "en": "Feel comfortable around people."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "extraversion_02",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 2; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "extraversion_03",
+      "version": "1.0.0",
+      "text": {
+        "en": "Start conversations."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "extraversion_03",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 3; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "extraversion_04",
+      "version": "1.0.0",
+      "text": {
+        "en": "Talk to a lot of different people at parties."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "extraversion_04",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 4; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "extraversion_05",
+      "version": "1.0.0",
+      "text": {
+        "en": "Don't mind being the center of attention."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "extraversion_05",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 5; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "extraversion_06",
+      "version": "1.0.0",
+      "text": {
+        "en": "Don't talk a lot."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "extraversion_06",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 6; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "extraversion_07",
+      "version": "1.0.0",
+      "text": {
+        "en": "Keep in the background."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "extraversion_07",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 7; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "extraversion_08",
+      "version": "1.0.0",
+      "text": {
+        "en": "Have little to say."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "extraversion_08",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 8; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "extraversion_09",
+      "version": "1.0.0",
+      "text": {
+        "en": "Don't like to draw attention to myself."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "extraversion_09",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 9; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "extraversion_10",
+      "version": "1.0.0",
+      "text": {
+        "en": "Am quiet around strangers."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "extraversion_10",
+      "constructRefs": [
+        "extraversion"
+      ],
+      "instrumentRef": "form_extraversion",
+      "originalItemNumber": "Source-key position 10; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Extraversion"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_01",
+      "version": "1.0.0",
+      "text": {
+        "en": "Am always prepared."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "conscientiousness_01",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 1; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_02",
+      "version": "1.0.0",
+      "text": {
+        "en": "Pay attention to details."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "conscientiousness_02",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 2; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_03",
+      "version": "1.0.0",
+      "text": {
+        "en": "Get chores done right away."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "conscientiousness_03",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 3; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_04",
+      "version": "1.0.0",
+      "text": {
+        "en": "Like order."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "conscientiousness_04",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 4; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_05",
+      "version": "1.0.0",
+      "text": {
+        "en": "Follow a schedule."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "conscientiousness_05",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 5; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_06",
+      "version": "1.0.0",
+      "text": {
+        "en": "Am exacting in my work."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "conscientiousness_06",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 6; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_07",
+      "version": "1.0.0",
+      "text": {
+        "en": "Leave my belongings around."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "conscientiousness_07",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 7; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_08",
+      "version": "1.0.0",
+      "text": {
+        "en": "Make a mess of things."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "conscientiousness_08",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 8; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_09",
+      "version": "1.0.0",
+      "text": {
+        "en": "Often forget to put things back in their proper place."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "conscientiousness_09",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 9; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "conscientiousness_10",
+      "version": "1.0.0",
+      "text": {
+        "en": "Shirk my duties."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "conscientiousness_10",
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "instrumentRef": "form_conscientiousness",
+      "originalItemNumber": "Source-key position 10; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original",
+          "locator": "Conscientiousness"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_01",
+      "version": "1.0.0",
+      "text": {
+        "en": "Complete tasks successfully."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "self_efficacy_01",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 1; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_02",
+      "version": "1.0.0",
+      "text": {
+        "en": "Excel in what I do."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "self_efficacy_02",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 2; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_03",
+      "version": "1.0.0",
+      "text": {
+        "en": "Handle tasks smoothly."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "self_efficacy_03",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 3; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_04",
+      "version": "1.0.0",
+      "text": {
+        "en": "Am sure of my ground."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "self_efficacy_04",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 4; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_05",
+      "version": "1.0.0",
+      "text": {
+        "en": "Come up with good solutions."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "self_efficacy_05",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 5; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_06",
+      "version": "1.0.0",
+      "text": {
+        "en": "Know how to get things done."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "self_efficacy_06",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 6; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "positive"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_07",
+      "version": "1.0.0",
+      "text": {
+        "en": "Misjudge situations."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "self_efficacy_07",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 7; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_08",
+      "version": "1.0.0",
+      "text": {
+        "en": "Don't understand things."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "self_efficacy_08",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 8; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_09",
+      "version": "1.0.0",
+      "text": {
+        "en": "Have little to contribute."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "self_efficacy_09",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 9; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    },
+    {
+      "id": "self_efficacy_10",
+      "version": "1.0.0",
+      "text": {
+        "en": "Don't see the consequences of things."
+      },
+      "response": {
+        "kind": "singleChoice",
+        "optionSetRef": "accuracy_5"
+      },
+      "inclusionRequired": false,
+      "answerRequired": true,
+      "defaultSelected": true,
+      "variableName": "self_efficacy_10",
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "instrumentRef": "form_self_efficacy",
+      "originalItemNumber": "Source-key position 10; not universal questionnaire number",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original",
+          "locator": "IPIP C1 Self-Efficacy"
+        }
+      ],
+      "organizerHelp": {
+        "en": "Original English IPIP wording; obligation flags are technical test settings."
+      },
+      "extensions": {
+        "org_example.sourceKey": {
+          "kind": "metadata",
+          "version": "1.0.0",
+          "data": {
+            "direction": "negative"
+          }
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "id": "scale_extraversion",
+      "title": {
+        "en": "Extraversion — complete item set"
+      },
+      "description": {
+        "en": "Full item set, interleaved with other scales."
+      },
+      "itemRefs": [
+        "extraversion_01",
+        "extraversion_02",
+        "extraversion_03",
+        "extraversion_04",
+        "extraversion_05",
+        "extraversion_06",
+        "extraversion_07",
+        "extraversion_08",
+        "extraversion_09",
+        "extraversion_10"
+      ],
+      "constructRefs": [
+        "extraversion"
+      ],
+      "selectionPolicy": "wholeScale",
+      "instrumentRef": "form_extraversion",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original"
+        }
+      ],
+      "scoreDefinitionRefs": [
+        "score_extraversion"
+      ]
+    },
+    {
+      "id": "scale_conscientiousness",
+      "title": {
+        "en": "Conscientiousness — complete item set"
+      },
+      "description": {
+        "en": "Full item set, interleaved with other scales."
+      },
+      "itemRefs": [
+        "conscientiousness_01",
+        "conscientiousness_02",
+        "conscientiousness_03",
+        "conscientiousness_04",
+        "conscientiousness_05",
+        "conscientiousness_06",
+        "conscientiousness_07",
+        "conscientiousness_08",
+        "conscientiousness_09",
+        "conscientiousness_10"
+      ],
+      "constructRefs": [
+        "conscientiousness"
+      ],
+      "selectionPolicy": "wholeScale",
+      "instrumentRef": "form_conscientiousness",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "original"
+        }
+      ],
+      "scoreDefinitionRefs": [
+        "score_conscientiousness"
+      ]
+    },
+    {
+      "id": "scale_self_efficacy",
+      "title": {
+        "en": "IPIP C1 Self-Efficacy — complete item set"
+      },
+      "description": {
+        "en": "Full item set, interleaved with other scales."
+      },
+      "itemRefs": [
+        "self_efficacy_01",
+        "self_efficacy_02",
+        "self_efficacy_03",
+        "self_efficacy_04",
+        "self_efficacy_05",
+        "self_efficacy_06",
+        "self_efficacy_07",
+        "self_efficacy_08",
+        "self_efficacy_09",
+        "self_efficacy_10"
+      ],
+      "constructRefs": [
+        "self_efficacy"
+      ],
+      "selectionPolicy": "wholeScale",
+      "instrumentRef": "form_self_efficacy",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "original"
+        }
+      ],
+      "scoreDefinitionRefs": [
+        "score_self_efficacy"
+      ]
+    }
+  ],
+  "modules": [
+    {
+      "id": "module_extraversion",
+      "title": {
+        "en": "Extraversion"
+      },
+      "description": {
+        "en": "Mandatory complete module; individual inclusionRequired flags intentionally false."
+      },
+      "itemRefs": [
+        "extraversion_01",
+        "extraversion_02",
+        "extraversion_03",
+        "extraversion_04",
+        "extraversion_05",
+        "extraversion_06",
+        "extraversion_07",
+        "extraversion_08",
+        "extraversion_09",
+        "extraversion_10"
+      ],
+      "selectionMode": "allOrNothing",
+      "inclusionRequired": true,
+      "defaultSelected": true,
+      "scaleRefs": [
+        "scale_extraversion"
+      ]
+    },
+    {
+      "id": "module_conscientiousness",
+      "title": {
+        "en": "Conscientiousness"
+      },
+      "description": {
+        "en": "Complete optional module."
+      },
+      "itemRefs": [
+        "conscientiousness_01",
+        "conscientiousness_02",
+        "conscientiousness_03",
+        "conscientiousness_04",
+        "conscientiousness_05",
+        "conscientiousness_06",
+        "conscientiousness_07",
+        "conscientiousness_08",
+        "conscientiousness_09",
+        "conscientiousness_10"
+      ],
+      "selectionMode": "allOrNothing",
+      "inclusionRequired": false,
+      "defaultSelected": true,
+      "scaleRefs": [
+        "scale_conscientiousness"
+      ]
+    },
+    {
+      "id": "module_self_efficacy",
+      "title": {
+        "en": "IPIP C1 Self-Efficacy"
+      },
+      "description": {
+        "en": "Complete optional module."
+      },
+      "itemRefs": [
+        "self_efficacy_01",
+        "self_efficacy_02",
+        "self_efficacy_03",
+        "self_efficacy_04",
+        "self_efficacy_05",
+        "self_efficacy_06",
+        "self_efficacy_07",
+        "self_efficacy_08",
+        "self_efficacy_09",
+        "self_efficacy_10"
+      ],
+      "selectionMode": "allOrNothing",
+      "inclusionRequired": false,
+      "defaultSelected": true,
+      "scaleRefs": [
+        "scale_self_efficacy"
+      ]
+    }
+  ],
+  "questionnaire": {
+    "id": "test_template",
+    "title": {
+      "en": "Three complete mixed IPIP scales"
+    },
+    "introduction": {
+      "en": "Software test only. Rate how accurately each statement describes you. No real participant data are collected by the planned preview."
+    },
+    "closingText": {
+      "en": "End of technical fixture."
+    },
+    "sections": [
+      {
+        "id": "mixed",
+        "title": {
+          "en": "Interleaved source items"
+        },
+        "itemRefs": [
+          "extraversion_01",
+          "conscientiousness_01",
+          "self_efficacy_01",
+          "extraversion_02",
+          "conscientiousness_02",
+          "self_efficacy_02",
+          "extraversion_03",
+          "conscientiousness_03",
+          "self_efficacy_03",
+          "extraversion_04",
+          "conscientiousness_04",
+          "self_efficacy_04",
+          "extraversion_05",
+          "conscientiousness_05",
+          "self_efficacy_05",
+          "extraversion_06",
+          "conscientiousness_06",
+          "self_efficacy_06",
+          "extraversion_07",
+          "conscientiousness_07",
+          "self_efficacy_07",
+          "extraversion_08",
+          "conscientiousness_08",
+          "self_efficacy_08",
+          "extraversion_09",
+          "conscientiousness_09",
+          "self_efficacy_09",
+          "extraversion_10",
+          "conscientiousness_10",
+          "self_efficacy_10"
+        ]
+      }
+    ]
+  },
+  "scoringDefinitions": [
+    {
+      "id": "score_extraversion",
+      "title": {
+        "en": "Complete-case mean: Extraversion"
+      },
+      "itemRefs": [
+        "extraversion_01",
+        "extraversion_02",
+        "extraversion_03",
+        "extraversion_04",
+        "extraversion_05",
+        "extraversion_06",
+        "extraversion_07",
+        "extraversion_08",
+        "extraversion_09",
+        "extraversion_10"
+      ],
+      "method": "mean",
+      "itemMappings": [
+        {
+          "itemRef": "extraversion_01",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "extraversion_02",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "extraversion_03",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "extraversion_04",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "extraversion_05",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "extraversion_06",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "extraversion_07",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "extraversion_08",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "extraversion_09",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "extraversion_10",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        }
+      ],
+      "minimumAnswered": 10,
+      "interpretationDirection": "higherMore",
+      "scaleRef": "scale_extraversion",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "scoring"
+        }
+      ],
+      "documentation": {
+        "limitations": {
+          "en": "Conservative software-fixture complete-case rule, no missing imputation or diagnostic interpretation. Metadata only, not executed in the core."
+        }
+      }
+    },
+    {
+      "id": "score_conscientiousness",
+      "title": {
+        "en": "Complete-case mean: Conscientiousness"
+      },
+      "itemRefs": [
+        "conscientiousness_01",
+        "conscientiousness_02",
+        "conscientiousness_03",
+        "conscientiousness_04",
+        "conscientiousness_05",
+        "conscientiousness_06",
+        "conscientiousness_07",
+        "conscientiousness_08",
+        "conscientiousness_09",
+        "conscientiousness_10"
+      ],
+      "method": "mean",
+      "itemMappings": [
+        {
+          "itemRef": "conscientiousness_01",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "conscientiousness_02",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "conscientiousness_03",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "conscientiousness_04",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "conscientiousness_05",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "conscientiousness_06",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "conscientiousness_07",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "conscientiousness_08",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "conscientiousness_09",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "conscientiousness_10",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        }
+      ],
+      "minimumAnswered": 10,
+      "interpretationDirection": "higherMore",
+      "scaleRef": "scale_conscientiousness",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_broad",
+          "relation": "scoring"
+        }
+      ],
+      "documentation": {
+        "limitations": {
+          "en": "Conservative software-fixture complete-case rule, no missing imputation or diagnostic interpretation. Metadata only, not executed in the core."
+        }
+      }
+    },
+    {
+      "id": "score_self_efficacy",
+      "title": {
+        "en": "Complete-case mean: IPIP C1 Self-Efficacy"
+      },
+      "itemRefs": [
+        "self_efficacy_01",
+        "self_efficacy_02",
+        "self_efficacy_03",
+        "self_efficacy_04",
+        "self_efficacy_05",
+        "self_efficacy_06",
+        "self_efficacy_07",
+        "self_efficacy_08",
+        "self_efficacy_09",
+        "self_efficacy_10"
+      ],
+      "method": "mean",
+      "itemMappings": [
+        {
+          "itemRef": "self_efficacy_01",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "self_efficacy_02",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "self_efficacy_03",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "self_efficacy_04",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "self_efficacy_05",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "self_efficacy_06",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 1
+            },
+            {
+              "code": "2",
+              "score": 2
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 4
+            },
+            {
+              "code": "5",
+              "score": 5
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "self_efficacy_07",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "self_efficacy_08",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "self_efficacy_09",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        },
+        {
+          "itemRef": "self_efficacy_10",
+          "rawToScore": [
+            {
+              "code": "1",
+              "score": 5
+            },
+            {
+              "code": "2",
+              "score": 4
+            },
+            {
+              "code": "3",
+              "score": 3
+            },
+            {
+              "code": "4",
+              "score": 2
+            },
+            {
+              "code": "5",
+              "score": 1
+            }
+          ],
+          "missingCodes": []
+        }
+      ],
+      "minimumAnswered": 10,
+      "interpretationDirection": "higherMore",
+      "scaleRef": "scale_self_efficacy",
+      "sourceLinks": [
+        {
+          "sourceRef": "src_facets",
+          "relation": "scoring"
+        }
+      ],
+      "documentation": {
+        "limitations": {
+          "en": "Conservative software-fixture complete-case rule, no missing imputation or diagnostic interpretation. Metadata only, not executed in the core."
+        }
+      }
+    }
+  ],
+  "evidence": []
+}

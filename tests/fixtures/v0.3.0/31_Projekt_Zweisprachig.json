@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "0.3.0",
+  "documentType": "questionnaireProject",
+  "catalogRef": {
+    "id": "school_test_bilingual",
+    "version": "1.0.0"
+  },
+  "questionnaireRef": "test_template",
+  "selectedItemIds": [
+    "extraversion_01",
+    "extraversion_02"
+  ],
+  "language": "de-CH"
+}

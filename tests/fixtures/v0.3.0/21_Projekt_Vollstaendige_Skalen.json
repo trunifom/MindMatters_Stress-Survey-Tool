@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "0.3.0",
+  "documentType": "questionnaireProject",
+  "catalogRef": {
+    "id": "school_test_complete",
+    "version": "1.0.0"
+  },
+  "questionnaireRef": "test_template",
+  "selectedItemIds": [
+    "extraversion_01",
+    "extraversion_02",
+    "extraversion_03",
+    "extraversion_04",
+    "extraversion_05",
+    "extraversion_06",
+    "extraversion_07",
+    "extraversion_08",
+    "extraversion_09",
+    "extraversion_10",
+    "conscientiousness_01",
+    "conscientiousness_02",
+    "conscientiousness_03",
+    "conscientiousness_04",
+    "conscientiousness_05",
+    "conscientiousness_06",
+    "conscientiousness_07",
+    "conscientiousness_08",
+    "conscientiousness_09",
+    "conscientiousness_10",
+    "self_efficacy_01",
+    "self_efficacy_02",
+    "self_efficacy_03",
+    "self_efficacy_04",
+    "self_efficacy_05",
+    "self_efficacy_06",
+    "self_efficacy_07",
+    "self_efficacy_08",
+    "self_efficacy_09",
+    "self_efficacy_10"
+  ],
+  "language": "en"
+}
