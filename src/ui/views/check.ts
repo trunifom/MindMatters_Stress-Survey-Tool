@@ -6,6 +6,10 @@ import type { Selection } from "../../model/selection";
 import { buildCodebook } from "../../output/codebook";
 import { buildLimeSurvey } from "../../output/limesurvey";
 import { buildQualtrics } from "../../output/qualtrics";
+import { buildRedcap } from "../../output/redcap";
+import { buildGoogleForms } from "../../output/googleforms";
+import { buildBauplan } from "../../output/bauplan";
+import { buildNeutralCsv } from "../../output/csvtable";
 import type { AdapterResult } from "../../output/mapping";
 import { buildCheckReport, isReportStale, reportFileName, serializeReport, stateFingerprint } from "../../output/report";
 import { diagnosticsList } from "../components";
@@ -192,14 +196,26 @@ function rightsSection(s: AppState): HTMLElement {
   );
 }
 
-/** Platforms with an adapter. The others stay listed as planned. */
-const ADAPTERS: Record<string, (c: Catalog, selection: Selection, opts: { language: string; mode: "native" | "test" }) => AdapterResult> = {
-  limesurvey: buildLimeSurvey,
-  qualtrics: buildQualtrics,
+type Build = (c: Catalog, selection: Selection, opts: { language: string; mode: "native" | "test" }) => AdapterResult;
+/**
+ * Everything the tool can write. `tier` tells the school how far to trust it:
+ *  adapter   = writes a file the system imports, not yet tested on a real instance
+ *  prototype = written from documentation or general knowledge, never run (REDCap, Google Forms),
+ *              or a build plan for a person because the system imports nothing (Unipark, SurveyMonkey)
+ *  table     = a neutral table for people, not for any system
+ */
+const ADAPTERS: Record<string, { build: Build; tier: "adapter" | "prototype" | "table"; label: string }> = {
+  limesurvey: { build: buildLimeSurvey, tier: "adapter", label: "LimeSurvey" },
+  qualtrics: { build: buildQualtrics, tier: "adapter", label: "Qualtrics" },
+  redcap: { build: buildRedcap, tier: "prototype", label: "REDCap" },
+  googleForms: { build: buildGoogleForms, tier: "prototype", label: "Google Forms (Apps Script)" },
+  surveymonkey: { build: (c, s, o) => buildBauplan("surveymonkey", c, s, o), tier: "prototype", label: "SurveyMonkey (Bauplan)" },
+  unipark: { build: (c, s, o) => buildBauplan("unipark", c, s, o), tier: "prototype", label: "Unipark (Bauplan)" },
+  csv: { build: buildNeutralCsv, tier: "table", label: "Neutrale Tabelle (CSV)" },
 };
 
 function runExport(s: AppState, store: Store, platform: string, name: string, mode: "native" | "test"): void {
-  const adapter = ADAPTERS[platform];
+  const adapter = ADAPTERS[platform]?.build;
   if (!adapter) return;
   const r = adapter(s.loaded!.catalog, s.selection, { language: s.language, mode });
   if (!r.ok || r.content === undefined) return;
@@ -209,7 +225,7 @@ function runExport(s: AppState, store: Store, platform: string, name: string, mo
 
 function adapterBlock(s: AppState, store: Store, platform: string, name: string): HTMLElement {
   const c = s.loaded!.catalog;
-  const adapter = ADAPTERS[platform] as (typeof ADAPTERS)[string];
+  const adapter = (ADAPTERS[platform] as (typeof ADAPTERS)[string]).build;
   const native = adapter(c, s.selection, { language: s.language, mode: "native" });
   const test = adapter(c, s.selection, { language: s.language, mode: "test" });
   const blockedDiagnostics = (r: AdapterResult) => r.diagnostics.filter((d) => d.severity !== "info");
@@ -266,13 +282,23 @@ function adapterBlock(s: AppState, store: Store, platform: string, name: string)
   );
 }
 
+/** Platforms and the neutral table, with the name shown to the school. */
+function exportList(): Array<[string, string]> {
+  return [...PLATFORMS.map(([id, name]): [string, string] => [id, ADAPTERS[id]?.label ?? name]), ["csv", ADAPTERS["csv"]!.label]];
+}
+
+function tierKey(id: string): TextKey {
+  const tier = ADAPTERS[id]?.tier;
+  return tier === "adapter" ? "out.adapterReady" : tier === "prototype" ? "out.adapterPrototype" : tier === "table" ? "out.adapterTable" : "out.adapterPlanned";
+}
+
 function exportSection(s: AppState, store: Store): HTMLElement {
   return h(
     "section",
     { class: "out-block", "aria-labelledby": "export-h" },
     h("h3", { id: "export-h" }, t("out.exportTitle")),
     h("p", { class: "banner banner-info", role: "note" }, h("strong", null, t("out.exportStatus"))),
-    h("ul", { class: "adapters" }, ...PLATFORMS.map(([id, name]) => h("li", { "data-platform": id, class: id === s.targetPlatform ? "is-target" : "" }, t(ADAPTERS[id] ? "out.adapterReady" : "out.adapterPlanned", { name })))),
-    ...PLATFORMS.filter(([id]) => ADAPTERS[id]).map(([id, name]) => adapterBlock(s, store, id, name)),
+    h("ul", { class: "adapters" }, ...exportList().map(([id, name]) => h("li", { "data-platform": id, class: id === s.targetPlatform ? "is-target" : "" }, t(tierKey(id), { name })))),
+    ...exportList().map(([id, name]) => adapterBlock(s, store, id, name)),
   );
 }

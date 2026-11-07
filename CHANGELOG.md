@@ -102,3 +102,9 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - Oberfläche: Exportbereich je Plattform mit eigenen Element-IDs. Bei gesperrtem regulärem Export werden auch die Gründe des Testexports gezeigt. `Option.exportHints.qualtrics.code` im Beispielkatalog.
 - 20 neue Unit-Tests. **Nicht belegt:** Import in eine echte Qualtrics-Instanz.
 
+### Hinzugefügt (M6, Fortsetzung: Prototypen für alle Zielsysteme, ADR-008)
+- Prototypen, in der Oberfläche als «Prototyp, ungeprüft» gekennzeichnet: **REDCap** (Datenwörterbuch-CSV, 18 Spalten, Verzweigungslogik, Slider nur 0 bis 100), **Google Forms** (Apps-Script, Katalogtexte nur in Zeichenkettenliteralen), **Unipark** und **SurveyMonkey** (Bauplan als Markdown mit Typnamen, Codes, Grenzen und Bedingungen als Satz, SurveyMonkey mit Einfügetext). Dazu die **neutrale Tabelle** (CSV, Schutz vor Formeleinschleusung).
+- `src/output/adapterBase.ts` (gemeinsamer Start: Rechte, Auswahl, Sprache, Fehlerhilfe), `src/output/plain.ts`, `docs/PROTOTYPEN.md`, ADR-008.
+- Oberfläche: sieben Exportblöcke mit Stufenangabe je Ziel und Begründung, warum ein Export nicht möglich ist.
+- 27 neue Tests, darunter ein Ausführungstest des Google-Skripts mit feindlichem Text. **Nicht belegt:** jedes Zielsystem.
+

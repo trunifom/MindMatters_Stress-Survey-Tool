@@ -273,20 +273,21 @@ describe("rights per action and export overview", () => {
     expect(m.root.textContent).toContain("withdrawal notice");
   });
 
-  it("without confirmed rights no export is offered, the reason is shown and only LimeSurvey and Qualtrics have an adapter", () => {
+  it("without confirmed rights no export is offered, the reason is shown and every target has a labelled adapter, prototype or table", () => {
     const m = loaded(CAT10);
     expect(m.q<HTMLButtonElement>("#native-export-limesurvey").disabled).toBe(true);
     expect(m.q<HTMLButtonElement>("#test-export-limesurvey").disabled).toBe(true);
     expect(m.q("#export-why-limesurvey").textContent).toContain("CATALOG_NOT_RELEASED");
     expect(m.qa("ul.adapters li").map((li) => li.textContent)).toEqual([
       "LimeSurvey: adapter available, untested on a real instance",
-      "REDCap: planned",
+      "REDCap: prototype, unverified",
       "Qualtrics: adapter available, untested on a real instance",
-      "SurveyMonkey: planned",
-      "Google Forms: planned",
-      "Unipark: planned",
+      "SurveyMonkey (Bauplan): prototype, unverified",
+      "Google Forms (Apps Script): prototype, unverified",
+      "Unipark (Bauplan): prototype, unverified",
+      "Neutrale Tabelle (CSV): table for people, not an import",
     ]);
-    expect(m.q(".out-block .banner-info").textContent).toContain("Neither has been tested on a real instance");
+    expect(m.q(".out-block .banner-info").textContent).toContain("None of this has been tested on a real instance");
     expect(m.q("#native-reason-limesurvey").textContent).toContain("does not bypass any rights prohibition");
   });
 });
@@ -338,6 +339,24 @@ describe("export for LimeSurvey", () => {
     const d = await last();
     expect(d.name).toMatch(/_qualtrics_TEST\.txt$/);
     expect(d.text.startsWith("[[AdvancedFormat]]")).toBe(true);
+  });
+
+  it("the neutral table and the build plans download for the rich example, REDCap and Google Forms explain why they cannot", async () => {
+    const m = loaded(exampleText());
+    for (const id of ["rank_topics", "contact_email", "wants_help", "mood_slider"]) toggleItem(m.store, id, true);
+    expect(m.q<HTMLButtonElement>("#test-export-csv").disabled).toBe(false);
+    expect(m.q<HTMLButtonElement>("#test-export-unipark").disabled).toBe(false);
+    expect(m.q<HTMLButtonElement>("#test-export-surveymonkey").disabled).toBe(false);
+    expect(m.q<HTMLButtonElement>("#test-export-redcap").disabled).toBe(true);
+    expect(m.q("#export-why-redcap").textContent).toContain("EXPORT_RESPONSE_UNSUPPORTED");
+    expect(m.q<HTMLButtonElement>("#test-export-googleForms").disabled).toBe(true);
+    expect(m.q("#export-why-googleForms").textContent).toContain("EXPORT_CONDITION_UNSUPPORTED");
+    click(m.q("#test-export-csv"));
+    expect((await last()).name).toMatch(/_csv_TEST_table\.csv$/);
+    click(m.q("#test-export-unipark"));
+    const plan = await last();
+    expect(plan.name).toMatch(/_unipark_TEST_bauplan\.md$/);
+    expect(plan.text).toContain("# Bauplan für Unipark");
   });
 
   it("an option code LimeSurvey cannot take blocks the export and names the remedy", () => {

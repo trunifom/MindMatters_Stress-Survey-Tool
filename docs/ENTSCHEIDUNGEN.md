@@ -51,6 +51,18 @@ Jeder Eintrag: Kontext, Entscheidung, Alternativen, Folgen. Neue Entscheidungen 
 - **Alternativen:** Codes automatisch kürzen (verworfen: Kollisionen und stille Änderung der Identität); Export mit Warnung trotz unzulässigem Code (verworfen: die Datei wäre im Zielsystem falsch oder nicht importierbar).
 - **Folgen:** Qualtrics (TXT) kann weder Bedingungen noch Slider. Nach Punkt 3 sind beide dort Fehler. Ein Katalog mit Bedingungen ist dort ohne Weiteres nicht exportierbar, bis ein Verfahren mit ausdrücklicher Zustimmung der Schule (Bedingung von Hand nachbauen) vorliegt. Schema 0.4.0 erhält `Option.exportHints` (additiv, 0.4.0 ist noch nicht ausgeliefert, ADR-003 bleibt unberührt). Kataloge für LimeSurvey brauchen kurze Exportcodes für Optionen mit langen Codes.
 
+## ADR-008: Alle Zielsysteme bedienen, in drei klar benannten Stufen
+- **Datum:** 2026-11-08, **Status:** angenommen
+- **Kontext:** Es gibt derzeit keine Testinstanz für LimeSurvey, Qualtrics, REDCap, SurveyMonkey, Google Forms oder Unipark. Trotzdem soll jedes Zielsystem bedient werden. Für REDCap fehlt eine öffentliche Quelle der Kopfzeile, Unipark und SurveyMonkey lesen keine Fragebogendatei, Google Forms hat keinen Dateiimport.
+- **Entscheidung:** Jede Ausgabe trägt eine Stufe, die im Konfigurator neben dem Namen steht:
+  1. **Adapter** (LimeSurvey, Qualtrics): erzeugt eine Datei, die das System importiert, nach den Angaben der Herstellerseite, an keiner echten Instanz getestet.
+  2. **Prototyp** (REDCap, Google Forms; Unipark und SurveyMonkey als Bauplan): aus allgemeinem Wissen oder sekundären Quellen geschrieben, nie gegen das echte System gelaufen, oder ein Dokument zum Nachbauen, weil das System nichts importiert.
+  3. **Tabelle** (neutrale CSV): für Menschen, kein Import.
+  Alle Stufen gelten dieselben Regeln aus ADR-007 (Rechte, Katalogstatus, eine Sprache, nichts still geändert, nichts weggelassen) und führen ihre Annahmen offen.
+- **Änderung gegenüber dem Stand vom 7. November:** REDCap wurde dort wegen der unbelegten Kopfzeile zunächst nicht gebaut. Mit der Vorgabe «möglichst alles, auch als Prototyp» entsteht es jetzt als Prototyp. Die Kopfzeile bleibt unbelegt und ist in der Annahmenliste und im Zuordnungsbericht (`prototype`) genannt.
+- **Gründe:** Schulen sollen einen Stand bekommen, an dem sie arbeiten können. Das Risiko liegt in einem still falschen Import, deshalb bleibt die Stufe sichtbar und der Weg zu «getestet» ist in [PROTOTYPEN.md](PROTOTYPEN.md) beschrieben.
+- **Folgen:** Eine Stufe wird nur nach einem protokollierten Test angehoben. Der gemeinsame Start jedes neuen Adapters liegt in `src/output/adapterBase.ts`.
+
 ## Offene Entscheidungen
 - Lizenz des Repositories.
 - Erste Plattform-Reihenfolge der Adapter (Vorschlag: LimeSurvey, REDCap, Qualtrics).

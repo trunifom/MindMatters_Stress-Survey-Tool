@@ -9,7 +9,7 @@
 | M3 | Oberfläche | Einzeldatei-Build, Katalogansicht, Suche/Filter, Info-Panel, Vorschau, Ausgaben | erledigt (jsdom und Edge 156 getestet) |
 | M4 | Ausgaben | Codebuch (Markdown), Prüfbericht (JSON) | erledigt (Datenseite) |
 | M5 | Erster Adapter | LimeSurvey (TSV), Test an echter Instanz | Adapter umgesetzt und getestet (Struktur, Gates, Browser-Download); **Importtest an echter Instanz offen** |
-| M6 | Weitere Adapter | REDCap, Qualtrics, danach SurveyMonkey, Google Forms (Skript), Unipark | Qualtrics (TXT) umgesetzt, Importtest offen; die übrigen offen |
+| M6 | Weitere Adapter | REDCap, Qualtrics, SurveyMonkey, Google Forms (Skript), Unipark | Qualtrics (Adapter) und REDCap, Google Forms, SurveyMonkey, Unipark (Prototypen, [PROTOTYPEN.md](PROTOTYPEN.md)) umgesetzt; **keine Instanz getestet** |
 | M7 | Profil-JSON | Schulanpassung ohne Code-Varianten | offen |
 | M8 | Autorenmodus / CSV-Pflege | eigene Fragen, CSV-Import | offen |
 
@@ -20,5 +20,5 @@ Stand der Abnahmetests: [ABNAHMETESTS.md](ABNAHMETESTS.md).
 ## Nächste Schritte
 1. Importtest des LimeSurvey-Exports an einer echten Instanz (Anleitung in [LIMESURVEY.md](LIMESURVEY.md)); danach Annahmenliste und Adapter korrigieren.
 2. Importtest des Qualtrics-Exports ([QUALTRICS.md](QUALTRICS.md)).
-3. REDCap-Adapter: **blockiert**, bis die Kopfzeile des Datenwörterbuchs aus einem echten REDCap-Projekt vorliegt (siehe [RECHERCHE_Zielsysteme.md](RECHERCHE_Zielsysteme.md), offener Punkt 3). Danach SurveyMonkey, Google Forms, Unipark.
+3. Prototypen gegen die echten Systeme prüfen (REDCap-Kopfzeile, Google-Apps-Script, Typnamen bei Unipark und SurveyMonkey), danach Stufe anheben.
 4. Browsernachweis über Edge hinaus (Firefox, Safari), Screenreader-Prüfung.

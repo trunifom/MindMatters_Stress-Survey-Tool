@@ -9,6 +9,7 @@
 | [ABNAHMETESTS.md](ABNAHMETESTS.md) | Rückverfolgbarkeit T01–T45: welcher Test belegt was, was fehlt | Entwickler, Projektleitung |
 | [AUSGABEN.md](AUSGABEN.md) | Projektdatei, Prüfbericht, Codebuch: Inhalt, Regeln, Format | Entwickler, Katalogpfleger |
 | [LIMESURVEY.md](LIMESURVEY.md) | LimeSurvey-Export: Zuordnung, Namensregeln, belegte und ungeprüfte Annahmen, Importtest | Entwickler, Katalogpfleger |
+| [PROTOTYPEN.md](PROTOTYPEN.md) | REDCap, Google Forms, Unipark, SurveyMonkey und neutrale Tabelle: Zuordnung, Annahmen, Weg zu «getestet» | Entwickler, Katalogpfleger |
 | [QUALTRICS.md](QUALTRICS.md) | Qualtrics-Export (TXT Advanced Format): was das Format nicht kann, Zuordnung, Annahmen, Importtest | Entwickler, Katalogpfleger |
 | [BROWSER.md](BROWSER.md) | Welche Browser belegt sind, was nicht, wie man den Nachweis erweitert | Entwickler, Projektleitung |
 | [RECHERCHE_Zielsysteme.md](RECHERCHE_Zielsysteme.md) | Importmöglichkeiten von LimeSurvey, REDCap, Qualtrics, SurveyMonkey, Google Forms, Unipark | Entwickler (Adapter) |
