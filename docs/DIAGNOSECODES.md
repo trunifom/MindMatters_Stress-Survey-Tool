@@ -49,3 +49,37 @@ Zuerst prüft ein Gate Dokumenttyp und `schemaVersion`. Nur wenn es besteht, fol
 | `TOO_MANY_DIAGNOSTICS` | info | Ausgabe auf 200 Strukturfehler gekürzt |
 
 Bei `response` und `visibleWhen` wird der Zweig anhand der Daten gewählt (`kind`, bzw. `all`/`any`). Es erscheinen nur die Fehler dieses Zweigs, nicht die Fehlschläge aller Varianten.
+
+## Stufe `reference` (Register und Verweise)
+
+Fehlende Verweisziele werden gebündelt: ein Befund je Ziel mit Anzahl der Vorkommen, statt vieler Folgefehler.
+
+| Code | Severity | Bedeutung |
+|---|---|---|
+| `DUPLICATE_ID` | error | ID kommt in einem Register doppelt vor (Quellen, Rechte, Konstrukte, Instrumente, Antwortlisten, Items, Skalen, Module, Scoring, Evidenz, Abschnitte, versteckte Felder) |
+| `DUPLICATE_OPTION_CODE` | error | Antwortcode kommt in einer Antwortliste doppelt vor |
+| `DUPLICATE_VARIABLE_NAME` | error | `variableName` ist katalogweit nicht eindeutig (Items und versteckte Felder zusammen) |
+| `MISSING_OPTION_SET` | error | Verweis auf unbekannte Antwortliste. Erwarteter Code für Testdatei 91 |
+| `MISSING_ITEM` | error | Verweis auf unbekanntes Item (Skala, Modul, Vorlage, Scoring, Bedingung) |
+| `MISSING_SOURCE` | error | Verweis auf unbekannte Quelle |
+| `MISSING_RIGHTS_PROFILE` | error | Verweis auf unbekanntes Rechteprofil |
+| `MISSING_CONSTRUCT` | error | Verweis auf unbekanntes Konstrukt |
+| `MISSING_INSTRUMENT` | error | Verweis auf unbekanntes Instrument (auch Evidenz mit `targetType: instrument`) |
+| `MISSING_SCALE` | error | Verweis auf unbekannte Skala |
+| `MISSING_SCORE_DEFINITION` | error | Verweis auf unbekannte Scoring-Definition |
+| `CONSTRUCT_CYCLE` | error | Konstrukthierarchie enthält einen Zyklus (auch Selbstbezug), einmal je Zyklus gemeldet |
+
+## Stufe `content` (Sprachen, Features, Daten)
+
+| Code | Severity | Bedeutung |
+|---|---|---|
+| `DEFAULT_LANGUAGE_NOT_LISTED` | error | `catalog.defaultLanguage` steht nicht in `languages` |
+| `LANGUAGE_NOT_DECLARED` | error | ein Sprachschlüssel in einem Text steht nicht in `languages` |
+| `MISSING_TRANSLATION` | warning | Teilnehmertexte fehlen in einer deklarierten Sprache (ein Befund je Sprache mit Anzahl). Ausgabe in dieser Sprache ist blockiert, es wird nichts automatisch übersetzt. Verwaltungstexte dürfen auf die Standardsprache zurückfallen und werden nicht gemeldet |
+| `REQUIRED_FEATURE_MISSING` | error | `coreQuestions`, `requiredInclusion` oder `requiredAnswer` fehlt in `requiredFeatures` |
+| `UNKNOWN_FEATURE` | error | deklariertes Feature wird von dieser Anwendungsversion nicht unterstützt. Normale Verarbeitung gesperrt, reine Diagnose bleibt möglich (T07) |
+| `FEATURE_NOT_DECLARED` | error | der Katalog nutzt ein Feature (Module, wholeScale, Bedingungen, Slider, Ranking, Notiz, Zufallsreihenfolge, zusammengesetzte Bedingungen, Behavior-Extension), ohne es zu deklarieren |
+| `DATE_ORDER_INVALID` | error | `updatedAt` liegt vor `createdAt` (Vergleich als Zeitpunkt, Zeitzonen berücksichtigt) |
+
+Hinweis: Reine `metadata`-Extensions brauchen kein Feature, bleiben erhalten und werden nie ausgeführt (T08).
+
