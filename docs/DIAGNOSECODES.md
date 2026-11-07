@@ -21,6 +21,7 @@ Register aller Codes, die der Validator ausgibt. Jede neue Regel trägt hier ihr
 |---|---|---|
 | `JSON_SYNTAX_ERROR` | error | kein gültiges JSON (Kommentare, Kommata, Anführungszeichen, abschliessender Inhalt). Meldung nennt Zeile und Spalte |
 | `JSON_DUPLICATE_KEY` | error | ein Objektschlüssel kommt im selben Objekt doppelt vor. `jsonPath` zeigt auf den zweiten Schlüssel |
+| `PREVIOUS_STATE_KEPT` | info | eine Datei wurde abgelehnt, der zuvor geladene gültige Katalog bleibt unverändert (T04, T42) |
 | `LIMIT_EXCEEDED` | error | Grössenlimit überschritten (Bytes, Verschachtelungstiefe, Anzahl Werte oder Stringlänge). Werte sind vorläufig, siehe `src/core/limits.ts` |
 
 ## Stufe `structure` (Version, Schema, Migration)

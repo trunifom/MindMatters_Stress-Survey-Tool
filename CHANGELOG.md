@@ -22,4 +22,5 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 ### Geändert
 - `examples/catalog_rich_0_4_0.json`: Zahlenvergleich auf dem Slider statt auf einer Einfachauswahl (Validator-Befund); `mood_slider` ist vorausgewählt, weil ein vorausgewähltes Item davon abhängt.
 - `src/model/selection.ts`: wirksame Pflichtmenge (inkl. Pflichtmodule), Anfangsauswahl, Sammelaktionen (Item, Modul, «alles abwählen» behält Pflichtmenge), Auswahlregeln (wholeScale, Teilskalen-Warnung, Module, Abhängigkeiten), Score-Verfügbarkeit, Projekt laden mit Pflichtergänzung und Meldung.
+- `src/core/loader.ts`: Lade-Pipeline `loadCatalog`/`loadProject` (alles oder nichts, getrennte Prüfstatus, optionale ausdrückliche Migration) und `replaceCatalog` (transaktional, alter Zustand bleibt bei Fehler). Die Fixtures liefern genau die Befunde des Lieferberichts.
 

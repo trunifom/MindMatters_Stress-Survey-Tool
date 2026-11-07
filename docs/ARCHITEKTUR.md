@@ -34,6 +34,23 @@ src/i18n/       UI-Texte (später)
 
 Abhängigkeitsrichtung: `ui → model → core`. `adapters` hängen nur von `model` und `core` ab. `core` kennt weder DOM noch Browser, läuft also identisch in Node (Tests) und im Browser.
 
+## Lade-Pipeline (`src/core/loader.ts`)
+
+```
+Text → strikter JSON-Leser (Syntax, doppelte Schlüssel, Limits)
+     → [ausdrückliche Migration 0.3.0 → 0.4.0, nur mit migrate=true]
+     → Versions-/Typ-Gate → JSON Schema
+     → Register, Verweise, Sprachen, Features, Antworten, Vorlage, Bedingungen, Module, Scoring
+     → Anfangsauswahl des Katalogs
+     → nutzbarer Katalog
+```
+
+- **Alles oder nichts:** Ein Katalog wird nur zurückgegeben, wenn keine Stufe einen Fehler meldet. Die Diagnosen aller gelaufenen Stufen kommen immer mit, damit eine fehlerhafte Datei trotzdem analysiert werden kann.
+- **Anfangsauswahl:** Sie wird nur beurteilt, wenn die Verweise des Katalogs stimmen. Ein Widerspruch dort ist ein Konfigurationsfehler des Katalogs (Diagnose mit `context: "initial"`) und nie erst ein späterer Exportfehler.
+- **Transaktional:** `replaceCatalog` ersetzt den Zustand nur bei Erfolg. Bei einem Fehler bleibt der alte gültige Zustand dasselbe Objekt (Diagnose `PREVIOUS_STATE_KEPT`).
+- **Getrennte Prüfstatus** (`pass | warning | fail | notRun`): technische Gültigkeit, Auswahl, Rechte, Export. Rechte und Export sind noch `notRun`.
+- **Projekte:** `loadProject` verlangt die exakte Katalog-ID und -Version. Fehlende Pflichtitems werden ergänzt und gemeldet, alle anderen Konflikte bleiben als bearbeitbarer Zwischenstand sichtbar.
+
 ## Validierung in zwei Stufen
 
 1. **Struktur** durch JSON Schema (Draft 2020-12), geladen aus `schema/<version>/`. Geschlossene Objekte, Typen, Enums, bedingte Felder.
