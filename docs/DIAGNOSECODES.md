@@ -80,6 +80,14 @@ Fehlende Verweisziele werden gebündelt: ein Befund je Ziel mit Anzahl der Vorko
 | `UNKNOWN_FEATURE` | error | deklariertes Feature wird von dieser Anwendungsversion nicht unterstützt. Normale Verarbeitung gesperrt, reine Diagnose bleibt möglich (T07) |
 | `FEATURE_NOT_DECLARED` | error | der Katalog nutzt ein Feature (Module, wholeScale, Bedingungen, Slider, Ranking, Notiz, Zufallsreihenfolge, zusammengesetzte Bedingungen, Behavior-Extension), ohne es zu deklarieren |
 | `DATE_ORDER_INVALID` | error | `updatedAt` liegt vor `createdAt` (Vergleich als Zeitpunkt, Zeitzonen berücksichtigt) |
+| `ORDINAL_POSITIONS_INVALID` | error | ordinale Antwortliste: `ordinalPosition` fehlt, ist doppelt oder die Optionen stehen nicht aufsteigend |
+| `RANGE_INVALID` | error | Untergrenze grösser als Obergrenze (Zahl, Textlänge, Datum, Auswahlanzahl). Gleiche Grenzen sind erlaubt |
+| `ANSWER_UNSATISFIABLE` | error / warning | es gibt keine zulässige Antwort. error bei Antwortpflicht (z. B. `maxLength: 0`, `maxSelections: 0`, Mindestanzahl über der Optionenzahl), warning bei freiwilliger Frage |
+| `EXCLUSIVE_CODE_UNKNOWN` | error | `exclusiveCodes` nennt einen Code, den die Antwortliste nicht enthält |
+| `EXCLUSIVE_CODE_UNSELECTABLE` | error | exklusive Codes zusammen mit `minSelections` ≥ 2: sie wären nie wählbar |
+| `SELECTION_LIMIT_EXCEEDS_OPTIONS` | warning | `maxSelections` grösser als die Zahl der Optionen |
+| `SLIDER_RANGE_INVALID` | error | Slider: Minimum nicht kleiner als Maximum, oder Schrittweite grösser als der Bereich |
+| `RANKING_MAX_EXCEEDS_OPTIONS` | error | Ranking: `maxRanks` grösser als die Zahl inhaltlicher Optionen |
+| `PRESENTATION_INCOMPATIBLE` | error | Widget passt nicht zum Antworttyp (z. B. `checkbox` bei Einfachauswahl) |
 
 Hinweis: Reine `metadata`-Extensions brauchen kein Feature, bleiben erhalten und werden nie ausgeführt (T08).
-

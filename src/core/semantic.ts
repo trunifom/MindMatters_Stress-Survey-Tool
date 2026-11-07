@@ -2,6 +2,7 @@ import type { Diagnostic } from "./diagnostics";
 import { checkFeatures } from "./features";
 import { checkLanguages } from "./languages";
 import { checkRegisters } from "./registers";
+import { checkOptionSets, checkResponses } from "./responses";
 import type { Catalog } from "./types";
 
 /**
@@ -10,5 +11,11 @@ import type { Catalog } from "./types";
  * diagnostics; this function only concatenates them.
  */
 export function validateCatalogSemantics(c: Catalog): Diagnostic[] {
-  return [...checkRegisters(c), ...checkLanguages(c), ...checkFeatures(c)];
+  return [
+    ...checkRegisters(c),
+    ...checkLanguages(c),
+    ...checkFeatures(c),
+    ...checkOptionSets(c),
+    ...checkResponses(c),
+  ];
 }
