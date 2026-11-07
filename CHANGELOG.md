@@ -14,3 +14,4 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - Recherche zu den Importmöglichkeiten der Zielsysteme.
 - TypeScript-Gerüst (Vitest, ajv, strict), Versionskonstanten.
 - `src/core`: Diagnose-Typen (JSON-Pointer-Pfade), Limits und strikter JSON-Leser (doppelte Schlüssel, Grössen-/Tiefen-/Stringlimits, Zeile/Spalte in Fehlern). Diagnosecode-Register `docs/DIAGNOSECODES.md`.
+- `src/core`: Versions-/Typ-Gate, Schema-Prüfung mit ajv (Draft 2020-12) mit stabilen Diagnosecodes, ausdrückliche Migration 0.3.0 → 0.4.0.
