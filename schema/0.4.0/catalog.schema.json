@@ -1,0 +1,1944 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mindmatters.example/schema/0.4.0/catalog.schema.json",
+  "title": "Questionnaire catalog (schemaVersion 0.4.0)",
+  "description": "Additive extension of 0.3.0. Every new field is optional, so a 0.3.0 catalog becomes valid 0.4.0 by changing schemaVersion only. New: slider/ranking/note response kinds, text formats, compound and numeric visibility conditions, export labels and per-platform export hints, key direction, item origin, sensitivity markers, option order, section layout and page breaks, consent/privacy/help texts, delivery settings, hidden fields, instrument age range and administration time. Cross-register checks (references, uniqueness, selection rules, scoring completeness, template covers every item once, feature declaration for every used behaviour) belong to the semantic validator.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "documentType",
+    "catalog",
+    "languages",
+    "requiredFeatures",
+    "sources",
+    "rights",
+    "constructs",
+    "instruments",
+    "optionSets",
+    "items",
+    "scales",
+    "modules",
+    "questionnaire"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.4.0"
+    },
+    "documentType": {
+      "const": "questionnaireCatalog"
+    },
+    "catalog": {
+      "$ref": "#/$defs/Catalog"
+    },
+    "languages": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/LanguageTag"
+      }
+    },
+    "requiredFeatures": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/FeatureId"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Source"
+      }
+    },
+    "rights": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/RightsProfile"
+      }
+    },
+    "constructs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Construct"
+      }
+    },
+    "instruments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/InstrumentForm"
+      }
+    },
+    "optionSets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/OptionSet"
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/Item"
+      }
+    },
+    "scales": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Scale"
+      }
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Module"
+      }
+    },
+    "questionnaire": {
+      "$ref": "#/$defs/Questionnaire"
+    },
+    "scoringDefinitions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ScoreDefinition"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      }
+    },
+    "extensions": {
+      "$ref": "#/$defs/Extensions"
+    }
+  },
+  "$defs": {
+    "Id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{0,63}$"
+    },
+    "FeatureId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "SemVer": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "LanguageTag": {
+      "type": "string",
+      "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
+    },
+    "NonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "Date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "HttpUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://\\S+$"
+    },
+    "LocalizedText": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "#/$defs/LanguageTag"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "IdList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/Id"
+      }
+    },
+    "NonEmptyIdList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/Id"
+      }
+    },
+    "Extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]*\\.[A-Za-z0-9_.-]+$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/ExtensionEntry"
+      }
+    },
+    "ExtensionEntry": {
+      "type": "object",
+      "required": [
+        "kind",
+        "version",
+        "data"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "metadata",
+            "behavior"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "featureId": {
+          "$ref": "#/$defs/FeatureId"
+        },
+        "data": true
+      },
+      "additionalProperties": false,
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "behavior"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "featureId"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "featureId"
+          ]
+        }
+      }
+    },
+    "Catalog": {
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "title",
+        "defaultLanguage",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/SemVer"
+        },
+        "title": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "defaultLanguage": {
+          "$ref": "#/$defs/LanguageTag"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "reviewed",
+            "released",
+            "withdrawn"
+          ]
+        },
+        "description": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "publisher": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "contact": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/Timestamp"
+        },
+        "changeSummary": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "extensions": {
+          "$ref": "#/$defs/Extensions"
+        }
+      }
+    },
+    "Source": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "title"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "type": {
+          "enum": [
+            "article",
+            "manual",
+            "book",
+            "website",
+            "unpublished",
+            "originalContent"
+          ]
+        },
+        "title": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NonEmptyString"
+          }
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 9999
+        },
+        "doi": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "url": {
+          "$ref": "#/$defs/HttpUrl"
+        },
+        "edition": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "accessedAt": {
+          "$ref": "#/$defs/Date"
+        },
+        "citationText": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "extensions": {
+          "$ref": "#/$defs/Extensions"
+        }
+      }
+    },
+    "SourceLink": {
+      "type": "object",
+      "required": [
+        "sourceRef",
+        "relation"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "sourceRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "relation": {
+          "enum": [
+            "original",
+            "translation",
+            "validation",
+            "scoring",
+            "background"
+          ]
+        },
+        "locator": {
+          "$ref": "#/$defs/NonEmptyString"
+        }
+      }
+    },
+    "SourceLinks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SourceLink"
+      }
+    },
+    "Permission": {
+      "enum": [
+        "unknown",
+        "permitted",
+        "prohibited"
+      ]
+    },
+    "RightsProfile": {
+      "type": "object",
+      "required": [
+        "id",
+        "reviewStatus",
+        "permissions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "reviewStatus": {
+          "enum": [
+            "unreviewed",
+            "reviewed",
+            "clarificationRequired"
+          ]
+        },
+        "permissions": {
+          "type": "object",
+          "required": [
+            "redistribution",
+            "electronicDisplay",
+            "electronicAdministration",
+            "modification",
+            "export"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "redistribution": {
+              "$ref": "#/$defs/Permission"
+            },
+            "electronicDisplay": {
+              "$ref": "#/$defs/Permission"
+            },
+            "electronicAdministration": {
+              "$ref": "#/$defs/Permission"
+            },
+            "modification": {
+              "$ref": "#/$defs/Permission"
+            },
+            "export": {
+              "$ref": "#/$defs/Permission"
+            }
+          }
+        },
+        "rightsHolder": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "licenseName": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "licenseUrl": {
+          "$ref": "#/$defs/HttpUrl"
+        },
+        "attribution": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "evidenceSourceRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "notes": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      }
+    },
+    "Documentation": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "measurementExplanation": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "selectionAdvice": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "limitations": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "administrationNotes": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "interpretationNotes": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      }
+    },
+    "Construct": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "label": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "description": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "parentRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceLinks": {
+          "$ref": "#/$defs/SourceLinks"
+        },
+        "documentation": {
+          "$ref": "#/$defs/Documentation"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NonEmptyString"
+          }
+        }
+      }
+    },
+    "ReferencePeriod": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "unspecified",
+            "current",
+            "general",
+            "relative"
+          ]
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "unit": {
+          "enum": [
+            "day",
+            "week",
+            "month",
+            "year"
+          ]
+        },
+        "label": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      },
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "relative"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "amount",
+          "unit"
+        ]
+      },
+      "else": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "amount"
+              ]
+            },
+            {
+              "required": [
+                "unit"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "Translation": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "original",
+            "draft",
+            "reviewed",
+            "authorized",
+            "unknown"
+          ]
+        },
+        "language": {
+          "$ref": "#/$defs/LanguageTag"
+        },
+        "method": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "sourceLinks": {
+          "$ref": "#/$defs/SourceLinks"
+        },
+        "revision": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "notes": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      }
+    },
+    "InstrumentForm": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "formName",
+        "versionLabel"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "title": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "formName": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "versionLabel": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "familyName": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "originalLanguage": {
+          "$ref": "#/$defs/LanguageTag"
+        },
+        "language": {
+          "$ref": "#/$defs/LanguageTag"
+        },
+        "respondentRole": {
+          "enum": [
+            "self",
+            "parent",
+            "teacher",
+            "other"
+          ]
+        },
+        "targetPopulation": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "referencePeriod": {
+          "$ref": "#/$defs/ReferencePeriod"
+        },
+        "instruction": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "sourceLinks": {
+          "$ref": "#/$defs/SourceLinks"
+        },
+        "rightsRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "translation": {
+          "$ref": "#/$defs/Translation"
+        },
+        "documentation": {
+          "$ref": "#/$defs/Documentation"
+        },
+        "extensions": {
+          "$ref": "#/$defs/Extensions"
+        },
+        "ageRange": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+            "minYears": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "maxYears": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "administrationTime": {
+          "description": "Only documented estimates with a source; never invented.",
+          "type": "object",
+          "required": [
+            "sourceLinks"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "minMinutes": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "maxMinutes": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "sourceLinks": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/SourceLink"
+              }
+            }
+          },
+          "anyOf": [
+            {
+              "required": [
+                "minMinutes"
+              ]
+            },
+            {
+              "required": [
+                "maxMinutes"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "Evidence": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "status",
+        "targetType",
+        "targetRef"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "type": {
+          "enum": [
+            "internalConsistency",
+            "testRetest",
+            "structuralValidity",
+            "measurementInvariance",
+            "responsiveness",
+            "other"
+          ]
+        },
+        "status": {
+          "enum": [
+            "documented",
+            "notInvestigated",
+            "unknown"
+          ]
+        },
+        "targetType": {
+          "enum": [
+            "instrument",
+            "scale"
+          ]
+        },
+        "targetRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "sourceLinks": {
+          "$ref": "#/$defs/SourceLinks"
+        },
+        "population": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "language": {
+          "$ref": "#/$defs/LanguageTag"
+        },
+        "method": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "result": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "limitations": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      },
+      "if": {
+        "properties": {
+          "status": {
+            "const": "documented"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "sourceLinks"
+        ],
+        "properties": {
+          "sourceLinks": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    "Scale": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "description",
+        "itemRefs",
+        "constructRefs",
+        "selectionPolicy"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "title": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "description": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "itemRefs": {
+          "$ref": "#/$defs/NonEmptyIdList"
+        },
+        "constructRefs": {
+          "$ref": "#/$defs/IdList"
+        },
+        "selectionPolicy": {
+          "enum": [
+            "wholeScale",
+            "partialWithWarning"
+          ]
+        },
+        "instrumentRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "scoreDefinitionRefs": {
+          "$ref": "#/$defs/IdList"
+        },
+        "sourceLinks": {
+          "$ref": "#/$defs/SourceLinks"
+        },
+        "documentation": {
+          "$ref": "#/$defs/Documentation"
+        },
+        "extensions": {
+          "$ref": "#/$defs/Extensions"
+        }
+      }
+    },
+    "Option": {
+      "type": "object",
+      "required": [
+        "code",
+        "label",
+        "role"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "label": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "role": {
+          "enum": [
+            "substantive",
+            "missing"
+          ]
+        },
+        "ordinalPosition": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "missingReason": {
+          "enum": [
+            "refused",
+            "dontKnow",
+            "notApplicable"
+          ]
+        }
+      },
+      "if": {
+        "properties": {
+          "role": {
+            "const": "missing"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "missingReason"
+        ],
+        "not": {
+          "required": [
+            "ordinalPosition"
+          ]
+        }
+      },
+      "else": {
+        "not": {
+          "required": [
+            "missingReason"
+          ]
+        }
+      }
+    },
+    "OptionSet": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "codeType",
+        "orderPolicy",
+        "options"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "label": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "codeType": {
+          "const": "string"
+        },
+        "orderPolicy": {
+          "const": "fixed"
+        },
+        "options": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/Option"
+          }
+        },
+        "measurementLevel": {
+          "enum": [
+            "nominal",
+            "ordinal"
+          ]
+        },
+        "editPolicy": {
+          "const": "locked"
+        }
+      }
+    },
+    "Unit": {
+      "type": "object",
+      "required": [
+        "code",
+        "label"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "label": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      }
+    },
+    "Response": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/RespSingleChoice"
+        },
+        {
+          "$ref": "#/$defs/RespMultipleChoice"
+        },
+        {
+          "$ref": "#/$defs/RespInteger"
+        },
+        {
+          "$ref": "#/$defs/RespDecimal"
+        },
+        {
+          "$ref": "#/$defs/RespShortText"
+        },
+        {
+          "$ref": "#/$defs/RespLongText"
+        },
+        {
+          "$ref": "#/$defs/RespDate"
+        },
+        {
+          "$ref": "#/$defs/RespSlider"
+        },
+        {
+          "$ref": "#/$defs/RespRanking"
+        },
+        {
+          "$ref": "#/$defs/RespNote"
+        }
+      ]
+    },
+    "RespSingleChoice": {
+      "type": "object",
+      "required": [
+        "kind",
+        "optionSetRef"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "singleChoice"
+        },
+        "optionSetRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "validationMessage": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      }
+    },
+    "RespMultipleChoice": {
+      "type": "object",
+      "required": [
+        "kind",
+        "optionSetRef"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "multipleChoice"
+        },
+        "optionSetRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "minSelections": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxSelections": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "exclusiveCodes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/NonEmptyString"
+          }
+        },
+        "validationMessage": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      }
+    },
+    "RespInteger": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "integer"
+        },
+        "minimum": {
+          "type": "integer"
+        },
+        "maximum": {
+          "type": "integer"
+        },
+        "unit": {
+          "$ref": "#/$defs/Unit"
+        },
+        "validationMessage": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      }
+    },
+    "RespDecimal": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "decimal"
+        },
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        },
+        "maxDecimalPlaces": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unit": {
+          "$ref": "#/$defs/Unit"
+        },
+        "validationMessage": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      }
+    },
+    "RespShortText": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "shortText"
+        },
+        "minLength": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxLength": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "validationMessage": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "format": {
+          "description": "Structured text format; adapters map to native validation or report manual.",
+          "enum": [
+            "email",
+            "url",
+            "phone"
+          ]
+        }
+      }
+    },
+    "RespLongText": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "longText"
+        },
+        "minLength": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxLength": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "validationMessage": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      }
+    },
+    "RespDate": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "date"
+        },
+        "minimum": {
+          "$ref": "#/$defs/Date"
+        },
+        "maximum": {
+          "$ref": "#/$defs/Date"
+        },
+        "validationMessage": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      }
+    },
+    "Presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "widget"
+          ]
+        },
+        {
+          "required": [
+            "orientation"
+          ]
+        },
+        {
+          "required": [
+            "optionOrder"
+          ]
+        }
+      ],
+      "properties": {
+        "widget": {
+          "enum": [
+            "radio",
+            "dropdown",
+            "checkbox",
+            "number",
+            "text",
+            "textarea",
+            "date",
+            "slider"
+          ]
+        },
+        "orientation": {
+          "enum": [
+            "vertical",
+            "horizontal"
+          ]
+        },
+        "optionOrder": {
+          "description": "random requires feature randomization; never silently applied to Likert scales.",
+          "enum": [
+            "fixed",
+            "random"
+          ]
+        }
+      }
+    },
+    "Condition": {
+      "type": "object",
+      "required": [
+        "itemRef",
+        "operator",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "itemRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "operator": {
+          "enum": [
+            "equals",
+            "notEquals",
+            "contains",
+            "notContains",
+            "greaterThan",
+            "greaterThanOrEqual",
+            "lessThan",
+            "lessThanOrEqual"
+          ]
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "Item": {
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "text",
+        "response",
+        "inclusionRequired",
+        "answerRequired",
+        "defaultSelected",
+        "variableName",
+        "constructRefs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "version": {
+          "$ref": "#/$defs/SemVer"
+        },
+        "text": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "response": {
+          "$ref": "#/$defs/Response"
+        },
+        "inclusionRequired": {
+          "type": "boolean"
+        },
+        "answerRequired": {
+          "type": "boolean"
+        },
+        "defaultSelected": {
+          "type": "boolean"
+        },
+        "variableName": {
+          "$ref": "#/$defs/Id"
+        },
+        "constructRefs": {
+          "$ref": "#/$defs/IdList"
+        },
+        "instrumentRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "originalItemNumber": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "instruction": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "respondentHelp": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "organizerHelp": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "referencePeriod": {
+          "$ref": "#/$defs/ReferencePeriod"
+        },
+        "sourceLinks": {
+          "$ref": "#/$defs/SourceLinks"
+        },
+        "rightsRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "presentation": {
+          "$ref": "#/$defs/Presentation"
+        },
+        "visibleWhen": {
+          "$ref": "#/$defs/ConditionOrGroup"
+        },
+        "documentation": {
+          "$ref": "#/$defs/Documentation"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NonEmptyString"
+          }
+        },
+        "extensions": {
+          "$ref": "#/$defs/Extensions"
+        },
+        "exportLabel": {
+          "description": "Short variable label for codebooks/SPSS/R; distinct from display text.",
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "displayNumber": {
+          "description": "Number shown to respondents; distinct from originalItemNumber.",
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "requiredMessage": {
+          "description": "Message shown when a required answer is missing.",
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "keyDirection": {
+          "enum": [
+            "positive",
+            "negative",
+            "unspecified"
+          ],
+          "description": "Scoring direction of the item relative to its construct."
+        },
+        "origin": {
+          "enum": [
+            "original",
+            "adapted",
+            "own"
+          ],
+          "description": "own = newly authored; never output as a validated instrument item."
+        },
+        "sensitivity": {
+          "type": "object",
+          "required": [
+            "level"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "level": {
+              "enum": [
+                "sensitive",
+                "highlySensitive"
+              ]
+            },
+            "warningText": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "helpResourcesText": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "excludeFromExportByDefault": {
+              "type": "boolean"
+            }
+          }
+        },
+        "exportHints": {
+          "description": "Per-platform overrides. Keys are platform ids (limesurvey, redcap, qualtrics, surveymonkey, googleForms, unipark, or a custom lowerCamelCase id).",
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[a-z][A-Za-z0-9]{0,31}$"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 1,
+            "properties": {
+              "variableName": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_]{0,99}$"
+              },
+              "label": {
+                "$ref": "#/$defs/LocalizedText"
+              },
+              "notes": {
+                "$ref": "#/$defs/LocalizedText"
+              }
+            }
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "inclusionRequired": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "defaultSelected": {
+            "const": true
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "response": {
+                "properties": {
+                  "kind": {
+                    "const": "note"
+                  }
+                },
+                "required": [
+                  "kind"
+                ]
+              }
+            },
+            "required": [
+              "response"
+            ]
+          },
+          "then": {
+            "properties": {
+              "answerRequired": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Module": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "description",
+        "itemRefs",
+        "selectionMode",
+        "inclusionRequired",
+        "defaultSelected"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "title": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "description": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "itemRefs": {
+          "$ref": "#/$defs/NonEmptyIdList"
+        },
+        "selectionMode": {
+          "enum": [
+            "independent",
+            "allOrNothing"
+          ]
+        },
+        "inclusionRequired": {
+          "type": "boolean"
+        },
+        "defaultSelected": {
+          "type": "boolean"
+        },
+        "scaleRefs": {
+          "$ref": "#/$defs/IdList"
+        },
+        "documentation": {
+          "$ref": "#/$defs/Documentation"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "selectionMode": {
+                "const": "independent"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "inclusionRequired": {
+                "const": false
+              },
+              "defaultSelected": {
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "inclusionRequired": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "defaultSelected": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Section": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "itemRefs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "title": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "itemRefs": {
+          "$ref": "#/$defs/NonEmptyIdList"
+        },
+        "instruction": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "layout": {
+          "enum": [
+            "list",
+            "matrix",
+            "table"
+          ],
+          "description": "matrix/table = one shared option set across items (batteries). Adapters map to LimeSurvey array, REDCap matrix group, etc."
+        },
+        "pageBreakBefore": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Questionnaire": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "sections"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "title": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "introduction": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "closingText": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "sections": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/Section"
+          }
+        },
+        "consent": {
+          "type": "object",
+          "required": [
+            "text"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "text": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "parentalConsentText": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "requiresParentalConsent": {
+              "type": "boolean"
+            }
+          }
+        },
+        "privacyNotice": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "helpResources": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "delivery": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "pageMode": {
+              "enum": [
+                "onePage",
+                "perSection",
+                "perItem"
+              ]
+            },
+            "showProgress": {
+              "type": "boolean"
+            },
+            "allowBackNavigation": {
+              "type": "boolean"
+            },
+            "anonymity": {
+              "enum": [
+                "anonymous",
+                "pseudonymous",
+                "identified"
+              ]
+            },
+            "pseudonymizationNote": {
+              "$ref": "#/$defs/LocalizedText"
+            }
+          }
+        },
+        "hiddenFields": {
+          "description": "Grouping/context variables (school, class, wave). Not questions.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "variableName",
+              "source"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/Id"
+              },
+              "variableName": {
+                "$ref": "#/$defs/Id"
+              },
+              "source": {
+                "enum": [
+                  "urlParameter",
+                  "embeddedData",
+                  "constant"
+                ]
+              },
+              "constantValue": {
+                "type": "string"
+              },
+              "label": {
+                "$ref": "#/$defs/LocalizedText"
+              },
+              "description": {
+                "$ref": "#/$defs/LocalizedText"
+              }
+            },
+            "if": {
+              "properties": {
+                "source": {
+                  "const": "constant"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "constantValue"
+              ]
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "constantValue"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "ScoreMapping": {
+      "type": "object",
+      "required": [
+        "itemRef",
+        "rawToScore",
+        "missingCodes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "itemRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "rawToScore": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "code",
+              "score"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "missingCodes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ScoreDefinition": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "itemRefs",
+        "method",
+        "itemMappings",
+        "minimumAnswered",
+        "interpretationDirection"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Id"
+        },
+        "title": {
+          "$ref": "#/$defs/LocalizedText"
+        },
+        "itemRefs": {
+          "$ref": "#/$defs/NonEmptyIdList"
+        },
+        "method": {
+          "enum": [
+            "sum",
+            "mean"
+          ]
+        },
+        "itemMappings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ScoreMapping"
+          }
+        },
+        "minimumAnswered": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "interpretationDirection": {
+          "enum": [
+            "higherMore",
+            "higherLess",
+            "notSpecified"
+          ]
+        },
+        "sourceLinks": {
+          "$ref": "#/$defs/SourceLinks"
+        },
+        "documentation": {
+          "$ref": "#/$defs/Documentation"
+        },
+        "scaleRef": {
+          "$ref": "#/$defs/Id"
+        }
+      }
+    },
+    "RespSlider": {
+      "description": "Continuous or stepped scale. Feature: sliderResponse.",
+      "type": "object",
+      "required": [
+        "kind",
+        "minimum",
+        "maximum"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "slider"
+        },
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        },
+        "step": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "min": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "mid": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "max": {
+              "$ref": "#/$defs/LocalizedText"
+            }
+          }
+        },
+        "showValue": {
+          "type": "boolean"
+        },
+        "unit": {
+          "$ref": "#/$defs/Unit"
+        },
+        "validationMessage": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      }
+    },
+    "RespRanking": {
+      "description": "Respondent orders options. Feature: rankingResponse.",
+      "type": "object",
+      "required": [
+        "kind",
+        "optionSetRef"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "ranking"
+        },
+        "optionSetRef": {
+          "$ref": "#/$defs/Id"
+        },
+        "maxRanks": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "validationMessage": {
+          "$ref": "#/$defs/LocalizedText"
+        }
+      }
+    },
+    "RespNote": {
+      "description": "Display-only text block (no answer). The item text is the content. Feature: noteItems.",
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "note"
+        }
+      }
+    },
+    "ConditionGroup": {
+      "description": "Compound visibility. Feature: compoundVisibility.",
+      "type": "object",
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": [
+            "all"
+          ]
+        },
+        {
+          "required": [
+            "any"
+          ]
+        }
+      ],
+      "properties": {
+        "all": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/Condition"
+          }
+        },
+        "any": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/Condition"
+          }
+        }
+      }
+    },
+    "ConditionOrGroup": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Condition"
+        },
+        {
+          "$ref": "#/$defs/ConditionGroup"
+        }
+      ]
+    }
+  }
+}
