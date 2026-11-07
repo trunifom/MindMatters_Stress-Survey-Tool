@@ -17,3 +17,8 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - `src/core`: Versions-/Typ-Gate, Schema-Prüfung mit ajv (Draft 2020-12) mit stabilen Diagnosecodes, ausdrückliche Migration 0.3.0 → 0.4.0.
 - `src/core`: semantische Prüfung Teil 1 – eindeutige IDs und Variablennamen, Verweisauflösung (gebündelt), Konstruktzyklen, Datumsreihenfolge, Sprachen (nicht deklariert, fehlende Übersetzung), Feature-Deklaration. Typmodell `src/core/types.ts`.
 - `src/core`: semantische Prüfung Teil 2 – ordinale Antwortlisten, Wertebereiche, Erfüllbarkeit von Antworten (Mehrfachauswahl mit exklusiven Codes, Textlängen), Slider, Ranking, Widget-Kompatibilität.
+- `src/core`: semantische Prüfung Teil 3 – Vorlage (jedes Item genau einmal), Bedingungen (Auslöser, Reihenfolge, Operator/Typ, Wert, Zyklen), Module, Scoring-Definitionen.
+
+### Geändert
+- `examples/catalog_rich_0_4_0.json`: Zahlenvergleich auf dem Slider statt auf einer Einfachauswahl (Validator-Befund); `mood_slider` ist vorausgewählt, weil ein vorausgewähltes Item davon abhängt.
+

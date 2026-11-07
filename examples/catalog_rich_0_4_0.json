@@ -170,7 +170,7 @@
       },
       "inclusionRequired": false,
       "answerRequired": false,
-      "defaultSelected": false,
+      "defaultSelected": true,
       "variableName": "mood_slider",
       "origin": "own",
       "constructRefs": [],
@@ -219,7 +219,7 @@
       "visibleWhen": {
         "all": [
           { "itemRef": "wants_help", "operator": "equals", "value": "yes" },
-          { "itemRef": "demo_02", "operator": "greaterThanOrEqual", "value": "4" }
+          { "itemRef": "mood_slider", "operator": "lessThan", "value": "30" }
         ]
       }
     }

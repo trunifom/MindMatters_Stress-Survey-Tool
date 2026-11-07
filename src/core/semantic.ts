@@ -3,6 +3,8 @@ import { checkFeatures } from "./features";
 import { checkLanguages } from "./languages";
 import { checkRegisters } from "./registers";
 import { checkOptionSets, checkResponses } from "./responses";
+import { checkScoring } from "./scoring";
+import { checkConditions, checkModules, checkTemplate } from "./structure";
 import type { Catalog } from "./types";
 
 /**
@@ -17,5 +19,9 @@ export function validateCatalogSemantics(c: Catalog): Diagnostic[] {
     ...checkFeatures(c),
     ...checkOptionSets(c),
     ...checkResponses(c),
+    ...checkTemplate(c),
+    ...checkConditions(c),
+    ...checkModules(c),
+    ...checkScoring(c),
   ];
 }

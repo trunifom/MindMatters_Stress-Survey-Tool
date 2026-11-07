@@ -89,5 +89,21 @@ Fehlende Verweisziele werden gebündelt: ein Befund je Ziel mit Anzahl der Vorko
 | `SLIDER_RANGE_INVALID` | error | Slider: Minimum nicht kleiner als Maximum, oder Schrittweite grösser als der Bereich |
 | `RANKING_MAX_EXCEEDS_OPTIONS` | error | Ranking: `maxRanks` grösser als die Zahl inhaltlicher Optionen |
 | `PRESENTATION_INCOMPATIBLE` | error | Widget passt nicht zum Antworttyp (z. B. `checkbox` bei Einfachauswahl) |
+| `TEMPLATE_ITEM_MISSING` | error | ein Item kommt in der Vorlage nicht vor. Jedes Item muss genau einmal erscheinen |
+| `TEMPLATE_ITEM_DUPLICATE` | error | ein Item steht mehrfach in der Vorlage. Wiederholte Verwendung braucht ein Vorkommensmodell, das dieses Profil nicht hat (T43) |
+| `CONDITION_SELF_REFERENCE` | error | ein Item hängt von sich selbst ab |
+| `CONDITION_TRIGGER_NOT_BEFORE` | error | der Auslöser steht in der Vorlage nicht vor dem abhängigen Item |
+| `CONDITION_OPERATOR_TYPE` | error | Operator passt nicht zum Auslöser: `equals`/`notEquals` nur Einfachauswahl, `contains`/`notContains` nur Mehrfachauswahl, Zahlenvergleiche nur Ganzzahl, Dezimalzahl, Slider |
+| `CONDITION_VALUE_INVALID` | error | Wert ist kein Optionscode des Auslösers bzw. keine Zahl bei Zahlenvergleich |
+| `CONDITION_CYCLE` | error | Sichtbarkeitsbedingungen bilden einen Zyklus |
+| `ITEM_IN_MULTIPLE_MODULES` | error | ein Item gehört zu mehr als einem Modul |
+| `MODULE_SCALE_NOT_CONTAINED` | error | eine in `scaleRefs` genannte Skala liegt nicht vollständig im Modul |
+| `MODULE_DEFAULT_MISMATCH` | error | `allOrNothing`-Modul: `defaultSelected` eines Items weicht vom Modul ab |
+| `MODULE_OPTIONAL_HAS_REQUIRED_ITEM` | error | optionales `allOrNothing`-Modul enthält ein Pflichtitem (T13) |
+| `SCORE_MINIMUM_EXCEEDS_ITEMS` | error | `minimumAnswered` grösser als die Itemzahl |
+| `SCORE_MAPPING_MISSING` / `SCORE_MAPPING_DUPLICATE` / `SCORE_MAPPING_EXTRA` | error | je Item genau ein Mapping: fehlt, doppelt oder für ein fremdes Item |
+| `SCORE_ITEM_NOT_SINGLE_CHOICE` | error | nur Einfachauswahl kann in diesem Profil bewertet werden |
+| `SCORE_CODE_UNCOVERED` / `SCORE_CODE_DUPLICATE` / `SCORE_CODE_UNKNOWN` | error | jeder Optionscode muss genau einmal in `rawToScore` oder `missingCodes` stehen: fehlt, doppelt oder unbekannt |
+| `SCORE_ROLE_MISMATCH` | error | `missing`-Option in `rawToScore` oder `substantive`-Option in `missingCodes` |
 
 Hinweis: Reine `metadata`-Extensions brauchen kein Feature, bleiben erhalten und werden nie ausgeführt (T08).

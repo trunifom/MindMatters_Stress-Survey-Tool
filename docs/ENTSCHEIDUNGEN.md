@@ -36,3 +36,4 @@ Jeder Eintrag: Kontext, Entscheidung, Alternativen, Folgen. Neue Entscheidungen 
 - Erste Plattform-Reihenfolge der Adapter (Vorschlag: LimeSurvey, REDCap, Qualtrics).
 - Unipark: Importformat bei Tivian erfragen.
 - Ressourcenlimits (Dateigrösse, Verschachtelung, Itemzahl) und Referenzgerät für das Leistungsziel.
+- Zahlenvergleiche in Bedingungen auf ordinalen Einfachauswahlen (z. B. «trifft eher zu oder mehr»): Vergleich über Code oder `ordinalPosition`? Bis zur Entscheidung sind `greaterThan` usw. nur für Ganzzahl, Dezimalzahl und Slider erlaubt (`CONDITION_OPERATOR_TYPE`).
