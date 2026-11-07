@@ -98,6 +98,8 @@ def mutations(rich):
         "sensitivity without level": m(lambda d: item(d, "demo_02")["sensitivity"].pop("level")),
         "sensitivity bad level": m(lambda d: item(d, "demo_02")["sensitivity"].update(level="low")),
         "exportHints bad platform key": m(lambda d: item(d, "demo_01")["exportHints"].update({"Lime Survey": {"notes": {"en": "x"}}})),
+        "option exportHints without code": m(lambda d: d["optionSets"][0]["options"][-1]["exportHints"]["limesurvey"].pop("code")),
+        "option exportHints bad code": m(lambda d: d["optionSets"][0]["options"][-1]["exportHints"]["limesurvey"].update(code="a b")),
         "exportHints empty entry": m(lambda d: item(d, "demo_01")["exportHints"].update(limesurvey={})),
         "administrationTime without source": m(lambda d: d["instruments"][0]["administrationTime"].pop("sourceLinks")),
         "hidden constant without value": m(lambda d: d["questionnaire"]["hiddenFields"][1].pop("constantValue")),

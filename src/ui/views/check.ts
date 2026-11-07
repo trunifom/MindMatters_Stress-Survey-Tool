@@ -1,7 +1,11 @@
 import { resolveText } from "../../core/localized";
 import { createProject, projectFileName, serializeProject } from "../../model/project";
 import { Action, ActionDecision, evaluateAction } from "../../model/rights";
+import type { Catalog } from "../../core/types";
+import type { Selection } from "../../model/selection";
 import { buildCodebook } from "../../output/codebook";
+import { buildLimeSurvey } from "../../output/limesurvey";
+import type { AdapterResult } from "../../output/mapping";
 import { buildCheckReport, isReportStale, reportFileName, serializeReport, stateFingerprint } from "../../output/report";
 import { diagnosticsList } from "../components";
 import { downloadText, h } from "../dom";
@@ -46,7 +50,7 @@ export function renderCheck({ state: s, store }: ViewContext): HTMLElement {
     metaForm(s, store),
     filesSection(s, store),
     rightsSection(s),
-    exportSection(s),
+    exportSection(s, store),
   );
 }
 
@@ -187,20 +191,80 @@ function rightsSection(s: AppState): HTMLElement {
   );
 }
 
-function exportSection(s: AppState): HTMLElement {
+/** Platforms with an adapter. The others stay listed as planned. */
+const ADAPTERS: Record<string, (c: Catalog, selection: Selection, opts: { language: string; mode: "native" | "test" }) => AdapterResult> = {
+  limesurvey: buildLimeSurvey,
+};
+
+function runExport(s: AppState, store: Store, platform: string, name: string, mode: "native" | "test"): void {
+  const adapter = ADAPTERS[platform];
+  if (!adapter) return;
+  const r = adapter(s.loaded!.catalog, s.selection, { language: s.language, mode });
+  if (!r.ok || r.content === undefined) return;
+  downloadText(r.fileName, r.content, r.mimeType);
+  store.set({ notice: { kind: "info", text: t("out.exportDone", { file: r.fileName, name }) } });
+}
+
+function adapterBlock(s: AppState, store: Store, platform: string, name: string): HTMLElement {
+  const c = s.loaded!.catalog;
+  const adapter = ADAPTERS[platform] as (typeof ADAPTERS)[string];
+  const native = adapter(c, s.selection, { language: s.language, mode: "native" });
+  const test = adapter(c, s.selection, { language: s.language, mode: "test" });
+  const blockedDiagnostics = (r: AdapterResult) => r.diagnostics.filter((d) => d.severity !== "info");
+  // The regular export explains itself first; if only the test export works, its findings are shown instead.
+  const reasons = native.ok ? [] : blockedDiagnostics(native);
+  const source = test.ok ? test : native;
+  const levelOrder = { manual: 0, unsupported: 1, transformed: 2, exact: 3 } as const;
+  const mapping = [...source.mapping].sort((a, b) => levelOrder[a.level] - levelOrder[b.level]);
+  return h(
+    "div",
+    { class: "adapter-block", "data-platform": platform },
+    h("h4", null, name),
+    h(
+      "div",
+      { class: "toolbar" },
+      h("button", { type: "button", class: "btn btn-primary", id: "native-export", disabled: !native.ok, "aria-describedby": "native-reason", "data-focus": "native-export", on: { click: () => runExport(s, store, platform, name, "native") } }, t("out.exportFor", { name })),
+      h("button", { type: "button", class: "btn", id: "test-export", disabled: !test.ok, "aria-describedby": "native-reason", "data-focus": "test-export", on: { click: () => runExport(s, store, platform, name, "test") } }, t("out.testExportFor", { name })),
+    ),
+    h("p", { id: "native-reason", class: "muted" }, t("out.responsibility")),
+    reasons.length > 0 ? h("div", { id: "export-why" }, h("h5", null, t("out.exportWhy")), diagnosticsList(reasons)) : null,
+    source.mapping.length > 0
+      ? h(
+          "details",
+          { class: "mapping", id: "mapping-report" },
+          h("summary", null, t("out.mapping")),
+          h("p", { class: "muted" }, t("out.mappingHint")),
+          h(
+            "table",
+            { class: "mapping-table" },
+            h(
+              "tbody",
+              null,
+              ...mapping.map((m) =>
+                h(
+                  "tr",
+                  { class: `level-${m.level}` },
+                  h("td", null, h("span", { class: `badge lvl-${m.level}` }, t(`out.level.${m.level}` as TextKey))),
+                  h("td", null, h("code", null, m.feature)),
+                  h("td", null, m.message, m.itemRefs.length > 0 ? h("span", { class: "muted" }, " (" + t("out.mappingItems", { n: m.itemRefs.length }) + ")") : null),
+                ),
+              ),
+            ),
+          ),
+          h("h5", null, t("out.assumptions")),
+          h("ul", null, ...source.assumptions.map((a) => h("li", null, a))),
+        )
+      : null,
+  );
+}
+
+function exportSection(s: AppState, store: Store): HTMLElement {
   return h(
     "section",
     { class: "out-block", "aria-labelledby": "export-h" },
     h("h3", { id: "export-h" }, t("out.exportTitle")),
-    h("p", { class: "banner banner-info", role: "note" }, h("strong", null, t("out.exportPlanned"))),
-    h("ul", { class: "adapters" }, ...PLATFORMS.map(([id, name]) => h("li", { "data-platform": id, class: id === s.targetPlatform ? "is-target" : "" }, t("out.adapterPlanned", { name })))),
-    h(
-      "div",
-      { class: "toolbar" },
-      // Adapters are not implemented: the buttons are present so that the reason is visible, but never enabled.
-      h("button", { type: "button", class: "btn", id: "native-export", disabled: true, "aria-describedby": "native-reason" }, t("out.nativeExport")),
-      h("button", { type: "button", class: "btn", id: "test-export", disabled: true, "aria-describedby": "native-reason" }, t("out.testExport")),
-    ),
-    h("p", { id: "native-reason", class: "muted" }, t("out.notAvailable") + ". ", t("out.responsibility")),
+    h("p", { class: "banner banner-info", role: "note" }, h("strong", null, t("out.exportStatus"))),
+    h("ul", { class: "adapters" }, ...PLATFORMS.map(([id, name]) => h("li", { "data-platform": id, class: id === s.targetPlatform ? "is-target" : "" }, t(ADAPTERS[id] ? "out.adapterReady" : "out.adapterPlanned", { name })))),
+    ...PLATFORMS.filter(([id]) => ADAPTERS[id]).map(([id, name]) => adapterBlock(s, store, id, name)),
   );
 }

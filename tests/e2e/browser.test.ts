@@ -196,6 +196,22 @@ describe.skipIf(!executablePath)(`real browser (${executablePath ?? "none found"
     await context.close();
   });
 
+  it("the LimeSurvey test export downloads a real file with a byte order mark and the TEST label", async () => {
+    const { context, page } = await open();
+    await loadExample(page);
+    await page.click("[data-focus=tab-check]");
+    expect(await page.isDisabled("#native-export")).toBe(true); // the example is a draft
+    const [download] = await Promise.all([page.waitForEvent("download"), page.click("#test-export")]);
+    const bytes = readFileSync((await download.path())!);
+    expect(download.suggestedFilename()).toBe("example_rich_1.0.0_limesurvey_TEST.txt");
+    expect([...bytes.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
+    const text = bytes.toString("utf8");
+    expect(text).toContain("surveyls_title");
+    expect(text).toContain("TEST");
+    expect(text.split("\n")[1]).toContain("\t"); // tab separated
+    await context.close();
+  });
+
   it("a saved project can be loaded again through the project file input", async () => {
     const { context, page } = await open();
     await loadExample(page);

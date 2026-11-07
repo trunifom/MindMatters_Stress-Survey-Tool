@@ -165,7 +165,12 @@
             "de-CH": "Keine Angabe"
           },
           "role": "missing",
-          "missingReason": "refused"
+          "missingReason": "refused",
+          "exportHints": {
+            "limesurvey": {
+              "code": "ref"
+            }
+          }
         }
       ]
     },
@@ -217,7 +222,12 @@
             "en": "School work",
             "de-CH": "Schule"
           },
-          "role": "substantive"
+          "role": "substantive",
+          "exportHints": {
+            "limesurvey": {
+              "code": "sch"
+            }
+          }
         },
         {
           "code": "friends",
@@ -225,7 +235,12 @@
             "en": "Friends",
             "de-CH": "Freunde"
           },
-          "role": "substantive"
+          "role": "substantive",
+          "exportHints": {
+            "limesurvey": {
+              "code": "fri"
+            }
+          }
         }
       ]
     }
@@ -248,7 +263,12 @@
       "variableName": "intro_note",
       "constructRefs": [],
       "origin": "own",
-      "rightsRef": "rights_own"
+      "rightsRef": "rights_own",
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "intronote"
+        }
+      }
     },
     {
       "id": "demo_01",
@@ -341,6 +361,11 @@
           "de-CH": "Sprich mit einer Lehrperson oder mit der Schulsozialarbeit."
         },
         "excludeFromExportByDefault": false
+      },
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "demo02"
+        }
       }
     },
     {
@@ -376,6 +401,11 @@
       "rightsRef": "rights_own",
       "presentation": {
         "widget": "slider"
+      },
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "moodslider"
+        }
       }
     },
     {
@@ -399,6 +429,11 @@
       "rightsRef": "rights_own",
       "presentation": {
         "optionOrder": "random"
+      },
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "ranktopics"
+        }
       }
     },
     {
@@ -418,7 +453,12 @@
       "variableName": "wants_help",
       "origin": "own",
       "constructRefs": [],
-      "rightsRef": "rights_own"
+      "rightsRef": "rights_own",
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "wantshelp"
+        }
+      }
     },
     {
       "id": "contact_email",
@@ -456,6 +496,11 @@
             "value": "30"
           }
         ]
+      },
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "contactemail"
+        }
       }
     },
     {
@@ -475,7 +520,12 @@
       "variableName": "anon_note",
       "constructRefs": [],
       "origin": "own",
-      "rightsRef": "rights_own"
+      "rightsRef": "rights_own",
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "anonnote"
+        }
+      }
     },
     {
       "id": "demo_03",
@@ -502,6 +552,11 @@
       "presentation": {
         "widget": "radio",
         "orientation": "horizontal"
+      },
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "demo03"
+        }
       }
     },
     {
@@ -529,6 +584,11 @@
       "presentation": {
         "widget": "radio",
         "orientation": "horizontal"
+      },
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "demo04"
+        }
       }
     }
   ],

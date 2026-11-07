@@ -39,6 +39,18 @@ Jeder Eintrag: Kontext, Entscheidung, Alternativen, Folgen. Neue Entscheidungen 
 - **Alternativen:** eigenes Register `textBlocks` (verworfen: doppelte Ordnungs- und Auswahllogik); HTML/Markdown in Texten (verworfen: Sicherheit, Zielsysteme unterstützen es unterschiedlich).
 - **Folgen:** Schema 0.4.0 wurde vor der ersten Auslieferung erweitert (ADR-003 bleibt unberührt, weil 0.4.0 noch nirgends verwendet wird). Exporter ignorieren `variableName` von Notizen und erzeugen keine Datenspalte.
 
+## ADR-007: Exporter schreiben, was sie belegen können, und ändern nichts still
+- **Datum:** 2026-11-07, **Status:** angenommen
+- **Kontext:** Zielsysteme haben eigene Regeln für Codes und Namen (LimeSurvey: Antwortcodes höchstens 5 Zeichen, Fragecodes ohne Unterstrich). Die Katalogcodes (`refused`, `demo_01`) entsprechen dem nicht. Die Herstellerseite des TSV-Formats lässt Escape-Regeln, Typbuchstaben und Limits offen.
+- **Entscheidung:**
+  1. Jeder Adapter liefert neben der Datei einen **Zuordnungsbericht** (`exact | transformed | manual | unsupported`) und die Liste seiner **ungeprüften Annahmen**. Beides sieht die Schule im Konfigurator.
+  2. Codes werden **nie abgeleitet**. Ein unzulässiger Code ist ein Fehler mit Hinweis. Abhilfe ist ein Eintrag im Katalog: `Item.exportHints.<plattform>.variableName` (vorhanden) und neu `Option.exportHints.<plattform>.code`. Der Katalogcode bleibt die Identität der Option, Bedingungen werden beim Schreiben auf den Exportcode abgebildet.
+  3. Eine Bedingung, die das Zielsystem nicht ausdrücken kann, ist ein Fehler. Sie wird nicht weggelassen.
+  4. Texte werden so maskiert, dass keine Zelle Tabulator, Zeilenumbruch oder doppelte Anführungszeichen enthält. Dadurch braucht der Adapter keine Escape-Regel, die nicht belegt ist.
+  5. Der Adapter heisst «ungetestet», bis ein Importtest an einer echten Instanz in `docs/LIMESURVEY.md` protokolliert ist.
+- **Alternativen:** Codes automatisch kürzen (verworfen: Kollisionen und stille Änderung der Identität); Export mit Warnung trotz unzulässigem Code (verworfen: die Datei wäre im Zielsystem falsch oder nicht importierbar).
+- **Folgen:** Schema 0.4.0 erhält `Option.exportHints` (additiv, 0.4.0 ist noch nicht ausgeliefert, ADR-003 bleibt unberührt). Kataloge für LimeSurvey brauchen kurze Exportcodes für Optionen mit langen Codes.
+
 ## Offene Entscheidungen
 - Lizenz des Repositories.
 - Erste Plattform-Reihenfolge der Adapter (Vorschlag: LimeSurvey, REDCap, Qualtrics).

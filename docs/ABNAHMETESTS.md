@@ -2,7 +2,7 @@
 
 Die 45 Abnahmetests T01–T45 stammen aus den Ausgangsunterlagen (lokal, nicht im Repo). Diese Tabelle zeigt, welcher automatische Test den jeweiligen Punkt belegt. Sie ist die einzige Stelle, die den Stand ehrlich ausweist: **«abgedeckt»** heisst, der Test läuft und besteht auf dem Entwicklungsrechner. **«teilweise»** heisst, die Datenseite (Validator, Modell) ist getestet, die Benutzeroberfläche oder der Export fehlt noch. **«offen»** heisst, nichts davon existiert.
 
-Stand: 7. November 2026 · 439 Unit-Tests (davon UI unter jsdom) · 11 Browser-Tests (Edge 156) (Vitest) · 60 Konformanzprüfungen (Python)
+Stand: 7. November 2026 · 468 Unit-Tests (davon UI unter jsdom) · 12 Browser-Tests (Edge 156) (Vitest) · 60 Konformanzprüfungen (Python)
 
 | ID | Test | Stand | Nachweis / fehlender Teil |
 |---|---|---|---|
@@ -31,18 +31,18 @@ Stand: 7. November 2026 · 439 Unit-Tests (davon UI unter jsdom) · 11 Browser-T
 | T23 | Leerzeichen, Unicode, Minimallänge | offen | Eingabeprüfung fehlt |
 | T24 | Missing gegen Neutral, Code 01 | teilweise | Codes bleiben Strings (Strikter Leser), Rollenprüfung im Scoring; Export fehlt |
 | T25 | Infoansicht | abgedeckt | `ui/items.test.ts`: Infofenster in der Reihenfolge A09, «nicht dokumentiert» statt Raten |
-| T26 | Sprachwechsel, fehlende Übersetzung | teilweise | Sprachwechsel in Liste und Vorschau, fehlende Übersetzung wird markiert statt gemischt (`ui/items.test.ts`, `ui/preview.test.ts`, `output.test.ts`); Export in der Sprache folgt |
+| T26 | Sprachwechsel, fehlende Übersetzung | teilweise | Sprachwechsel in Liste und Vorschau, fehlende Übersetzung wird markiert statt gemischt (`ui/items.test.ts`, `ui/preview.test.ts`, `output.test.ts`); Export: fehlender Text in der Exportsprache ist ein Fehler, nie ein Auffüllen (`limesurvey.test.ts`); nur LimeSurvey, ungetestet an echter Instanz |
 | T27 | Projekt speichern/laden | abgedeckt | `project.test.ts`, `ui/output.test.ts`: Speichern, Laden über die Dateiauswahl, gleiche Auswahl und Angaben |
 | T28 | falscher Katalog/Version | abgedeckt | `selection.test.ts`, `pipeline.test.ts` |
 | T29 | Schulnotizen nicht ungefragt veröffentlicht | abgedeckt | `output.test.ts`, `ui/output.test.ts`: Codebuch ohne Notizen ausser auf ausdrückliche Wahl, Dateinamen und Prüfbericht ohne Notizen |
 | T30 | echter Importtest je Adapter | offen | Adapter fehlen (M5/M6) |
 | T31 | Namens-/Codeabbildung | offen | Adapter fehlen |
 | T32 | nicht übertragbarer Constraint | offen | Adapter fehlen |
-| T33 | Bedingungen und Ausblendung | teilweise | Bedingungen im Katalog geprüft und in Liste und Vorschau als Struktur gezeigt; Export-Semantik fehlt |
+| T33 | Bedingungen und Ausblendung | teilweise | Bedingungen im Katalog geprüft und in Liste und Vorschau als Struktur gezeigt; Export-Semantik für LimeSurvey als Relevanz-Gleichung (`limesurvey.test.ts`), nicht an echter Instanz getestet; andere Zielsysteme fehlen |
 | T34 | Testantwortdaten exportieren | offen | Adapter fehlen |
 | T35 | erlaubte Nutzung, verbotene Änderung | abgedeckt | `rights.test.ts`: `modification=prohibited` blockiert nichts, nicht benötigte Verbote blockieren nicht |
 | T36 | unbekannte Darstellungsrechte | abgedeckt | `ui/items.test.ts`: Text gesperrt, nirgends im DOM, nicht durchsuchbar, Katalog nutzbar |
-| T37 | Codebuch gegen nativer Export | teilweise | Codebuch und Rechtefolgen je Handlung in Matrix, Codebuch und Oberfläche getestet (`rights.test.ts`, `output.test.ts`, `ui/output.test.ts`); nativer Export folgt mit den Adaptern |
+| T37 | Codebuch gegen nativer Export | teilweise | Codebuch und Rechtefolgen je Handlung in Matrix, Codebuch und Oberfläche getestet (`rights.test.ts`, `output.test.ts`, `ui/output.test.ts`); nativer Export für LimeSurvey an Rechte und Status gebunden (`limesurvey.test.ts`, `ui/output.test.ts`), andere Adapter folgen |
 | T38 | CSV-Import | offen | spätere Stufe (M8) |
 | T39 | Tastatur, Dialogfokus | teilweise | Tastaturablauf Laden, Auswählen, Info-Fenster inklusive Fokusring, Tab-Falle und Rückfokus in Edge 156 belegt; Screenreader und restliche Ansichten nur über native Bedienelemente, nicht gesondert getestet |
 | T40 | 1.000 Items / 5 MB | teilweise | `performance.test.ts` (Kern: 1,36 s) und `tests/e2e/browser.test.ts` (Edge 156: 5,12 MB, 1.010 Items bedienbar nach 749 ms, Ziel 5 s). Referenzgerät noch nicht festgelegt |

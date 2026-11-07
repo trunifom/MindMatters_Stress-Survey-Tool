@@ -103,6 +103,8 @@ export interface Option {
   role: "substantive" | "missing";
   ordinalPosition?: number;
   missingReason?: "refused" | "dontKnow" | "notApplicable";
+  /** Per-platform answer codes (platform id to code). Never derived, only used if given. */
+  exportHints?: Record<string, { code: string }>;
 }
 
 export interface OptionSet {

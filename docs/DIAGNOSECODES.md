@@ -151,3 +151,21 @@ Ein Fehler bei einer Nutzungsart, die die Handlung nicht braucht, blockiert sie 
 | `DRAFT_WATERMARK_REQUIRED` | info | Ausgabe aus einem `draft`-Katalog muss «Entwurf – nicht für produktive Durchführung freigegeben» tragen |
 | `TEST_ARTIFACT` | info | Entwicklungs-Testexport: als Testartefakt kennzeichnen, vom Schulablauf trennen, Freigabeverantwortung benennen |
 
+## Stufe `export` (Adapter)
+
+Gilt für die Export-Adapter (`targetPlatform` nennt das Zielsystem). Ein Fehler dieser Stufe verhindert die Datei, es wird nichts repariert. Die Rechtecodes oben (`CATALOG_NOT_RELEASED`, `RIGHTS_*`) gehören ebenfalls zu jedem Export.
+
+| Code | Severity | Bedeutung |
+|---|---|---|
+| `EXPORT_SELECTION_INVALID` | error | die Auswahl hat ungelöste Konflikte |
+| `EXPORT_LANGUAGE_UNKNOWN` | error | die Exportsprache gehört nicht zum Katalog |
+| `EXPORT_TEXT_MISSING` | error | ein Text fehlt in der Exportsprache; es wird nie mit einer anderen Sprache aufgefüllt |
+| `EXPORT_VARIABLE_NAME_INVALID` | error | Fragecode für das Zielsystem unzulässig; `remediation` nennt `exportHints.<plattform>.variableName` |
+| `EXPORT_VARIABLE_NAME_DUPLICATE` | error | zwei Items bekämen denselben Fragecode |
+| `EXPORT_OPTION_CODE_INVALID` | error | Antwortcode für das Zielsystem unzulässig; `remediation` nennt `exportHints.<plattform>.code` an der Option |
+| `EXPORT_OPTION_CODE_DUPLICATE` | error | zwei Optionen bekämen denselben Exportcode |
+| `EXPORT_EXCLUSIVE_UNSUPPORTED` | error | mehrere exklusive Optionen, das Zielsystem kennt eine |
+| `EXPORT_CONDITION_TARGET_MISSING` | error | eine Bedingung verweist auf ein Item, das nicht im Fragebogen ist |
+| `EXPORT_CONDITION_UNSUPPORTED` | error | die Bedingung ist im Zielsystem nicht ausdrückbar (sie wird nie weggelassen) |
+| `EXPORT_SENSITIVE_INCLUDED` | info | ein standardmässig vom Export ausgeschlossenes sensibles Item ist ausdrücklich gewählt |
+

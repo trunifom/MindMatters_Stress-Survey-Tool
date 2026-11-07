@@ -86,3 +86,13 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 
 ### Behoben
 - Auf einem Handy (375 px) verbreiterte die Matrix der Vorschau die ganze Seite um 152 px. Die Tabelle scrollt jetzt in einem eigenen, per Tastatur erreichbaren Bereich.
+
+### Hinzugefügt (M5: LimeSurvey-Export)
+- Adapter `src/output/limesurvey.ts`: tab-getrennte Strukturdatei (14 Spalten, Klassen S, SL, G, Q, SQ, A, Attributspalten), regulärer Export und gekennzeichneter Testexport. Gesperrt durch Rechtematrix, Katalogstatus und Auswahlkonflikte. Eine Sprache pro Datei; fehlender Text, unzulässiger oder doppelter Code, nicht ausdrückbare Bedingung sind Fehler, nie stille Änderungen. Texte werden so maskiert, dass keine Zelle Escape-Regeln braucht.
+- Gemeinsamer Zuordnungsbericht (`src/output/mapping.ts`): je Merkmal `exact`, `transformed`, `manual` oder `unsupported`, dazu die Liste ungeprüfter Annahmen über das Zielsystem.
+- Oberfläche: Tasten für regulären und Testexport, Begründung bei gesperrtem Export, aufklappbare Zuordnung mit Annahmen. Die Übersicht trennt «Adapter vorhanden, an echter Instanz ungetestet» von «geplant».
+- Schema 0.4.0: `Option.exportHints.<plattform>.code` für Zielsysteme mit anderen Coderegeln (ADR-007). Das Beispiel enthält LimeSurvey-Namen und -Codes.
+- Diagnosecodes der Stufe `export`, `docs/LIMESURVEY.md` (Zuordnung, Regeln, belegte und unbelegte Annahmen, Importtest), ADR-007.
+- Tests: 29 neue Unit-Tests (Adapter, UI), 1 Browser-Test (echter Download mit Byte-Order-Mark), 2 Schema-Mutationen.
+- **Nicht belegt:** Import in eine echte LimeSurvey-Instanz.
+

@@ -8,7 +8,7 @@
 | M2 | Auswahlkern | wirksame Pflichtmenge, Projekt laden/speichern, Initialauswahl, Sammelaktionen | erledigt (Datenseite) |
 | M3 | Oberfläche | Einzeldatei-Build, Katalogansicht, Suche/Filter, Info-Panel, Vorschau, Ausgaben | erledigt (jsdom und Edge 156 getestet) |
 | M4 | Ausgaben | Codebuch (Markdown), Prüfbericht (JSON) | erledigt (Datenseite) |
-| M5 | Erster Adapter | LimeSurvey (TSV), Test an echter Instanz | offen |
+| M5 | Erster Adapter | LimeSurvey (TSV), Test an echter Instanz | Adapter umgesetzt und getestet (Struktur, Gates, Browser-Download); **Importtest an echter Instanz offen** |
 | M6 | Weitere Adapter | REDCap, Qualtrics, danach SurveyMonkey, Google Forms (Skript), Unipark | offen |
 | M7 | Profil-JSON | Schulanpassung ohne Code-Varianten | offen |
 | M8 | Autorenmodus / CSV-Pflege | eigene Fragen, CSV-Import | offen |
@@ -18,5 +18,6 @@ Jeder Meilenstein endet mit Tests, Dokumentation, Changelog-Eintrag und Commit.
 Stand der Abnahmetests: [ABNAHMETESTS.md](ABNAHMETESTS.md).
 
 ## Nächste Schritte
-1. Erster Export-Adapter: LimeSurvey (M5), mit Importtest an einer echten Instanz.
-2. Browsernachweis über Edge hinaus (Firefox, Safari), Screenreader-Prüfung.
+1. Importtest des LimeSurvey-Exports an einer echten Instanz (Anleitung in [LIMESURVEY.md](LIMESURVEY.md)); danach Annahmenliste und Adapter korrigieren.
+2. Weitere Adapter (M6): REDCap-Datenwörterbuch, Qualtrics-TXT.
+3. Browsernachweis über Edge hinaus (Firefox, Safari), Screenreader-Prüfung.

@@ -876,6 +876,27 @@
             "dontKnow",
             "notApplicable"
           ]
+        },
+        "exportHints": {
+          "description": "Per-platform answer codes for targets whose code rules differ from this catalog's (for example LimeSurvey: letters and digits, at most 5 characters). Keys are platform ids as in Item.exportHints. The catalog code stays the identity of the option; the hint is only used when writing to that platform. Without a hint the exporter never shortens or rewrites a code.",
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[a-z][A-Za-z0-9]{0,31}$"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 1,
+            "required": [
+              "code"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_]{1,50}$"
+              }
+            }
+          }
         }
       },
       "if": {

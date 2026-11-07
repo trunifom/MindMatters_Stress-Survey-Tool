@@ -46,6 +46,15 @@ afterEach(() => {
   HTMLAnchorElement.prototype.click = origClick;
 });
 
+function firstBytes(b: Blob): Promise<number[]> {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve([...new Uint8Array(r.result as ArrayBuffer).slice(0, 3)]);
+    r.onerror = () => reject(r.error);
+    r.readAsArrayBuffer(b);
+  });
+}
+
 async function last(): Promise<Download> {
   const d = downloads[downloads.length - 1] as Download & { blob?: Blob };
   if (!d?.blob) throw new Error("no download happened");
@@ -264,20 +273,58 @@ describe("rights per action and export overview", () => {
     expect(m.root.textContent).toContain("withdrawal notice");
   });
 
-  it("no export is offered yet: the buttons stay disabled and every adapter is listed as planned", () => {
+  it("without confirmed rights no export is offered, the reason is shown and only LimeSurvey has an adapter", () => {
     const m = loaded(CAT10);
     expect(m.q<HTMLButtonElement>("#native-export").disabled).toBe(true);
     expect(m.q<HTMLButtonElement>("#test-export").disabled).toBe(true);
+    expect(m.q("#export-why").textContent).toContain("CATALOG_NOT_RELEASED");
     expect(m.qa("ul.adapters li").map((li) => li.textContent)).toEqual([
-      "LimeSurvey: planned",
+      "LimeSurvey: adapter available, untested on a real instance",
       "REDCap: planned",
       "Qualtrics: planned",
       "SurveyMonkey: planned",
       "Google Forms: planned",
       "Unipark: planned",
     ]);
-    expect(m.q(".out-block .banner-info").textContent).toContain("There is no tested adapter yet");
+    expect(m.q(".out-block .banner-info").textContent).toContain("has not been tested on a real LimeSurvey instance");
     expect(m.q("#native-reason").textContent).toContain("does not bypass any rights prohibition");
+  });
+});
+
+describe("export for LimeSurvey", () => {
+  it("a draft catalog offers only the labelled test export, which downloads a file with BOM, TEST label and the mapping", async () => {
+    const m = loaded(exampleText());
+    expect(m.q<HTMLButtonElement>("#native-export").disabled).toBe(true);
+    expect(m.q<HTMLButtonElement>("#test-export").disabled).toBe(false);
+    expect(m.q("#export-why").textContent).toContain("CATALOG_NOT_RELEASED");
+    click(m.q("#test-export"));
+    const d = await last();
+    expect(d.name).toMatch(/_limesurvey_TEST\.txt$/);
+    expect(await firstBytes((downloads[downloads.length - 1] as Download & { blob: Blob }).blob)).toEqual([0xef, 0xbb, 0xbf]); // UTF-8 byte order mark
+    expect(d.text).toContain("surveyls_title");
+    expect(d.text).toContain("TEST");
+    expect(m.q("#notices").textContent).toContain("was created");
+    expect(m.q("#mapping-report").textContent).toContain("response.slider");
+    expect(m.q("#mapping-report").textContent).toContain("Unverified assumptions");
+  });
+
+  it("a released catalog offers the regular export", async () => {
+    const m = loaded(exampleText(), (d) => (d.catalog.status = "released"));
+    expect(m.q<HTMLButtonElement>("#native-export").disabled).toBe(false);
+    expect(m.root.querySelector("#export-why")).toBeNull();
+    click(m.q("#native-export"));
+    const d = await last();
+    expect(d.name).toMatch(/_limesurvey\.txt$/);
+    expect(d.text).not.toContain("[TEST");
+  });
+
+  it("an option code LimeSurvey cannot take blocks the export and names the remedy", () => {
+    const m = loaded(exampleText(), (d) => {
+      d.catalog.status = "released";
+      delete d.optionSets[0].options.find((o: any) => o.code === "refused").exportHints;
+    });
+    expect(m.q<HTMLButtonElement>("#native-export").disabled).toBe(true);
+    expect(m.q("#export-why").textContent).toContain("EXPORT_OPTION_CODE_INVALID");
   });
 });
 

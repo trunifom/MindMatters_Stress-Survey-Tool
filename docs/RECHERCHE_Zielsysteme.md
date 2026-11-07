@@ -8,7 +8,7 @@ Kein Zielsystem nimmt ein vollständiges Fragebogenformat mit allen Einstellunge
 
 | Ziel | Realistischer Weg aus einem Offline-HTML | Stand |
 |---|---|---|
-| LimeSurvey | Tab-separierte Strukturdatei (`.txt`, UTF-8) oder `.lss` (XML), Upload im UI | TSV [V], `.lss`-Schema [?] |
+| LimeSurvey | Tab-separierte Strukturdatei (`.txt`, UTF-8) oder `.lss` (XML), Upload im UI | TSV [V] (14 Spalten und Klassen am 7. November 2026 gelesen, Details und Lücken in [LIMESURVEY.md](LIMESURVEY.md)), `.lss`-Schema [?] |
 | REDCap | Data-Dictionary-CSV (18 Spalten), Upload im Projekt | nur [S], offizielle Doku ohne Login nicht lesbar |
 | Qualtrics | TXT im Advanced Format (`[[AdvancedFormat]]`), Upload im UI | [V]; `.qsf` nicht empfohlen |
 | SurveyMonkey | kein Datei-Import; Text zum Einfügen (nur Multiple Choice und Textbox) oder API v3 mit OAuth | [V] |
@@ -65,7 +65,7 @@ Bewusst **nicht** aufgenommen:
 ## 4. Offene Punkte
 
 1. Unipark: Importformat bei Tivian oder Hochschul-Support erfragen.
-2. LimeSurvey: `.lss`-Schema, aktuelle Längenlimits (Quelle sind 3.x-Bugtracker), Escape-Regeln im TSV.
+2. LimeSurvey: Die TSV-Seite nennt keine Escape-Regeln, Typbuchstaben, Attributnamen, Längenlimits und keine BOM-Pflicht; der Adapter geht von Annahmen aus, die ein Importtest bestätigen muss ([LIMESURVEY.md](LIMESURVEY.md)). `.lss`-Schema bleibt ungeprüft.
 3. REDCap: alle Angaben an einer Testinstanz prüfen (Header-Strings, Validierungscodes, Quoting in Branching Logic, Choice-Code-Regeln).
 4. Qualtrics: Pflichtfeld, Validierung, Datum per TXT; UTF-8 mit/ohne BOM.
 5. SurveyMonkey: Logik und Recode-Werte per API.

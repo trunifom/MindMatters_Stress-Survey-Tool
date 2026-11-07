@@ -43,8 +43,11 @@ Oben sehen Sie Titel, Katalog-ID, Version, Status und die Sprache der Fragen. Vi
 
 Beim Schliessen des Tabs oder beim Laden einer anderen Datei fragt der Browser nach, wenn Sie ungesicherte Änderungen haben.
 
+- **Export für LimeSurvey:** Tasten *Export für LimeSurvey* und *Testexport für LimeSurvey* im Bereich «Export für Umfragetools». Der reguläre Export ist nur bei Katalogstatus «released» und bestätigten Rechten aller gewählten Items möglich. Der Testexport gilt auch für Entwürfe, trägt «TEST» im Titel und umgeht kein Rechteverbot. Ist ein Export nicht möglich, steht darunter, warum (zum Beispiel ein Code, den LimeSurvey nicht annimmt, mit dem Hinweis, was der Katalogpfleger ergänzen muss). Die **Zuordnung zum Zielsystem** zeigt, was genau übernommen wird und was Sie nach dem Import von Hand einstellen müssen (zum Beispiel das Einwilligungsfeld). Es wird eine Sprache pro Datei exportiert. Fehlt ein Text in dieser Sprache, gibt es keine Datei.
+
 ## Was noch nicht geht
-- **Export für Umfragetools** (LimeSurvey, REDCap, Qualtrics, SurveyMonkey, Google Forms, Unipark) ist in Entwicklung. Die Tasten sind vorhanden, aber gesperrt. Die Übersicht zeigt, warum ein Export nach heutiger Rechtepolitik gesperrt wäre.
+- **Der LimeSurvey-Export ist an keiner echten LimeSurvey-Instanz getestet.** Prüfen Sie importierte Umfragen vor dem Einsatz sorgfältig (Anleitung in [LIMESURVEY.md](LIMESURVEY.md)).
+- **Export für REDCap, Qualtrics, SurveyMonkey, Google Forms und Unipark** ist in Entwicklung und steht in der Übersicht als «geplant».
 - Es gibt keine Kataloge zum Bearbeiten im Browser und keinen CSV-Import.
 - Das Tool berechnet keine Scores, Normen oder Diagnosen. Es prüft nicht, ob ein Instrument fachlich für Ihre Schule geeignet ist, und es ersetzt keine Rechteklärung. Die Rechteangaben sind Erklärungen des Herausgebers.
 - Welche Browser tatsächlich getestet sind, steht in [BROWSER.md](BROWSER.md). Alles dort nicht Genannte ist nur ein Ziel, kein Nachweis.
