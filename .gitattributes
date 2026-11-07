@@ -1,0 +1,9 @@
+# Einheitliche Zeilenenden (LF) auf allen Systemen. Wichtig fuer reproduzierbare
+# Builds, Pruefsummen und stabile Diffs der JSON-Dateien.
+* text=auto eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.ts text eol=lf
+*.py text eol=lf
+*.png binary
+*.zip binary
