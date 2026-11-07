@@ -33,3 +33,13 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 ### Hinzugefügt (Rechte)
 - `src/model/rights.ts`: Rechte-Handlungsmatrix. Rechte werden pro ausgewähltem Item aufgelöst (Item → Instrument → unbekannt), Politik je Handlung (Anzeige, Projekt, Prüfbericht, Codebuch, nativer Export, Test-Export), Katalogstatus-Politik (draft, reviewed, released, withdrawn), Entwurfsvermerk, Rückzugshinweis, Pflicht-Attribution. Der Lader meldet den Rechtestatus; Rechtebeschränkungen machen einen Katalog nicht unbrauchbar.
 
+### Hinzugefügt (Ausgaben)
+- `src/output/codebook.ts`: Codebuch als Markdown (Auswahl in Fragebogenreihenfolge, Antwortcodes, Einschränkungen, Bedingungen, Quellen, Dimensionen, Textblöcke, dokumentierte Auswertung). Gesperrte Wortlaute erscheinen nie, Katalogtexte werden maskiert, Entwurfs- und Rückzugsvermerk, Schulnotizen nur auf ausdrückliche Wahl.
+- `src/output/report.ts`: technischer Prüfbericht ohne Wortlaut, mit Zustands-Fingerabdruck (Erkennung veralteter Berichte) und Konfliktkennzeichnung.
+- `src/core/localized.ts`: Textauflösung ohne stille Übersetzung.
+- `docs/AUSGABEN.md`.
+
+### Behoben
+- Beschriftungen versteckter Felder galten fälschlich als Teilnehmertext (`MISSING_TRANSLATION`).
+- `examples/catalog_rich_0_4_0.json` ist jetzt vollständig zweisprachig (en/de-CH).
+

@@ -7,7 +7,7 @@
 | M2a | Rechte-Handlungsmatrix | Auflösung je Item, Politik je Handlung, Katalogstatus draft/reviewed/released/withdrawn | erledigt |
 | M2 | Auswahlkern | wirksame Pflichtmenge, Projekt laden/speichern, Initialauswahl, Sammelaktionen | erledigt (Datenseite) |
 | M3 | Oberfläche | Einzeldatei-Build, Katalogansicht, Suche/Filter, Info-Panel, Vorschau | offen |
-| M4 | Ausgaben | Codebuch (Markdown), Prüfbericht (JSON) | offen |
+| M4 | Ausgaben | Codebuch (Markdown), Prüfbericht (JSON) | erledigt (Datenseite) |
 | M5 | Erster Adapter | LimeSurvey (TSV), Test an echter Instanz | offen |
 | M6 | Weitere Adapter | REDCap, Qualtrics, danach SurveyMonkey, Google Forms (Skript), Unipark | offen |
 | M7 | Profil-JSON | Schulanpassung ohne Code-Varianten | offen |
@@ -18,5 +18,4 @@ Jeder Meilenstein endet mit Tests, Dokumentation, Changelog-Eintrag und Commit.
 Stand der Abnahmetests: [ABNAHMETESTS.md](ABNAHMETESTS.md).
 
 ## Nächste Schritte
-1. Codebuch und Prüfbericht (M4).
-2. Einzeldatei-Build und Oberfläche (M3).
+1. Einzeldatei-Build und Oberfläche (M3).

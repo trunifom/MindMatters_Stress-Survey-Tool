@@ -60,6 +60,8 @@ export interface Construct {
 export interface InstrumentForm {
   id: string;
   title: LocalizedText;
+  formName?: string;
+  versionLabel?: string;
   rightsRef?: string;
   sourceLinks?: SourceLink[];
   translation?: { status: string; sourceLinks?: SourceLink[] };
@@ -151,6 +153,17 @@ export interface Item {
   respondentHelp?: LocalizedText;
   organizerHelp?: LocalizedText;
   requiredMessage?: LocalizedText;
+  originalItemNumber?: string;
+  displayNumber?: string;
+  exportLabel?: LocalizedText;
+  keyDirection?: "positive" | "negative" | "unspecified";
+  origin?: "original" | "adapted" | "own";
+  sensitivity?: {
+    level: "sensitive" | "highlySensitive";
+    warningText?: LocalizedText;
+    helpResourcesText?: LocalizedText;
+    excludeFromExportByDefault?: boolean;
+  };
   sourceLinks?: SourceLink[];
   rightsRef?: string;
   presentation?: { widget?: string; orientation?: string; optionOrder?: "fixed" | "random" };
@@ -160,6 +173,8 @@ export interface Item {
 
 export interface Scale {
   id: string;
+  title?: LocalizedText;
+  description?: LocalizedText;
   itemRefs: string[];
   constructRefs: string[];
   selectionPolicy: "wholeScale" | "partialWithWarning";

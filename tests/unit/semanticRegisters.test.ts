@@ -169,6 +169,12 @@ describe("languages (T26)", () => {
     c.items[1].documentation = { summary: { en: "only english" } };
     expect(checkLanguages(c).length).toBe(before);
   });
+  it("labels of hidden fields are administrative, never reported as missing participant text", () => {
+    const c = rich();
+    delete c.questionnaire.hiddenFields[0].label["de-CH"];
+    expect(c.questionnaire.hiddenFields[0].label).toEqual({ en: "School code" });
+    expect(checkLanguages(c).filter((x) => x.code === "MISSING_TRANSLATION")).toEqual([]);
+  });
   it("does not mistake extension data or plain strings for localized texts", () => {
     const c = rich();
     c.items[1].extensions = {

@@ -66,14 +66,16 @@ export function collectLocalized(doc: unknown): Found[] {
         if (isObject(v)) for (const [pid, entry] of Object.entries(v)) walk(entry, path + pointer(k, pid), undefined, false);
         continue;
       }
+      // hidden fields are never shown to participants, whatever their parent is
       const childParticipant =
-        participantCtx ||
+        k !== "hiddenFields" &&
+        (participantCtx ||
         k === "options" ||
         k === "sections" ||
         k === "questionnaire" ||
         k === "consent" ||
         k === "unit" ||
-        k === "labels";
+        k === "labels");
       walk(v, path + pointer(k), k, childParticipant);
     }
   };

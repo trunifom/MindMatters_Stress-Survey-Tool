@@ -333,10 +333,12 @@
       "sensitivity": {
         "level": "sensitive",
         "warningText": {
-          "en": "Some students may find this question upsetting."
+          "en": "Some students may find this question upsetting.",
+          "de-CH": "Manche Schülerinnen und Schüler finden diese Frage vielleicht belastend."
         },
         "helpResourcesText": {
-          "en": "Talk to a teacher or the school counselling service."
+          "en": "Talk to a teacher or the school counselling service.",
+          "de-CH": "Sprich mit einer Lehrperson oder mit der Schulsozialarbeit."
         },
         "excludeFromExportByDefault": false
       }
@@ -430,7 +432,8 @@
         "format": "email",
         "maxLength": 200,
         "validationMessage": {
-          "en": "Please enter a valid e-mail address."
+          "en": "Please enter a valid e-mail address.",
+          "de-CH": "Bitte gib eine gültige E-Mail-Adresse ein."
         }
       },
       "inclusionRequired": false,
@@ -480,31 +483,39 @@
   "questionnaire": {
     "id": "rich_template",
     "title": {
-      "en": "Rich example questionnaire"
+      "en": "Rich example questionnaire",
+      "de-CH": "Reichhaltiger Beispiel-Fragebogen"
     },
     "introduction": {
-      "en": "Software test only."
+      "en": "Software test only.",
+      "de-CH": "Nur für Softwaretests."
     },
     "closingText": {
-      "en": "Thank you."
+      "en": "Thank you.",
+      "de-CH": "Danke."
     },
     "consent": {
       "title": {
-        "en": "Consent"
+        "en": "Consent",
+        "de-CH": "Einwilligung"
       },
       "text": {
-        "en": "Taking part is voluntary. You can stop at any time."
+        "en": "Taking part is voluntary. You can stop at any time.",
+        "de-CH": "Die Teilnahme ist freiwillig. Du kannst jederzeit aufhören."
       },
       "parentalConsentText": {
-        "en": "Parents or guardians were informed."
+        "en": "Parents or guardians were informed.",
+        "de-CH": "Die Eltern oder Erziehungsberechtigten wurden informiert."
       },
       "requiresParentalConsent": true
     },
     "privacyNotice": {
-      "en": "No names are stored. Answers are evaluated for the whole class only."
+      "en": "No names are stored. Answers are evaluated for the whole class only.",
+      "de-CH": "Es werden keine Namen gespeichert. Die Antworten werden nur für die ganze Klasse ausgewertet."
     },
     "helpResources": {
-      "en": "If you need support, contact your school counselling service."
+      "en": "If you need support, contact your school counselling service.",
+      "de-CH": "Wenn du Unterstützung brauchst, wende dich an die Schulsozialarbeit."
     },
     "delivery": {
       "pageMode": "perSection",
@@ -532,7 +543,8 @@
       {
         "id": "intro",
         "title": {
-          "en": "Introduction"
+          "en": "Introduction",
+          "de-CH": "Einleitung"
         },
         "itemRefs": [
           "intro_note",
@@ -542,7 +554,8 @@
       {
         "id": "battery",
         "title": {
-          "en": "School"
+          "en": "School",
+          "de-CH": "Schule"
         },
         "layout": "matrix",
         "pageBreakBefore": true,
@@ -554,7 +567,8 @@
       {
         "id": "extras",
         "title": {
-          "en": "More"
+          "en": "More",
+          "de-CH": "Mehr"
         },
         "pageBreakBefore": true,
         "itemRefs": [

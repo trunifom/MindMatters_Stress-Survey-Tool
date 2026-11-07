@@ -2,7 +2,7 @@
 
 Die 45 Abnahmetests T01–T45 stammen aus den Ausgangsunterlagen (lokal, nicht im Repo). Diese Tabelle zeigt, welcher automatische Test den jeweiligen Punkt belegt. Sie ist die einzige Stelle, die den Stand ehrlich ausweist: **«abgedeckt»** heisst, der Test läuft und besteht auf dem Entwicklungsrechner. **«teilweise»** heisst, die Datenseite (Validator, Modell) ist getestet, die Benutzeroberfläche oder der Export fehlt noch. **«offen»** heisst, nichts davon existiert.
 
-Stand: 7. November 2026 · 294 Unit-Tests (Vitest) · 60 Konformanzprüfungen (Python)
+Stand: 7. November 2026 · 327 Unit-Tests (Vitest) · 60 Konformanzprüfungen (Python)
 
 | ID | Test | Stand | Nachweis / fehlender Teil |
 |---|---|---|---|
@@ -31,18 +31,18 @@ Stand: 7. November 2026 · 294 Unit-Tests (Vitest) · 60 Konformanzprüfungen (P
 | T23 | Leerzeichen, Unicode, Minimallänge | offen | Eingabeprüfung fehlt |
 | T24 | Missing gegen Neutral, Code 01 | teilweise | Codes bleiben Strings (Strikter Leser), Rollenprüfung im Scoring; Export fehlt |
 | T25 | Infoansicht | offen | Oberfläche fehlt |
-| T26 | Sprachwechsel, fehlende Übersetzung | teilweise | `MISSING_TRANSLATION` im Validator; Sprachwechsel fehlt |
+| T26 | Sprachwechsel, fehlende Übersetzung | teilweise | `MISSING_TRANSLATION` im Validator, Codebuch markiert fehlende Sprache statt zu mischen; Sprachwechsel in der Oberfläche fehlt |
 | T27 | Projekt speichern/laden | abgedeckt | `project.test.ts` (Round-Trip über Datei-Text); Download im Browser fehlt |
 | T28 | falscher Katalog/Version | abgedeckt | `selection.test.ts`, `pipeline.test.ts` |
-| T29 | Schulnotizen nicht ungefragt veröffentlicht | teilweise | Dateiname ohne Notizen; Ausgaben (Codebuch/Export) fehlen |
+| T29 | Schulnotizen nicht ungefragt veröffentlicht | abgedeckt (Datenseite) | `output.test.ts`: Codebuch ohne Notizen ausser auf Wahl, Prüfbericht und Dateiname ohne Notizen; Oberfläche folgt |
 | T30 | echter Importtest je Adapter | offen | Adapter fehlen (M5/M6) |
 | T31 | Namens-/Codeabbildung | offen | Adapter fehlen |
 | T32 | nicht übertragbarer Constraint | offen | Adapter fehlen |
 | T33 | Bedingungen und Ausblendung | teilweise | Bedingungen im Katalog geprüft; Export-Semantik fehlt |
 | T34 | Testantwortdaten exportieren | offen | Adapter fehlen |
 | T35 | erlaubte Nutzung, verbotene Änderung | abgedeckt | `rights.test.ts`: `modification=prohibited` blockiert nichts, nicht benötigte Verbote blockieren nicht |
-| T36 | unbekannte Darstellungsrechte | abgedeckt (Datenseite) | `rights.test.ts`: Text gesperrt, Diagnose und Projekt möglich; Sperranzeige in der Oberfläche folgt |
-| T37 | Codebuch gegen nativer Export | teilweise | Handlungsmatrix je Zeile getestet (`rights.test.ts`); Codebuch-Erzeugung folgt |
+| T36 | unbekannte Darstellungsrechte | abgedeckt (Datenseite) | `rights.test.ts`, `output.test.ts`: Text gesperrt im Codebuch, nirgends ausgegeben; Sperranzeige in der Oberfläche folgt |
+| T37 | Codebuch gegen nativer Export | teilweise | Codebuch je Matrixzeile getestet (`output.test.ts`, `rights.test.ts`); nativer Export folgt mit den Adaptern |
 | T38 | CSV-Import | offen | spätere Stufe (M8) |
 | T39 | Tastatur, Dialogfokus | offen | Oberfläche fehlt |
 | T40 | 1.000 Items / 5 MB | teilweise | `performance.test.ts`: 5,12 MB, 1.007 Items, Laden und Prüfen 1,36 s auf dem Entwicklungsrechner (Ziel 5 s). Referenzgerät noch nicht festgelegt |
@@ -52,4 +52,4 @@ Stand: 7. November 2026 · 294 Unit-Tests (Vitest) · 60 Konformanzprüfungen (P
 | T44 | Scorevoraussetzungen | abgedeckt | `selection.test.ts` (`scoreAvailability`) |
 | T45 | `withdrawn`/`draft` | abgedeckt | `rights.test.ts`: draft, reviewed, released, withdrawn je Handlung |
 
-**Zusammenfassung:** 17 abgedeckt, 15 teilweise, 13 offen (von 45). Die offenen Punkte hängen an der Oberfläche, den Ausgaben und den Adaptern.
+**Zusammenfassung:** 18 abgedeckt, 14 teilweise, 13 offen (von 45). Die offenen Punkte hängen an der Oberfläche und den Adaptern.
