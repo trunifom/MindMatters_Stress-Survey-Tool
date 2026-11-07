@@ -4,6 +4,7 @@
 |---|---|---|---|
 | M0 | Fundament | Repo-Struktur, Schema 0.3.0/0.4.0, Fixtures, Konformanztest, Recherche, Architektur | erledigt |
 | M1 | Validierungskern | TypeScript-Gerüst, strikter JSON-Leser, Schema-Prüfung (ajv), semantischer Validator, Migration 0.3→0.4, Diagnosecodes, Lade-Pipeline | erledigt |
+| M2a | Rechte-Handlungsmatrix | Auflösung je Item, Politik je Handlung, Katalogstatus draft/reviewed/released/withdrawn | erledigt |
 | M2 | Auswahlkern | wirksame Pflichtmenge, Projekt laden/speichern, Initialauswahl, Sammelaktionen | erledigt (Datenseite) |
 | M3 | Oberfläche | Einzeldatei-Build, Katalogansicht, Suche/Filter, Info-Panel, Vorschau | offen |
 | M4 | Ausgaben | Codebuch (Markdown), Prüfbericht (JSON) | offen |
@@ -17,6 +18,5 @@ Jeder Meilenstein endet mit Tests, Dokumentation, Changelog-Eintrag und Commit.
 Stand der Abnahmetests: [ABNAHMETESTS.md](ABNAHMETESTS.md).
 
 ## Nächste Schritte
-1. Rechte-Handlungsmatrix (Anzeige, Codebuch, Export je Item), Status `draft`/`withdrawn` (T35, T36, T45).
+1. Codebuch und Prüfbericht (M4).
 2. Einzeldatei-Build und Oberfläche (M3).
-3. Codebuch und Prüfbericht (M4).

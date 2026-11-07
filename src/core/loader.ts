@@ -5,6 +5,7 @@ import { validateStructure } from "./schemaCheck";
 import { validateCatalogSemantics } from "./semantic";
 import { parseStrictJson } from "./strictJson";
 import type { Catalog, Project } from "./types";
+import { evaluateAction } from "../model/rights";
 import { applyProject, checkInitialSelection, initialSelection, ProjectResult } from "../model/selection";
 
 /**
@@ -26,7 +27,7 @@ export interface LoadOptions {
   migrate?: boolean;
 }
 
-/** Separate check areas (spec C02). Rights and export are not implemented yet. */
+/** Separate check areas (spec C02). Export is evaluated per adapter later. */
 export interface CheckStatuses {
   technical: CheckStatus;
   selection: CheckStatus;
@@ -44,11 +45,11 @@ export interface CatalogLoad {
   status: CheckStatuses;
 }
 
-function statuses(ds: Diagnostic[], ran: { selection: boolean }): CheckStatuses {
+function statuses(ds: Diagnostic[], ran: { selection: boolean; rights?: boolean }): CheckStatuses {
   return {
     technical: statusOf(ds, ["file", "structure", "reference", "content"]),
     selection: ran.selection ? statusOf(ds, ["selection"]) : "notRun",
-    rights: "notRun",
+    rights: ran.rights ? statusOf(ds, ["rights"]) : "notRun",
     export: "notRun",
   };
 }
@@ -77,12 +78,17 @@ export function loadCatalog(text: string, options: LoadOptions = {}): CatalogLoa
   const sound = !hasErrors(diagnostics);
   if (sound) diagnostics.push(...checkInitialSelection(catalog));
 
+  // Rights limitations never make a catalog unusable: texts of items without a
+  // confirmed display permission are locked, but the catalog stays loadable (C03).
   const ok = !hasErrors(diagnostics);
+  if (ok) {
+    diagnostics.push(...evaluateAction(catalog, "displayItems", { selection: initialSelection(catalog) }).diagnostics);
+  }
   return {
     ok,
     ...(ok ? { catalog, initialSelection: initialSelection(catalog) } : {}),
     diagnostics,
-    status: statuses(diagnostics, { selection: sound }),
+    status: statuses(diagnostics, { selection: sound, rights: ok }),
   };
 }
 

@@ -126,3 +126,28 @@ Diese Befunde tragen `context`: `initial` für die Anfangsauswahl des Katalogs (
 | `PROJECT_LANGUAGE_UNKNOWN` | error | Projektsprache gehört nicht zu den Katalogsprachen |
 | `UNKNOWN_ITEM_ID` | error | das Projekt wählt ein Item, das der Katalog nicht kennt. Wird gemeldet und ignoriert, nicht repariert |
 
+## Stufe `rights` (Rechte und Handlungsmatrix)
+
+Die Matrix ist eine **Produktpolitik für deklarierte Rechte**, keine juristische Aussage. Rechte werden pro ausgewähltem Item aufgelöst: `Item.rightsRef`, sonst `Instrument.rightsRef`, sonst «unbekannt/ungeprüft». Befunde sind je Grund zusammengefasst (Anzahl und erstes Item), nicht je Item. Severity ist bei `displayItems` `warning` (Text gesperrt, Katalog bleibt nutzbar), bei Codebuch und Export `error`.
+
+| Handlung | benötigt je Item (alle `permitted`, Profil `reviewed`) | Katalogstatus |
+|---|---|---|
+| `displayItems` | `electronicDisplay` | jeder, bei `withdrawn` mit Rückzugshinweis |
+| `saveProject` | nichts (nur Referenzen) | jeder technisch nutzbare |
+| `saveCheckReport` | nichts (nur IDs und Befunde) | jeder |
+| `codebookWithTexts` | `export`, `redistribution`, `electronicDisplay` | `draft`/`reviewed`/`released`; `withdrawn` nur mit klarer Markierung; `draft` mit Entwurfsvermerk |
+| `nativeExport` | `export`, `redistribution`, `electronicAdministration` | nur `released` |
+| `devTestExport` | wie `nativeExport`, **ohne** Umgehung von Verboten | `draft`/`reviewed`/`released`, nie `withdrawn`; als Testartefakt zu kennzeichnen |
+
+Ein Fehler bei einer Nutzungsart, die die Handlung nicht braucht, blockiert sie nicht: `modification=prohibited` ist mit erlaubter unveränderter Nutzung vereinbar (T35).
+
+| Code | Severity | Bedeutung |
+|---|---|---|
+| `RIGHTS_UNREVIEWED` | warning / error | das wirksame Rechteprofil ist nicht `reviewed`. Deklarierte Erlaubnisse sind dann nur eine ungeprüfte Erklärung, keine Freigabe |
+| `RIGHTS_PERMISSION_UNKNOWN` | warning / error | eine für die Handlung nötige Nutzungsart ist `unknown` (T36) |
+| `RIGHTS_PERMISSION_PROHIBITED` | warning / error | eine nötige Nutzungsart ist `prohibited` |
+| `CATALOG_NOT_RELEASED` | error | reguläre native Exporte verlangen den Status `released` |
+| `CATALOG_WITHDRAWN` | error / warning | Katalog wurde zurückgezogen: Exporte blockiert, Ansichten und Codebuch mit Rückzugshinweis |
+| `DRAFT_WATERMARK_REQUIRED` | info | Ausgabe aus einem `draft`-Katalog muss «Entwurf – nicht für produktive Durchführung freigegeben» tragen |
+| `TEST_ARTIFACT` | info | Entwicklungs-Testexport: als Testartefakt kennzeichnen, vom Schulablauf trennen, Freigabeverantwortung benennen |
+

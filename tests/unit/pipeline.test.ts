@@ -29,7 +29,7 @@ describe("loadCatalog: positive fixtures (migrated explicitly)", () => {
     expect(r.status).toEqual({
       technical: "pass",
       selection: warnings.length ? "warning" : "pass",
-      rights: "notRun",
+      rights: "pass",
       export: "notRun",
     });
   });

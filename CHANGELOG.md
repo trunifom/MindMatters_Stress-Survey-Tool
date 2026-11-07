@@ -30,3 +30,6 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 ### Geändert
 - Schema 0.4.0 (vor erster Auslieferung): `note`-Items haben `style` (`text`, `title`, `subtitle`, `notice`) für Titel, Untertitel, Textabschnitte und Hinweise (ADR-006). Beispielkatalog um Titel und Anonymitätshinweis erweitert.
 
+### Hinzugefügt (Rechte)
+- `src/model/rights.ts`: Rechte-Handlungsmatrix. Rechte werden pro ausgewähltem Item aufgelöst (Item → Instrument → unbekannt), Politik je Handlung (Anzeige, Projekt, Prüfbericht, Codebuch, nativer Export, Test-Export), Katalogstatus-Politik (draft, reviewed, released, withdrawn), Entwurfsvermerk, Rückzugshinweis, Pflicht-Attribution. Der Lader meldet den Rechtestatus; Rechtebeschränkungen machen einen Katalog nicht unbrauchbar.
+

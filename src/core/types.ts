@@ -46,6 +46,7 @@ export interface RightsProfile {
     "unknown" | "permitted" | "prohibited"
   >;
   evidenceSourceRef?: string;
+  attribution?: LocalizedText;
 }
 
 export interface Construct {
