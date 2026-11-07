@@ -79,3 +79,10 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - Übersicht der Rechtefolgen je Handlung mit Begründung; Export-Übersicht mit allen geplanten Zielsystemen. Die Export-Tasten sind gesperrt, bis ein geprüfter Adapter existiert.
 - Hinweis «Ungesicherte Änderungen» im Kopfbereich und Warnung des Browsers beim Schliessen oder Neuladen mit ungesicherten Änderungen.
 - `docs/BENUTZERHANDBUCH.md`.
+
+### Hinzugefügt (Browsernachweis)
+- Browser-Tests (`tests/e2e/browser.test.ts`, `npm run test:e2e`): die gebaute Datei per `file://` in einem installierten Chromium-Browser (Edge 156 geprüft), ohne Download eines Browsers. 11 Tests: offline und ohne Netzwerkanfrage, Content-Security-Policy greift, Tastaturablauf mit sichtbarem Fokus, echte Downloads von Projekt, Prüfbericht und Codebuch, Projekt wieder laden, Rückfrage bei ungesicherten Änderungen, inerte Skripte in Katalogtexten, Handybreite ohne horizontales Scrollen, Hell/Dunkel, 5 MB und 1.010 Items nach 749 ms.
+- `docs/BROWSER.md`: trennt belegte von nicht belegten Browsern.
+
+### Behoben
+- Auf einem Handy (375 px) verbreiterte die Matrix der Vorschau die ganze Seite um 152 px. Die Tabelle scrollt jetzt in einem eigenen, per Tastatur erreichbaren Bereich.

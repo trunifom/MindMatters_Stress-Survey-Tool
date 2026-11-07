@@ -90,7 +90,7 @@ function renderSectionItems(s: AppState, section: Section, items: Item[]): HTMLE
 
 function matrix(s: AppState, items: Item[], os: OptionSet): HTMLElement {
   const label = (o: Option) => shownText(s, o.label)?.text ?? o.code;
-  return h(
+  const table = h(
     "table",
     { class: "pv-matrix", "aria-label": t("preview.matrixLabel") },
     h("thead", null, h("tr", null, h("th", { scope: "col" }), ...os.options.map((o) => h("th", { scope: "col" }, label(o))))),
@@ -108,6 +108,8 @@ function matrix(s: AppState, items: Item[], os: OptionSet): HTMLElement {
       }),
     ),
   );
+  // On narrow screens the table scrolls inside its own region instead of widening the page.
+  return h("div", { class: "pv-matrix-wrap", role: "region", tabindex: "0", "aria-label": t("preview.matrixLabel") }, table);
 }
 
 function requirement(item: Item): HTMLElement {

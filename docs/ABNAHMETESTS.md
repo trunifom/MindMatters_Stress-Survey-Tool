@@ -2,13 +2,13 @@
 
 Die 45 Abnahmetests T01–T45 stammen aus den Ausgangsunterlagen (lokal, nicht im Repo). Diese Tabelle zeigt, welcher automatische Test den jeweiligen Punkt belegt. Sie ist die einzige Stelle, die den Stand ehrlich ausweist: **«abgedeckt»** heisst, der Test läuft und besteht auf dem Entwicklungsrechner. **«teilweise»** heisst, die Datenseite (Validator, Modell) ist getestet, die Benutzeroberfläche oder der Export fehlt noch. **«offen»** heisst, nichts davon existiert.
 
-Stand: 7. November 2026 · 439 Unit-Tests (davon UI unter jsdom) (Vitest) · 60 Konformanzprüfungen (Python)
+Stand: 7. November 2026 · 439 Unit-Tests (davon UI unter jsdom) · 11 Browser-Tests (Edge 156) (Vitest) · 60 Konformanzprüfungen (Python)
 
 | ID | Test | Stand | Nachweis / fehlender Teil |
 |---|---|---|---|
-| T01 | HTML ohne Netz öffnen | offen | braucht Build und Oberfläche (M3) |
-| T02 | Netzwerkprotokoll | offen | braucht Oberfläche (E2E mit Playwright) |
-| T03 | unterstützte Browser | offen | Versionsmatrix noch zu definieren |
+| T01 | HTML ohne Netz öffnen | abgedeckt (Edge) | `tests/e2e/browser.test.ts`: Datei per `file://` bei abgeschaltetem Netz, Katalog laden, alle Ansichten; nur in Edge 156 belegt, siehe BROWSER.md |
+| T02 | Netzwerkprotokoll | abgedeckt (Edge) | `tests/e2e/browser.test.ts`: nur `file:`/`data:`/`blob:`-Anfragen aufgezeichnet, CSP weist `fetch` mit `connect-src` ab; nur in Edge 156 belegt |
+| T03 | unterstützte Browser | teilweise | nur Edge 156 (Chromium, headless) belegt; Firefox, Safari, Chrome und ältere Versionen nicht getestet, siehe BROWSER.md |
 | T04 | Syntaxfehler, doppelte Schlüssel, alter Zustand bleibt | abgedeckt | `strictJson.test.ts`, `pipeline.test.ts` (Transaktion) |
 | T05 | ungültige IDs/Referenzen | abgedeckt | `schemaCheck.test.ts`, `semanticRegisters.test.ts`, `ui/shell.test.ts`: Code und Stelle werden im Importergebnis angezeigt |
 | T06 | falsche `schemaVersion` | abgedeckt | `schemaCheck.test.ts`, `pipeline.test.ts` |
@@ -44,12 +44,12 @@ Stand: 7. November 2026 · 439 Unit-Tests (davon UI unter jsdom) (Vitest) · 60 
 | T36 | unbekannte Darstellungsrechte | abgedeckt | `ui/items.test.ts`: Text gesperrt, nirgends im DOM, nicht durchsuchbar, Katalog nutzbar |
 | T37 | Codebuch gegen nativer Export | teilweise | Codebuch und Rechtefolgen je Handlung in Matrix, Codebuch und Oberfläche getestet (`rights.test.ts`, `output.test.ts`, `ui/output.test.ts`); nativer Export folgt mit den Adaptern |
 | T38 | CSV-Import | offen | spätere Stufe (M8) |
-| T39 | Tastatur, Dialogfokus | offen | Oberfläche fehlt |
-| T40 | 1.000 Items / 5 MB | teilweise | `performance.test.ts`: 5,12 MB, 1.007 Items, Laden und Prüfen 1,36 s auf dem Entwicklungsrechner (Ziel 5 s). Referenzgerät noch nicht festgelegt |
-| T41 | Skriptzeichenfolge, gefährlicher Link | abgedeckt | `pipeline.test.ts`, `ui/shell.test.ts`, `ui/items.test.ts`: Text bleibt Text (kein img/script im DOM), nur http(s)-Links, statische Regel gegen innerHTML/eval |
-| T42 | ungesicherter Zustand bei Wechsel | abgedeckt | `ui/shell.test.ts`: Rückfrage vor dem Verwerfen, Ablehnung behält den Zustand, keine Rückfrage ohne Änderung |
+| T39 | Tastatur, Dialogfokus | teilweise | Tastaturablauf Laden, Auswählen, Info-Fenster inklusive Fokusring, Tab-Falle und Rückfokus in Edge 156 belegt; Screenreader und restliche Ansichten nur über native Bedienelemente, nicht gesondert getestet |
+| T40 | 1.000 Items / 5 MB | teilweise | `performance.test.ts` (Kern: 1,36 s) und `tests/e2e/browser.test.ts` (Edge 156: 5,12 MB, 1.010 Items bedienbar nach 749 ms, Ziel 5 s). Referenzgerät noch nicht festgelegt |
+| T41 | Skriptzeichenfolge, gefährlicher Link | abgedeckt | `pipeline.test.ts`, `ui/*.test.ts` und in Edge 156 (`tests/e2e/browser.test.ts`): Text bleibt Text, kein Skript läuft, nur http(s)-Links, statische Regel gegen innerHTML/eval |
+| T42 | ungesicherter Zustand bei Wechsel | abgedeckt | `ui/shell.test.ts`: Rückfrage vor dem Verwerfen; Edge 156: beforeunload wird bei Änderungen angefordert, nach dem Speichern nicht |
 | T43 | doppelte Itemverwendung | abgedeckt | `semanticStructure.test.ts` (`TEMPLATE_ITEM_DUPLICATE`) |
 | T44 | Scorevoraussetzungen | abgedeckt | `selection.test.ts` (`scoreAvailability`) |
 | T45 | `withdrawn`/`draft` | abgedeckt | `rights.test.ts`, `ui/output.test.ts`: draft, reviewed, released, withdrawn je Handlung und in der Oberfläche |
 
-**Zusammenfassung:** 23 abgedeckt, 12 teilweise, 10 offen (von 45). UI-Tests laufen unter jsdom, nicht in einem echten Browser; die Browserprüfung folgt.
+**Zusammenfassung:** 25 abgedeckt, 14 teilweise, 6 offen (von 45). Browsernachweis nur für Edge 156; Firefox, Safari und weitere Browser sind offen (docs/BROWSER.md).

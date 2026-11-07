@@ -26,6 +26,7 @@ Bereiche z. B.: `core`, `model`, `adapters`, `ui`, `schema`, `docs`, `repo`.
 npm test                                         # Vitest (Unit)
 npm run typecheck                                # tsc (mit und ohne DOM für den Kern)
 npm run build                                    # dist/mindmatters.html
+npm run test:e2e                                 # echter Browser (Edge/Chrome, MM_BROWSER_PATH wählbar)
 python -I tests/conformance/validate_schema.py   # Schema-Konformanz (Gegencheck)
 ```
 

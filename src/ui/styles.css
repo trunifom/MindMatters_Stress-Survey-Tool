@@ -174,7 +174,7 @@ fieldset.pv-question legend { padding: 0 .35rem; font-weight: 600; white-space: 
 .pv-slider input { flex: 1; }
 .pv-rank { margin: .2rem 0; padding-left: 1.4rem; }
 .pv-locked { border: 1px dashed var(--border); padding: .6rem; color: var(--muted); }
-.pv-matrix { width: 100%; border-collapse: collapse; margin: .75rem 0; }
+.pv-matrix { width: 100%; border-collapse: collapse; }
 .pv-matrix th, .pv-matrix td { border: 1px solid var(--border); padding: .35rem .5rem; text-align: center; vertical-align: middle; }
 .pv-matrix th[scope="row"] { text-align: left; font-weight: 500; width: 40%; }
 .pv-matrix thead th { font-size: .85rem; }
@@ -192,3 +192,6 @@ fieldset.pv-question legend { padding: 0 .35rem; font-weight: 600; white-space: 
 .adapters { display: flex; flex-wrap: wrap; gap: .4rem 1rem; }
 .adapters li { background: var(--bg); border: 1px solid var(--border); border-radius: .35rem; padding: .1rem .6rem; }
 .adapters li.is-target { border-color: var(--primary); font-weight: 600; }
+
+.pv-matrix-wrap { overflow-x: auto; max-width: 100%; margin: .75rem 0; }
+.pv-matrix { min-width: 34rem; }

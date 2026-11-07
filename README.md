@@ -4,7 +4,7 @@ Offline-Konfigurator für psychometrische Fragebogen. Eine **einzige, eigenstän
 
 Kein Server, keine Installation, kein Konto, keine Internetverbindung. Das Tool erhebt **keine** Teilnehmerantworten.
 
-> **Status: frühe Entwicklung.** Fertig sind das JSON-Schema (0.4.0), der Validierungskern, das Auswahlmodell mit Pflichtmenge und Projekten, die Rechte-Handlungsmatrix, Codebuch und Prüfbericht sowie die Oberfläche als Einzeldatei (Laden, Auswählen, Info-Fenster, Vorschau, Projekt/Prüfbericht/Codebuch speichern). **Noch nicht vorhanden:** die Export-Adapter für Umfragetools (die Tasten sind gesperrt) und der Nachweis in echten Browsern (bisher nur automatische Tests unter jsdom). Details: [docs/ABNAHMETESTS.md](docs/ABNAHMETESTS.md) (23 von 45 Abnahmetests abgedeckt), [docs/ROADMAP.md](docs/ROADMAP.md), [CHANGELOG.md](CHANGELOG.md), [docs/BENUTZERHANDBUCH.md](docs/BENUTZERHANDBUCH.md).
+> **Status: frühe Entwicklung.** Fertig sind das JSON-Schema (0.4.0), der Validierungskern, das Auswahlmodell mit Pflichtmenge und Projekten, die Rechte-Handlungsmatrix, Codebuch und Prüfbericht sowie die Oberfläche als Einzeldatei (Laden, Auswählen, Info-Fenster, Vorschau, Projekt/Prüfbericht/Codebuch speichern). **Noch nicht vorhanden:** die Export-Adapter für Umfragetools (die Tasten sind gesperrt) und der Browsernachweis über Edge 156 hinaus (Firefox, Safari und weitere sind nicht getestet, siehe [docs/BROWSER.md](docs/BROWSER.md)). Details: [docs/ABNAHMETESTS.md](docs/ABNAHMETESTS.md) (25 von 45 Abnahmetests abgedeckt), [docs/ROADMAP.md](docs/ROADMAP.md), [CHANGELOG.md](CHANGELOG.md), [docs/BENUTZERHANDBUCH.md](docs/BENUTZERHANDBUCH.md).
 
 ## Grundidee
 
@@ -37,6 +37,7 @@ npm install
 npm test                                         # Unit-Tests (Vitest, 439 Tests)
 npm run typecheck                                # TypeScript-Prüfung
 npm run build                                    # dist/mindmatters.html (eine Datei)
+npm run test:e2e                                 # Browser-Tests gegen dist/mindmatters.html (braucht Edge oder Chrome)
 python -I tests/conformance/validate_schema.py   # Schema-Konformanz
 ```
 
