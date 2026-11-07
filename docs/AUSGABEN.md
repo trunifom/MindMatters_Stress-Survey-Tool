@@ -9,7 +9,9 @@ Vier verschiedene Aktionen, die nicht verwechselt werden dürfen (Spec A12). Wel
 | Codebuch | Markdown | Beschreibung der Auswahl mit Wortlaut, Antwortcodes, Einschränkungen, Quellen | HTML, gesperrte Wortlaute, Schulnotizen (ausser auf ausdrückliche Wahl) | Dokumentation für Verantwortliche, **kein Import** |
 | Nativer Export | je Zielsystem | (folgt mit den Adaptern) | | Umfrage im Zielsystem aufbauen |
 
-Dateinamen enthalten nur Katalog-ID und Version, nie Schulbezeichnung oder Notizen.
+Dateinamen enthalten nur Katalog-ID und Version (das Codebuch zusätzlich die Sprache), nie Schulbezeichnung oder Notizen.
+
+In der Oberfläche stehen die drei Dateien im Tab «Prüfung und Ausgabe». Darunter zeigt eine Übersicht je Handlung (Anzeige, Codebuch, regulärer Export, Entwicklungs-Testexport), ob sie nach der Rechtepolitik möglich ist, und die Gründe. Der Export selbst ist noch nicht verfügbar: Die Tasten sind gesperrt und alle Adapter als «geplant» gelistet.
 
 ## Prüfbericht (`questionnaireCheckReport`, Version 1.0.0)
 

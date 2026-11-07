@@ -73,3 +73,9 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 ### Behoben
 - Die Matrixdarstellung konnte Inhalte eines Items verschlucken (Warnung eines sensiblen Items, Anweisung, Hilfe, Bedingung). Solche Items werden jetzt als Liste gezeigt.
 - Beispielkatalog: Matrixabschnitt mit drei gleichartigen Items, das sensible Item steht eigenständig.
+
+### Hinzugefügt (Oberfläche, Teil 4: Ausgaben)
+- Tab «Prüfung und Ausgabe»: Angaben zum Projekt (Schulbezeichnung, Zielsystem-Vermerk, interne Notizen, ausdrücklich «nur lokal»), Projekt speichern (auch mit Konflikten, ohne Reparatur), Prüfbericht speichern (ohne Wortlaut, mit Erkennung eines veralteten Berichts, Konfliktkennzeichnung), Codebuch speichern (Sprache der Fragen, Entwurfs- und Rückzugsvermerk, gesperrte Wortlaute fehlen und werden benannt, Schulnotizen nur auf ausdrückliche Wahl).
+- Übersicht der Rechtefolgen je Handlung mit Begründung; Export-Übersicht mit allen geplanten Zielsystemen. Die Export-Tasten sind gesperrt, bis ein geprüfter Adapter existiert.
+- Hinweis «Ungesicherte Änderungen» im Kopfbereich und Warnung des Browsers beim Schliessen oder Neuladen mit ungesicherten Änderungen.
+- `docs/BENUTZERHANDBUCH.md`.

@@ -2,6 +2,7 @@
 
 | Dokument | Inhalt | Zielgruppe |
 |---|---|---|
+| [BENUTZERHANDBUCH.md](BENUTZERHANDBUCH.md) | Bedienung für Schulen und Organisationen, Grenzen des heutigen Stands | Schulen, Projektleitung |
 | [ARCHITEKTUR.md](ARCHITEKTUR.md) | Gesamtkonzept: ein universelles HTML, Build, Schichten, Repo-Struktur | Entwickler |
 | [ENTSCHEIDUNGEN.md](ENTSCHEIDUNGEN.md) | Entscheidungsprotokoll (ADR) mit Begründung und Alternativen | Entwickler, Projektleitung |
 | [ROADMAP.md](ROADMAP.md) | Meilensteine und Stand | alle |

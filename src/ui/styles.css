@@ -182,3 +182,13 @@ fieldset.pv-question legend { padding: 0 .35rem; font-weight: 600; white-space: 
 .pv-note-subtitle { font-size: 1.1rem; margin: .8rem 0 .2rem; }
 .pv-end { text-align: center; margin-top: 2rem; }
 .pv input:disabled, .pv select:disabled, .pv textarea:disabled { opacity: 1; cursor: not-allowed; }
+
+/* --- check and output --------------------------------------------------- */
+.out-block { margin: 1.5rem 0; padding-top: .5rem; border-top: 1px solid var(--border); }
+.out-file { margin: .75rem 0 1.25rem; }
+.out-file h4 { margin: 0 0 .15rem; }
+.rights-list, .adapters { list-style: none; padding: 0; margin: .5rem 0; }
+.rights-row { padding: .4rem 0; border-bottom: 1px solid var(--border); }
+.adapters { display: flex; flex-wrap: wrap; gap: .4rem 1rem; }
+.adapters li { background: var(--bg); border: 1px solid var(--border); border-radius: .35rem; padding: .1rem .6rem; }
+.adapters li.is-target { border-color: var(--primary); font-weight: 600; }

@@ -6,7 +6,7 @@
 | M1 | Validierungskern | TypeScript-Gerüst, strikter JSON-Leser, Schema-Prüfung (ajv), semantischer Validator, Migration 0.3→0.4, Diagnosecodes, Lade-Pipeline | erledigt |
 | M2a | Rechte-Handlungsmatrix | Auflösung je Item, Politik je Handlung, Katalogstatus draft/reviewed/released/withdrawn | erledigt |
 | M2 | Auswahlkern | wirksame Pflichtmenge, Projekt laden/speichern, Initialauswahl, Sammelaktionen | erledigt (Datenseite) |
-| M3 | Oberfläche | Einzeldatei-Build, Katalogansicht, Suche/Filter, Info-Panel, Vorschau | offen |
+| M3 | Oberfläche | Einzeldatei-Build, Katalogansicht, Suche/Filter, Info-Panel, Vorschau, Ausgaben | erledigt (jsdom-getestet, Browsernachweis folgt) |
 | M4 | Ausgaben | Codebuch (Markdown), Prüfbericht (JSON) | erledigt (Datenseite) |
 | M5 | Erster Adapter | LimeSurvey (TSV), Test an echter Instanz | offen |
 | M6 | Weitere Adapter | REDCap, Qualtrics, danach SurveyMonkey, Google Forms (Skript), Unipark | offen |
@@ -18,4 +18,5 @@ Jeder Meilenstein endet mit Tests, Dokumentation, Changelog-Eintrag und Commit.
 Stand der Abnahmetests: [ABNAHMETESTS.md](ABNAHMETESTS.md).
 
 ## Nächste Schritte
-1. Einzeldatei-Build und Oberfläche (M3).
+1. Nachweis in einem echten Browser (Netzwerkprotokoll, Datei per `file://`, Download), danach weitere Browser.
+2. Erster Export-Adapter: LimeSurvey (M5).

@@ -64,6 +64,10 @@ export interface AppState {
   notice?: Notice;
   filter: Filter;
   info?: InfoTarget;
+  /** The check report saved last, to recognise it as outdated after changes. */
+  lastReport?: { fingerprint: string; at: string };
+  /** Explicit choice: put school label and notes into the codebook (default: no). */
+  codebookNotes: boolean;
 }
 
 export const EMPTY_FILTER: Filter = { query: "", scope: "all", moduleId: "", constructId: "" };
@@ -80,6 +84,7 @@ export function initialState(navigatorLanguage?: string): AppState {
     dirty: false,
     importDiagnostics: [],
     filter: { ...EMPTY_FILTER },
+    codebookNotes: false,
   };
 }
 
@@ -141,6 +146,8 @@ export function loadCatalogText(store: Store, text: string, fileName: string, mi
       notice: undefined,
       filter: { ...EMPTY_FILTER },
       info: undefined,
+      lastReport: undefined,
+      codebookNotes: false,
     });
     return result;
   }
@@ -239,6 +246,8 @@ export const openInfo = (store: Store, info: InfoTarget): void => store.set({ in
 export const closeInfo = (store: Store): void => store.set({ info: undefined });
 export const dismissNotice = (store: Store): void => store.set({ notice: undefined });
 export const markSaved = (store: Store): void => store.set({ dirty: false });
+export const setCodebookNotes = (store: Store, on: boolean): void => store.set({ codebookNotes: on });
+export const rememberReport = (store: Store, fingerprint: string, at: string): void => store.set({ lastReport: { fingerprint, at } });
 
 export function setMeta(store: Store, patch: Partial<Pick<AppState, "schoolLabel" | "internalNotes" | "targetPlatform">>): void {
   store.set({ ...patch, dirty: true });

@@ -189,6 +189,7 @@ function loadedContent(s: AppState, store: Store, env: AppEnv): HTMLElement {
       cat.languages.length > 1 ? fact(t("header.language"), languageSelect(s, store)) : fact(t("header.language"), h("code", null, s.language)),
     ),
     statusChips(currentStatus(s)),
+    s.dirty ? h("p", { class: "badge sev-warning", id: "dirty-badge", role: "status" }, "! " + t("out.unsaved")) : null,
     h(
       "div",
       { class: "toolbar" },
