@@ -56,18 +56,23 @@ Beim Schliessen des Tabs oder beim Laden einer anderen Datei fragt der Browser n
 - Das Tool berechnet keine Scores, Normen oder Diagnosen. Es prüft nicht, ob ein Instrument fachlich für Ihre Schule geeignet ist, und es ersetzt keine Rechteklärung. Die Rechteangaben sind Erklärungen des Herausgebers.
 - Welche Browser tatsächlich getestet sind, steht in [BROWSER.md](BROWSER.md). Alles dort nicht Genannte ist nur ein Ziel, kein Nachweis.
 
-## Aufbau der Oberfläche (vier Schritte)
+## Aufbau der Oberfläche (fünf Schritte)
 
-Nach dem Laden führen vier nummerierte Schritte durch das Tool. Unter den Schritten steht immer Ihre Auswahl (Anzahl Items, Module, Pflichtbestandteile). Unter jeder Ansicht führen «Zurück» und «Weiter» zum nächsten Schritt.
+Nach dem Laden führen fünf nummerierte Schritte durch das Tool. Unter den Schritten steht immer Ihre Auswahl (Anzahl Items, Module, Pflichtbestandteile). Unter jeder Ansicht führen «Zurück» und «Weiter» zum nächsten Schritt.
 
 1. **Fragen und Module:** auswählen. Unter jeder Frage sehen Sie die Antwortmöglichkeiten so, wie sie in der Umfrage erscheinen (Skalen, Ja/Nein, Schieberegler, Eingabefelder). Der Schalter «Antwortmöglichkeiten unter den Fragen zeigen» blendet sie aus. Bei Modulen zeigt «So sieht das Modul in der Umfrage aus» alle Fragen des Moduls als Vorschau. Mit «i» öffnen Sie Hintergrund und Quellen.
-2. **Texte anpassen:** siehe unten.
-3. **Vorschau:** der ganze Fragebogen wie ihn Teilnehmende sehen. Nichts wird gespeichert.
-4. **Prüfung und Ausgabe:** Prüfbericht, Projekt speichern, Dateien für Ihr Umfrage-Tool, ZIP-Paket. Wenn ein Export nicht möglich ist, steht dort in einfachen Worten warum (zum Beispiel «Google Forms kennt keinen Schieberegler von 0 bis 100»), welche Fragen betroffen sind und was Sie tun können.
+2. **Reihenfolge:** Blöcke und Fragen verschieben, wo der Katalog es erlaubt (siehe unten).
+3. **Texte anpassen:** siehe unten.
+4. **Vorschau:** der ganze Fragebogen wie ihn Teilnehmende sehen. Nichts wird gespeichert.
+5. **Prüfung und Ausgabe:** Prüfbericht, Projekt speichern, Dateien für Ihr Umfrage-Tool, ZIP-Paket. Wenn ein Export nicht möglich ist, steht dort in einfachen Worten warum (zum Beispiel «Google Forms kennt keinen Schieberegler von 0 bis 100»), welche Fragen betroffen sind und was Sie tun können.
 
 ## Darstellung: Hell/Dunkel und Schriftgrösse
 
 Oben rechts, auf jeder Seite: **Dunkel/Hell** wechselt das Farbschema, **A+/A−** wechselt zwischen normaler und grosser Schrift (zwei Stufen). Beides gilt nur für den aktuellen Besuch und wird nicht gespeichert. Zu Beginn folgt das Farbschema Ihrer Systemeinstellung. Die Oberfläche startet immer auf Deutsch (umschaltbar auf English), die Fragensprache auf Deutsch, sobald der Katalog Deutsch enthält.
+
+## Reihenfolge
+
+Im Schritt «Reihenfolge» verschieben Sie mit den Pfeilen **ganze Blöcke** (zum Beispiel eine Skala) oder **einzelne Fragen**, aber nur dort, wo der Katalog es erlaubt. Standardisierte Skalen haben einen festen Platz und eine feste Fragenreihenfolge, weil das Original so veröffentlicht ist. Persönliche Angaben wie Alter oder Geschlecht lassen sich meist einzeln verschieben. Eine Verschiebung, die eine Bedingung («nur zeigen, wenn …») verletzen würde, wird nicht ausgeführt, dann erscheint ein Hinweis. «Reihenfolge des Katalogs wiederherstellen» macht alles rückgängig. Nach dem Import in REDCap, Unipark oder ein anderes Tool können Sie die Reihenfolge dort ohnehin noch ändern.
 
 ## Texte anpassen und eigene Textblöcke
 

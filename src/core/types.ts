@@ -236,6 +236,8 @@ export interface Section {
   instruction?: LocalizedText;
   layout?: "list" | "matrix" | "table";
   pageBreakBefore?: boolean;
+  /** What a school may reorder. Both default to false (standardized instruments stay as published). */
+  reorder?: { movable?: boolean; itemsReorderable?: boolean };
 }
 
 export interface HiddenField {
@@ -262,6 +264,10 @@ export interface Customization {
   textOverrides?: Partial<Record<CustomizableText, LocalizedText>>;
   /** Adapted wording of catalog text blocks (items of kind note), by item id. */
   noteOverrides?: Record<string, LocalizedText>;
+  /** Order of the movable sections (ids). Sections that are not movable keep their place. */
+  sectionOrder?: string[];
+  /** Order of the items of a section whose items may be reordered, by section id. */
+  itemOrder?: Record<string, string[]>;
   customBlocks?: CustomBlock[];
 }
 

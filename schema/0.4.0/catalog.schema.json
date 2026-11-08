@@ -1589,6 +1589,21 @@
         },
         "pageBreakBefore": {
           "type": "boolean"
+        },
+        "reorder": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "What a school may change about the order. Both default to false, which is the right setting for a standardized instrument: its items are asked in the published order and as one block.",
+          "properties": {
+            "movable": {
+              "type": "boolean",
+              "description": "The whole section may be moved to another place among the other movable sections."
+            },
+            "itemsReorderable": {
+              "type": "boolean",
+              "description": "The items inside this section may be reordered one by one (for example demographic questions). Leave false for standardized scales."
+            }
+          }
         }
       }
     },

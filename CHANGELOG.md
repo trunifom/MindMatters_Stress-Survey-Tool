@@ -4,6 +4,10 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 
 ## [Unveröffentlicht]
 
+### Hinzugefügt (Reihenfolge)
+- Schema 0.4.0 (additiv): `section.reorder` (`movable`, `itemsReorderable`, beides standardmässig falsch) im Katalog, `customization.sectionOrder` und `customization.itemOrder` im Projekt. Diagnosecodes `CUSTOM_ORDER_LOCKED`, `CUSTOM_ORDER_UNKNOWN`, `CUSTOM_ORDER_CONDITION`.
+- Neuer Schritt «Reihenfolge» mit Pfeilen für Blöcke und Fragen. Verschiebungen, die eine Bedingung verletzen, werden verweigert. Im Beispielkatalog sind «Schule» (standardisierte Skala) als Block verschiebbar, die Fragen darin fest, und «Mehr» mit einzeln verschiebbaren Fragen.
+
 ### Hinzugefügt (Textblöcke des Katalogs)
 - Titel und Textblöcke des Katalogs sind anpassbar: `customization.noteOverrides` im Projekt, `questionnaire.lockedNotes` im Katalog (Schema 0.4.0, additiv), Diagnosecodes `CUSTOM_NOTE_LOCKED` und `CUSTOM_NOTE_NO_TARGET`. Neuer Abschnitt im Schritt «Texte anpassen».
 - Beispielkatalog erweitert: Untertitel in der Einleitung, Zwischentitel mit Übergangstext vor dem zweiten Teil und neuer Abschnitt «Abschluss» mit Dankestitel und -text. Alle Texte sind anpassbar, gesperrt bleiben nur die Einwilligungstexte.

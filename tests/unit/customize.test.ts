@@ -176,6 +176,71 @@ describe("adapting text blocks of the catalog", () => {
   });
 });
 
+describe("order of blocks and items", () => {
+  const secIds = (c: Catalog) => c.questionnaire.sections.map((s) => s.id);
+  const refs = (c: Catalog, id: string) => c.questionnaire.sections.find((s) => s.id === id)!.itemRefs;
+
+  it("moves movable sections only and keeps the others in their place", () => {
+    const r = applyCustomization(base(), { sectionOrder: ["extras", "battery"] });
+    expect(r.diagnostics).toEqual([]);
+    expect(secIds(r.catalog)).toEqual(["intro", "extras", "battery", "closing"]);
+  });
+
+  it("is off by default: a section without the flag, an unknown section and fixed items are reported and kept", () => {
+    const c = base();
+    const r = applyCustomization(c, { sectionOrder: ["closing", "nowhere", "extras"], itemOrder: { battery: ["demo_04", "demo_03", "demo_01"], nowhere: ["x"] } });
+    expect(r.diagnostics.map((d) => d.code).sort()).toEqual(["CUSTOM_ORDER_LOCKED", "CUSTOM_ORDER_LOCKED", "CUSTOM_ORDER_UNKNOWN", "CUSTOM_ORDER_UNKNOWN"]);
+    expect(refs(r.catalog, "battery")).toEqual(refs(c, "battery"));
+    expect(secIds(r.catalog)).toEqual(["intro", "extras", "battery", "closing"]); // "closing" is fixed, "extras" is named first among the movable ones
+  });
+
+  it("reorders the items of a free section, appends the ones not named and ignores foreign ids", () => {
+    const r = applyCustomization(base(), { itemOrder: { extras: ["rank_topics", "demo_01", "part2_title"] } });
+    expect(refs(r.catalog, "extras").slice(0, 2)).toEqual(["rank_topics", "part2_title"]);
+    expect(refs(r.catalog, "extras")).toHaveLength(7);
+    expect(refs(r.catalog, "extras")).not.toContain("demo_01");
+  });
+
+  it("refuses an order that puts a condition's trigger behind the dependent item", () => {
+    const c = base();
+    const order = [...refs(c, "extras")].filter((i) => i !== "contact_email");
+    const r = applyCustomization(c, { itemOrder: { extras: ["contact_email", ...order] } });
+    expect(r.diagnostics.map((d) => d.code)).toEqual(["CUSTOM_ORDER_CONDITION"]);
+    expect(refs(r.catalog, "extras")).toEqual(refs(c, "extras"));
+  });
+
+  it("own blocks keep their anchor when items move, and the result passes the full validation", () => {
+    const c = base();
+    const r = applyCustomization(c, {
+      sectionOrder: ["extras", "battery"],
+      itemOrder: { extras: ["rank_topics", "mood_slider"] },
+      customBlocks: [{ id: "custom_1", style: "text", text: { en: "after the slider" }, sectionRef: "extras", afterItemRef: "mood_slider" }],
+    });
+    const e = refs(r.catalog, "extras");
+    expect(e.indexOf("custom_1")).toBe(e.indexOf("mood_slider") + 1);
+    const load = loadCatalog(JSON.stringify(r.catalog));
+    expect(load.ok, JSON.stringify(load.diagnostics.filter((d) => d.severity === "error"))).toBe(true);
+  });
+
+  it("round-trips through the project file; an order the catalog forbids is reported on load", () => {
+    const c = base();
+    const custom: Customization = { sectionOrder: ["extras", "battery"], itemOrder: { extras: ["rank_topics"] } };
+    const eff = applyCustomization(c, custom).catalog;
+    const { project } = createProject(eff, all(eff), { language: "en", customization: custom });
+    expect(project!.customization).toEqual(custom);
+    const r = loadProject(serializeProject(project!), c);
+    expect(r.ok).toBe(true);
+    expect(secIds(r.catalog!)).toEqual(["intro", "extras", "battery", "closing"]);
+    const p: any = JSON.parse(serializeProject(project!));
+    p.customization.itemOrder = { battery: ["demo_04"] };
+    expect(loadProject(JSON.stringify(p), c).diagnostics.some((d) => d.code === "CUSTOM_ORDER_LOCKED")).toBe(true);
+  });
+
+  it("normalizes: empty orders are dropped", () => {
+    expect(normalizeCustomization({ sectionOrder: [], itemOrder: { extras: [] } })).toBeUndefined();
+  });
+});
+
 describe("project file with customization", () => {
   const custom: Customization = {
     textOverrides: { introduction: { "de-CH": "Eigene Einleitung" } },

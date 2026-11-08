@@ -249,7 +249,7 @@ describe("preview tab", () => {
   it("is reachable from the tab bar", () => {
     const m = mount("en");
     loadCatalogText(m.store, exampleText(), "x.json");
-    expect(m.qa("nav.tabs button").map((b) => b.textContent)).toEqual(["1 Questions and modules", "2 Adapt texts", "3 Preview", "4 Check and output"]);
+    expect(m.qa("nav.tabs button").map((b) => b.textContent)).toEqual(["1 Questions and modules", "2 Order", "3 Adapt texts", "4 Preview", "5 Check and output"]);
     click(m.q("[data-focus=tab-preview]"));
     expect(m.store.get().view).toBe("preview");
     expect(m.q("[data-focus=tab-preview]").getAttribute("aria-current")).toBe("page");

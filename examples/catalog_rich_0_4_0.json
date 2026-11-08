@@ -819,6 +819,10 @@
         },
         "layout": "matrix",
         "pageBreakBefore": true,
+        "reorder": {
+          "movable": true,
+          "itemsReorderable": false
+        },
         "itemRefs": [
           "demo_01",
           "demo_03",
@@ -832,6 +836,10 @@
           "de-CH": "Mehr"
         },
         "pageBreakBefore": true,
+        "reorder": {
+          "movable": true,
+          "itemsReorderable": true
+        },
         "itemRefs": [
           "part2_title",
           "part2_text",

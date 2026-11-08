@@ -70,7 +70,7 @@ Aufwand: S = Stunden, M = ein bis zwei Tage, L = mehrere Tage. Nutzen: ★ gerin
 | E6 | Texte anpassen und eigene Textblöcke, gesperrte Standardtexte | **umgesetzt** (ADR-009) |
 | E7 | Google Forms: Gründe in einfachen Worten, was der Katalog verlangt und das Ziel nicht kann | **umgesetzt** |
 | E8 | Anpassbare Texte auch für `note`-Items des Katalogs | **umgesetzt** (ADR-009, Punkt 7) |
-| E8b | Reihenfolge der eigenen Blöcke per Knopf (hoch/runter) | offen |
+| E8b | Reihenfolge von Blöcken und Fragen, wo der Katalog es erlaubt (`section.reorder`, Schritt «Reihenfolge») | **umgesetzt** (ADR-009, Punkt 9) |
 | E11 | Beispielkatalog mit Titel, Untertitel, Einleitung, Übergangstexten und Abschlussseite als Beispieltexte | **umgesetzt** (`examples/catalog_rich_0_4_0.json`) |
 | E12 | Prüfregel für Herausgeber: Warnung, wenn ein Katalog keine Einleitung, keinen Übergang zwischen Batterien oder keine Abschlussseite mitbringt | offen |
 | E9 | Sprachen der eigenen Texte nebeneinander bearbeiten | offen |

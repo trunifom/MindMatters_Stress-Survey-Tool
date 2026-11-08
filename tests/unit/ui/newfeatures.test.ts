@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
 import { loadCatalogText, setView } from "../../../src/ui/state";
+import { checkConditions } from "../../../src/core/structure";
 import { click, exampleText, mount } from "./helpers";
 
 const change = (el: Element, value: string) => {
@@ -171,13 +172,65 @@ describe("adapt texts", () => {
 });
 
 describe("steps and explanations", () => {
-  it("shows four numbered steps with an intro and next/back navigation", () => {
+  it("shows five numbered steps with an intro and next/back navigation", () => {
     const m = loaded();
-    expect(m.qa("nav.tabs .tab")).toHaveLength(4);
+    expect(m.qa("nav.tabs .tab")).toHaveLength(5);
     expect(m.q(".view-intro").textContent).toContain("Wählen Sie");
+    click(m.q("[data-focus=nav-next]"));
+    expect(m.store.get().view).toBe("structure");
     click(m.q("[data-focus=nav-next]"));
     expect(m.store.get().view).toBe("texts");
     click(m.q("[data-focus=nav-back]"));
+    click(m.q("[data-focus=nav-back]"));
     expect(m.store.get().view).toBe("items");
+  });
+});
+
+describe("order of blocks and questions", () => {
+  const sectionIds = (m: ReturnType<typeof loaded>) => m.store.get().loaded!.catalog.questionnaire.sections.map((s) => s.id);
+  const itemIds = (m: ReturnType<typeof loaded>, sec: string) => m.store.get().loaded!.catalog.questionnaire.sections.find((s) => s.id === sec)!.itemRefs;
+
+  it("shows what is movable, and fixed places for the rest", () => {
+    const m = loaded();
+    setView(m.store, "structure");
+    expect(m.qa("[data-section]")).toHaveLength(4);
+    expect(m.q("[data-focus=section-battery-up]")).toBeTruthy();
+    expect(m.qa("[data-focus=section-intro-up]")).toHaveLength(0);
+    expect(m.q("[data-section=battery]").textContent).toContain("festgelegten Reihenfolge");
+    expect(m.qa("[data-focus=item-demo_01-up]")).toHaveLength(0); // items of the standardized block stay put
+    expect(m.q("[data-focus=item-wants_help-up]")).toBeTruthy();
+  });
+
+  it("moves a whole block, keeps fixed ones in place, and the order reaches the preview and the project", () => {
+    const m = loaded();
+    setView(m.store, "structure");
+    click(m.q("[data-focus=section-battery-down]"));
+    expect(sectionIds(m)).toEqual(["intro", "extras", "battery", "closing"]);
+    expect(m.store.get().customization.sectionOrder).toEqual(["extras", "battery"]);
+    expect(m.store.get().dirty).toBe(true);
+    click(m.q("[data-focus=section-battery-up]"));
+    expect(sectionIds(m)).toEqual(["intro", "battery", "extras", "closing"]);
+    expect(m.store.get().customization.sectionOrder).toBeUndefined();
+  });
+
+  it("moves a single question inside a block that allows it", () => {
+    const m = loaded();
+    setView(m.store, "structure");
+    click(m.q("[data-focus=item-rank_topics-up]"));
+    const refs = itemIds(m, "extras");
+    expect(refs.indexOf("rank_topics")).toBeLessThan(refs.indexOf("mood_slider"));
+    expect(m.store.get().customization.itemOrder?.extras).toBeDefined();
+    click(m.q("#order-reset"));
+    expect(m.store.get().customization.itemOrder).toBeUndefined();
+  });
+
+  it("refuses a move that would put a condition's trigger behind its dependent question", () => {
+    const m = loaded();
+    setView(m.store, "structure");
+    for (let n = 0; n < 4; n++) click(m.q("[data-focus=item-contact_email-up]"));
+    const after = m.store.get().loaded!.catalog;
+    expect(checkConditions(after).filter((d) => d.code === "CONDITION_TRIGGER_NOT_BEFORE")).toEqual([]);
+    expect(m.q("#order-notice")).toBeTruthy();
+    expect(itemIds(m, "extras").indexOf("contact_email")).toBeGreaterThan(itemIds(m, "extras").indexOf("wants_help"));
   });
 });

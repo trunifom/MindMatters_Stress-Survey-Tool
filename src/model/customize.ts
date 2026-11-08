@@ -1,6 +1,7 @@
 import { deepClone } from "../core/clone";
 import { Diagnostic, diag } from "../core/diagnostics";
-import { CUSTOMIZABLE_TEXTS, Catalog, CustomBlock, CustomizableText, Customization, Item, LocalizedText, RightsProfile } from "../core/types";
+import { checkConditions } from "../core/structure";
+import { CUSTOMIZABLE_TEXTS, Catalog, CustomBlock, CustomizableText, Customization, Item, LocalizedText, RightsProfile, Section } from "../core/types";
 
 /**
  * School customization: adapted texts and added text blocks (titles, subtitles, text, notices).
@@ -77,6 +78,53 @@ export function isLocked(c: Catalog, key: CustomizableText): boolean {
   return (c.questionnaire.lockedTexts ?? []).includes(key);
 }
 
+export const isSectionMovable = (s: Section): boolean => s.reorder?.movable === true;
+export const areItemsReorderable = (s: Section): boolean => s.reorder?.itemsReorderable === true;
+
+/** Applies the school's order. Moves that would put a condition's trigger behind the dependent item are refused. */
+function applyOrder(c: Catalog, norm: Customization, diagnostics: Diagnostic[]): void {
+  const triggerErrors = (cat: Catalog) => checkConditions(cat).filter((d) => d.code === "CONDITION_TRIGGER_NOT_BEFORE");
+  const allowed = (what: string): boolean => {
+    const bad = triggerErrors(c);
+    if (bad.length === 0) return true;
+    diagnostics.push(diag("selection", "warning", "CUSTOM_ORDER_CONDITION", `The new order of ${what} was ignored: ${bad[0]!.message}`, { context: "project" }));
+    return false;
+  };
+  const secs = c.questionnaire.sections;
+
+  if (norm.sectionOrder) {
+    const movable = new Set(secs.filter(isSectionMovable).map((s) => s.id));
+    const wanted: string[] = [];
+    for (const id of norm.sectionOrder) {
+      if (!secs.some((s) => s.id === id)) diagnostics.push(diag("selection", "warning", "CUSTOM_ORDER_UNKNOWN", `The section "${id}" does not exist. It was ignored in the order.`, { context: "project" }));
+      else if (!movable.has(id)) diagnostics.push(diag("selection", "warning", "CUSTOM_ORDER_LOCKED", `The section "${id}" is not movable in this catalog. Its place was kept.`, { context: "project" }));
+      else if (!wanted.includes(id)) wanted.push(id);
+    }
+    for (const s of secs) if (movable.has(s.id) && !wanted.includes(s.id)) wanted.push(s.id);
+    const byId = new Map(secs.map((s) => [s.id, s]));
+    let k = 0;
+    const next = secs.map((s) => (movable.has(s.id) ? byId.get(wanted[k++]!)! : s));
+    c.questionnaire.sections = next;
+    if (!allowed("the sections")) c.questionnaire.sections = secs;
+  }
+
+  for (const [sid, ids] of Object.entries(norm.itemOrder ?? {})) {
+    const sec = c.questionnaire.sections.find((s) => s.id === sid);
+    if (!sec) {
+      diagnostics.push(diag("selection", "warning", "CUSTOM_ORDER_UNKNOWN", `The section "${sid}" does not exist. Its item order was ignored.`, { context: "project" }));
+      continue;
+    }
+    if (!areItemsReorderable(sec)) {
+      diagnostics.push(diag("selection", "warning", "CUSTOM_ORDER_LOCKED", `The items of section "${sid}" cannot be reordered in this catalog. The published order was kept.`, { context: "project" }));
+      continue;
+    }
+    const original = sec.itemRefs;
+    const wanted = ids.filter((id, i) => original.includes(id) && ids.indexOf(id) === i);
+    sec.itemRefs = [...wanted, ...original.filter((id) => !wanted.includes(id))];
+    if (!allowed(`section "${sid}"`)) sec.itemRefs = original;
+  }
+}
+
 /** The text blocks (notes) of the catalog itself, in questionnaire order, without the school's own blocks. */
 export function catalogNotes(c: Catalog): Item[] {
   const order: string[] = [];
@@ -104,7 +152,11 @@ export function normalizeCustomization(c: Customization | undefined): Customizat
     const v = cleanText(t);
     if (v) notes[id] = v;
   }
+  const itemOrder: Record<string, string[]> = {};
+  for (const [sid, ids] of Object.entries(c.itemOrder ?? {})) if (ids.length > 0) itemOrder[sid] = [...ids];
   const out: Customization = {
+    ...((c.sectionOrder ?? []).length > 0 ? { sectionOrder: [...c.sectionOrder!] } : {}),
+    ...(Object.keys(itemOrder).length > 0 ? { itemOrder } : {}),
     ...(Object.keys(overrides).length > 0 ? { textOverrides: overrides } : {}),
     ...(Object.keys(notes).length > 0 ? { noteOverrides: notes } : {}),
     ...(blocks.length > 0 ? { customBlocks: blocks } : {}),
@@ -174,6 +226,8 @@ export function applyCustomization(base: Catalog, custom: Customization | undefi
     }
     item.text = text;
   }
+
+  if (norm.sectionOrder || norm.itemOrder) applyOrder(c, norm, diagnostics);
 
   const blockIds: string[] = [];
   const known = new Set(c.items.map((i) => i.id));

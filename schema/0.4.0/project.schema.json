@@ -157,6 +157,30 @@
               }
             }
           }
+        },
+        "sectionOrder": {
+          "type": "array",
+          "uniqueItems": true,
+          "description": "Order of the movable sections. Sections that are not movable keep their place.",
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/Id"
+          }
+        },
+        "itemOrder": {
+          "type": "object",
+          "description": "Order of the items inside a section whose items may be reordered, by section id.",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]{0,63}$"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 1000,
+            "items": {
+              "$ref": "#/$defs/Id"
+            }
+          }
         }
       }
     }

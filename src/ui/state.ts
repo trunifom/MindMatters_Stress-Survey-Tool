@@ -19,7 +19,7 @@ export function preferredLanguage(c: Catalog): string {
   return c.languages.find((l) => l === "de") ?? c.languages.find((l) => l.toLowerCase().startsWith("de")) ?? c.catalog.defaultLanguage;
 }
 
-export type View = "items" | "texts" | "preview" | "check";
+export type View = "items" | "structure" | "texts" | "preview" | "check";
 
 export interface Notice {
   kind: "info" | "warning" | "error";
@@ -86,6 +86,8 @@ export interface AppState {
   showAnswers: boolean;
   /** Modules whose "how it looks in the survey" section is open. */
   openPreviews: string[];
+  /** Why the last attempt to move something was refused (null = nothing to say). */
+  orderNotice: string | null;
 }
 
 export const EMPTY_FILTER: Filter = { query: "", scope: "all", moduleId: "", constructId: "" };
@@ -99,6 +101,7 @@ export function initialState(_hint?: string, prefs: Prefs = {}): AppState {
     customization: {},
     showAnswers: true,
     openPreviews: [],
+    orderNotice: null,
     view: "items",
     selection: new Set(),
     language: "",
@@ -162,6 +165,7 @@ export function loadCatalogText(store: Store, text: string, fileName: string, mi
       selection: new Set(result.initialSelection),
       language: preferredLanguage(result.catalog),
       customization: {},
+      orderNotice: null,
       openPreviews: [],
       targetPlatform: "",
       schoolLabel: "",
@@ -213,6 +217,7 @@ export function loadProjectText(store: Store, text: string, fileName: string, mi
   store.set({
     loaded: { ...s.loaded, catalog: r.catalog ?? s.loaded.base },
     customization: r.project.customization ?? {},
+    orderNotice: null,
     selection: new Set(r.result.selection),
     language: lang,
     targetPlatform: r.project.targetPlatform ?? "",
@@ -342,7 +347,7 @@ function applyCustom(store: Store, custom: Customization): void {
   const exists = new Set(next.catalog.items.map((i) => i.id));
   const selection = new Set([...s.selection].filter((id) => exists.has(id)));
   for (const id of next.blockIds) if (!old.has(id)) selection.add(id);
-  store.set({ loaded: { ...s.loaded, catalog: next.catalog }, customization: custom, selection, dirty: true });
+  store.set({ loaded: { ...s.loaded, catalog: next.catalog }, customization: custom, selection, orderNotice: null, dirty: true });
 }
 
 /** Set (or, with empty text, remove) the text of one language of an adaptable questionnaire text. */
@@ -381,6 +386,72 @@ export function resetNoteText(store: Store, id: string): void {
   const notes = { ...(s.customization.noteOverrides ?? {}) };
   delete notes[id];
   applyCustom(store, { ...s.customization, noteOverrides: notes });
+}
+
+// --- order -------------------------------------------------------------------
+
+const swapped = (list: string[], id: string, delta: -1 | 1): string[] | undefined => {
+  const i = list.indexOf(id);
+  const j = i + delta;
+  if (i < 0 || j < 0 || j >= list.length) return undefined;
+  const out = [...list];
+  [out[i], out[j]] = [out[j]!, out[i]!];
+  return out;
+};
+
+const sameList = (a: string[], b: string[]) => a.length === b.length && a.every((x, i) => x === b[i]);
+
+/** Apply a new order if it is allowed; otherwise keep everything and say why. */
+function tryOrder(store: Store, custom: Customization): void {
+  const s = store.get();
+  if (!s.loaded) return;
+  const trial = applyCustomization(s.loaded.base, custom);
+  const refused = trial.diagnostics.find((d) => d.code === "CUSTOM_ORDER_CONDITION");
+  if (refused) {
+    store.set({ orderNotice: refused.message });
+    return;
+  }
+  applyCustom(store, custom);
+}
+
+/** The ids of the movable sections in their current order. */
+export const movableSectionIds = (c: Catalog): string[] => c.questionnaire.sections.filter((x) => x.reorder?.movable === true).map((x) => x.id);
+
+/** Move a movable section one place up or down among the movable sections. */
+export function moveSection(store: Store, sectionId: string, delta: -1 | 1): void {
+  const s = store.get();
+  if (!s.loaded) return;
+  const next = swapped(movableSectionIds(s.loaded.catalog), sectionId, delta);
+  if (!next) return;
+  const isDefault = sameList(next, movableSectionIds(s.loaded.base));
+  const custom = { ...s.customization };
+  if (isDefault) delete custom.sectionOrder;
+  else custom.sectionOrder = next;
+  tryOrder(store, custom);
+}
+
+/** Move one item inside a section whose items may be reordered. Own text blocks keep their anchor and are not moved here. */
+export function moveItem(store: Store, sectionId: string, itemId: string, delta: -1 | 1): void {
+  const s = store.get();
+  if (!s.loaded) return;
+  const sec = s.loaded.catalog.questionnaire.sections.find((x) => x.id === sectionId);
+  const baseSec = s.loaded.base.questionnaire.sections.find((x) => x.id === sectionId);
+  if (!sec || !baseSec || sec.reorder?.itemsReorderable !== true) return;
+  const own = new Set(baseSec.itemRefs);
+  const next = swapped(sec.itemRefs.filter((id) => own.has(id)), itemId, delta);
+  if (!next) return;
+  const itemOrder = { ...(s.customization.itemOrder ?? {}) };
+  if (sameList(next, baseSec.itemRefs)) delete itemOrder[sectionId];
+  else itemOrder[sectionId] = next;
+  tryOrder(store, { ...s.customization, itemOrder });
+}
+
+export function resetOrder(store: Store): void {
+  const s = store.get();
+  const custom = { ...s.customization };
+  delete custom.sectionOrder;
+  delete custom.itemOrder;
+  applyCustom(store, custom);
 }
 
 /** Add a block at the start of a section or after an item. Returns its id. */

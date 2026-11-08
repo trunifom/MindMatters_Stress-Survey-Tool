@@ -306,7 +306,7 @@ describe.skipIf(!executablePath)(`real browser (${executablePath ?? "none found"
   it("responsive: no horizontal scrolling on a phone-sized screen, in every view", async () => {
     const { context, page } = await open({ viewport: { width: 375, height: 700 } });
     await loadExample(page);
-    for (const tab of ["items", "texts", "preview", "check"]) {
+    for (const tab of ["items", "structure", "texts", "preview", "check"]) {
       await page.click(`[data-focus=tab-${tab}]`);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow, tab).toBeLessThanOrEqual(0);
