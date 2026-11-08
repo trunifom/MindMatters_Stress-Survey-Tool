@@ -1732,6 +1732,23 @@
               }
             }
           }
+        },
+        "lockedTexts": {
+          "type": "array",
+          "uniqueItems": true,
+          "description": "Texts of this questionnaire that are standardized (for example wording of the original instrument or a mandatory consent text) and must not be changed by a school. Allowed values: title, introduction, closingText, privacyNotice, helpResources, consentTitle, consentText, parentalConsentText. Everything not listed may be adapted.",
+          "items": {
+            "enum": [
+              "title",
+              "introduction",
+              "closingText",
+              "privacyNotice",
+              "helpResources",
+              "consentTitle",
+              "consentText",
+              "parentalConsentText"
+            ]
+          }
         }
       }
     },

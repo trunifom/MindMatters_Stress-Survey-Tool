@@ -67,12 +67,109 @@
       "type": "string",
       "format": "date-time",
       "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "customization": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Texts the school adapted and text blocks it added. Applied on top of the catalog; the catalog itself is never changed. Texts the catalog marks as locked are ignored.",
+      "properties": {
+        "textOverrides": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "introduction": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "closingText": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "privacyNotice": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "helpResources": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "consentTitle": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "consentText": {
+              "$ref": "#/$defs/LocalizedText"
+            },
+            "parentalConsentText": {
+              "$ref": "#/$defs/LocalizedText"
+            }
+          }
+        },
+        "customBlocks": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "style",
+              "text",
+              "sectionRef"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^custom_[a-z0-9_]{1,56}$"
+              },
+              "style": {
+                "enum": [
+                  "title",
+                  "subtitle",
+                  "text",
+                  "notice"
+                ]
+              },
+              "text": {
+                "$ref": "#/$defs/LocalizedText"
+              },
+              "sectionRef": {
+                "$ref": "#/$defs/Id"
+              },
+              "afterItemRef": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Id"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Item after which the block appears; null or missing means at the start of the section."
+              }
+            }
+          }
+        }
+      }
     }
   },
   "$defs": {
     "Id": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9_]{0,63}$"
+    },
+    "LocalizedText": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "#/$defs/LanguageTag"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "LanguageTag": {
+      "type": "string",
+      "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
     }
   }
 }

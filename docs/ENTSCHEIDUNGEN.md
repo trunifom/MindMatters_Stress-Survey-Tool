@@ -63,6 +63,18 @@ Jeder Eintrag: Kontext, Entscheidung, Alternativen, Folgen. Neue Entscheidungen 
 - **Gründe:** Schulen sollen einen Stand bekommen, an dem sie arbeiten können. Das Risiko liegt in einem still falschen Import, deshalb bleibt die Stufe sichtbar und der Weg zu «getestet» ist in [PROTOTYPEN.md](PROTOTYPEN.md) beschrieben.
 - **Folgen:** Eine Stufe wird nur nach einem protokollierten Test angehoben. Der gemeinsame Start jedes neuen Adapters liegt in `src/output/adapterBase.ts`.
 
+## ADR-009: Anpassbare Texte und eigene Textblöcke, Darstellung ohne Speicherung, Deutsch als Standard
+
+**Entscheidung.**
+1. **Texte anpassen.** Eine Schule kann Titel, Einleitung, Schlusstext, Datenschutzhinweis, Hilfsangebote und die Einwilligungstexte ändern und eigene Textblöcke (Titel, Zwischentitel, Text, Hinweis) an beliebiger Stelle einfügen. Das gespeicherte Ergebnis heisst `customization` und steht in der **Projektdatei** (Schema 0.4.0, rein additiv). Der Katalog wird nie verändert.
+2. **Gesperrte Texte.** Der Katalog kann Texte als standardisiert markieren (`questionnaire.lockedTexts`, zum Beispiel Wortlaut eines Originalinstruments oder eine vorgeschriebene Einwilligung). Eine Anpassung davon wird nicht angewendet und mit `CUSTOM_TEXT_LOCKED` gemeldet, in der Oberfläche ist das Feld gesperrt. Fragen und Antwortoptionen sind nie anpassbar.
+3. **Abgeleiteter Katalog.** `applyCustomization` baut im Speicher einen abgeleiteten Katalog (angepasste Texte, eigene Blöcke als `note`-Items mit `origin: own` und eigenem Rechteprofil `rights_custom_text`). Liste, Vorschau, Prüfung und **alle Exporte** arbeiten auf diesem einen Katalog. So kann der Wortlaut in Vorschau und Export nie auseinanderlaufen. Der abgeleitete Katalog besteht die volle Validierung (Test).
+4. **Nichts wird still verschoben.** Ein Block mit unbekanntem Abschnitt oder belegter ID wird übersprungen und gemeldet. Ein unbekannter Ankerpunkt setzt den Block an den Abschnittsanfang, mit Warnung.
+5. **Darstellung ohne Speicherung.** Hell/Dunkel und zwei Schriftgrössen gelten für die ganze Seite. Sie werden **bewusst nicht im Browser gespeichert**: Das Tool verspricht, nichts zu speichern, und ein statischer Test (T41) verbietet `localStorage`, `sessionStorage` und IndexedDB unter `src/ui`. Das Thema folgt zu Beginn der Systemeinstellung.
+6. **Deutsch als Standard.** Oberfläche immer Deutsch (umschaltbar). Die Fragensprache ist Deutsch, sobald der Katalog `de` oder `de-*` führt, sonst die Standardsprache des Katalogs.
+
+**Folgen.** Ein Projekt ohne Anpassungen sieht aus wie bisher (kein neuer Schlüssel). Wer die Projektdatei weitergibt, gibt die eigenen Texte der Schule weiter, aber keinen Katalogwortlaut. Exporte in einer Sprache ohne den eigenen Text melden den fehlenden Text wie bei jedem anderen Text (`EXPORT_TEXT_MISSING`).
+
 ## Offene Entscheidungen
 - Lizenz des Repositories.
 - Erste Plattform-Reihenfolge der Adapter (Vorschlag: LimeSurvey, REDCap, Qualtrics).

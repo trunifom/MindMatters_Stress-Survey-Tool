@@ -3,7 +3,7 @@
 | Ordner | Zweck |
 |---|---|
 | `0.3.0/` | Strukturelle Umsetzung des Datenvertrags in `Dokumente_Start/02_JSON_Datenvertrag.md`, unverändert. |
-| `0.4.0/` | Rein additive Erweiterung (alle neuen Felder optional). Ein 0.3.0-Dokument wird mit der Änderung von `schemaVersion` auf `0.4.0` gültig. Begründung der Felder: `docs/RECHERCHE_Zielsysteme.md`, Abschnitt 3. Dazu `Option.exportHints.<plattform>.code` für Zielsysteme mit anderen Coderegeln (ADR-007). |
+| `0.4.0/` | Rein additive Erweiterung (alle neuen Felder optional). Ein 0.3.0-Dokument wird mit der Änderung von `schemaVersion` auf `0.4.0` gültig. Begründung der Felder: `docs/RECHERCHE_Zielsysteme.md`, Abschnitt 3. Dazu `Option.exportHints.<plattform>.code` für Zielsysteme mit anderen Coderegeln (ADR-007), `questionnaire.lockedTexts` (standardisierte, nicht anpassbare Texte) und im Projekt `customization` (angepasste Texte und eigene Textblöcke, ADR-009). |
 
 Draft 2020-12. Objekte sind geschlossen (`additionalProperties: false`), Zusätze gehören in `extensions`.
 

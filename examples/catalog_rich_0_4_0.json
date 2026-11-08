@@ -620,6 +620,7 @@
   "modules": [],
   "questionnaire": {
     "id": "rich_template",
+    "lockedTexts": ["consentText", "parentalConsentText"],
     "title": {
       "en": "Rich example questionnaire",
       "de-CH": "Reichhaltiger Beispiel-Fragebogen"

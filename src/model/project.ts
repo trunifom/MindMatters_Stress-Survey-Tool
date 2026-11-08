@@ -1,5 +1,6 @@
 import { Diagnostic, diag } from "../core/diagnostics";
-import type { Catalog, Project } from "../core/types";
+import type { Catalog, Customization, Project } from "../core/types";
+import { normalizeCustomization } from "./customize";
 import { checkSelection, orderedSelection, Selection } from "./selection";
 
 /**
@@ -7,7 +8,8 @@ import { checkSelection, orderedSelection, Selection } from "./selection";
  *
  * A project stores references only: exact catalog id and version, the
  * questionnaire id, the language and the selected item ids. It never contains
- * item texts or rule overrides.
+ * item texts of the catalog or rule overrides. The only texts it may carry are the
+ * school's own: adapted questionnaire texts and added text blocks (`customization`).
  */
 
 export interface CreateProjectOptions {
@@ -18,6 +20,8 @@ export interface CreateProjectOptions {
   schoolLabel?: string;
   /** Internal notes; local only, never published by the tool. */
   internalNotes?: string;
+  /** Adapted texts and own text blocks (already applied to the catalog passed to createProject). */
+  customization?: Customization;
   /** Injected for deterministic output (tests); defaults to the current time. */
   now?: Date;
 }
@@ -53,6 +57,7 @@ export function createProject(c: Catalog, selected: Selection, options: CreatePr
   const platform = clean(options.targetPlatform);
   const school = clean(options.schoolLabel);
   const notes = clean(options.internalNotes);
+  const custom = normalizeCustomization(options.customization);
 
   // Fixed key order: stable, diff-friendly files.
   const project: Project = {
@@ -65,6 +70,7 @@ export function createProject(c: Catalog, selected: Selection, options: CreatePr
     ...(platform ? { targetPlatform: platform } : {}),
     ...(school ? { schoolLabel: school } : {}),
     ...(notes ? { internalNotes: notes } : {}),
+    ...(custom ? { customization: custom } : {}),
     savedAt: (options.now ?? new Date()).toISOString(),
   };
   return { project, diagnostics: checkSelection(c, selected, "project") };

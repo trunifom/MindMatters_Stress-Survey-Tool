@@ -6,6 +6,7 @@ import { validateCatalogSemantics } from "./semantic";
 import { parseStrictJson } from "./strictJson";
 import type { Catalog, Project } from "./types";
 import { evaluateAction } from "../model/rights";
+import { applyCustomization } from "../model/customize";
 import { applyProject, checkInitialSelection, initialSelection, ProjectResult } from "../model/selection";
 
 /**
@@ -99,6 +100,8 @@ export interface ProjectLoad {
   result?: ProjectResult;
   /** The project document as read (after an explicit migration), for its language and local labels. */
   project?: Project;
+  /** The catalog with the project's adapted texts and text blocks applied (the loaded catalog itself if there are none). */
+  catalog?: Catalog;
   diagnostics: Diagnostic[];
 }
 
@@ -120,10 +123,13 @@ export function loadProject(text: string, catalog: Catalog, options: LoadOptions
   diagnostics.push(...structure);
   if (hasErrors(structure)) return { ok: false, diagnostics };
 
-  const result = applyProject(catalog, doc as Project);
+  // Adapted texts and own text blocks come first: the selection may name blocks that only exist after applying them.
+  const customized = applyCustomization(catalog, (doc as Project).customization);
+  diagnostics.push(...customized.diagnostics);
+  const result = applyProject(customized.catalog, doc as Project);
   diagnostics.push(...result.diagnostics);
   const mismatch = result.diagnostics.some((d) => d.code === "PROJECT_CATALOG_MISMATCH");
-  return { ok: !hasErrors(diagnostics), ...(mismatch ? {} : { result, project: doc as Project }), diagnostics };
+  return { ok: !hasErrors(diagnostics), ...(mismatch ? {} : { result, project: doc as Project, catalog: customized.catalog }), diagnostics };
 }
 
 // ---------------------------------------------------------------------------

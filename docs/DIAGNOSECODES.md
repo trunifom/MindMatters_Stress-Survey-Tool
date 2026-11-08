@@ -171,3 +171,14 @@ Gilt für die Export-Adapter (`targetPlatform` nennt das Zielsystem). Ein Fehler
 | `EXPORT_TEXT_RESERVED` | error | ein Text enthält `[[` oder `]]`, die das Zielsystem als Tag liest (Qualtrics) |
 | `EXPORT_RESPONSE_UNSUPPORTED` | error | das Zielformat kennt den Antworttyp nicht (Qualtrics TXT: Slider); es gibt keinen Ersatz |
 | `EXPORT_HIDDEN_FIELD_INVALID` | error | ein verstecktes Feld hat einen Namen oder Wert, den das Zielsystem nicht annimmt |
+
+## Anpassungen der Schule (Stufe `selection`, Kontext `project`)
+
+| Code | Schwere | Bedeutung |
+|---|---|---|
+| `CUSTOM_TEXT_LOCKED` | warning | Der Katalog markiert den Text als standardisiert (`questionnaire.lockedTexts`). Die Anpassung wurde nicht angewendet |
+| `CUSTOM_TEXT_NO_TARGET` | warning | Titel oder Elterntext der Einwilligung angepasst, der Katalog hat aber keine Einwilligung |
+| `CUSTOM_BLOCK_SECTION_UNKNOWN` | error | Der Abschnitt des eigenen Blocks gibt es in diesem Katalog nicht. Block übersprungen |
+| `CUSTOM_BLOCK_ID_TAKEN` | error | Die ID des Blocks ist schon vergeben. Block übersprungen |
+| `CUSTOM_BLOCK_ANCHOR_UNKNOWN` | warning | Das Item, hinter dem der Block stehen sollte, ist nicht im Abschnitt. Block an den Anfang gesetzt |
+

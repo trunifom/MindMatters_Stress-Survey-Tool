@@ -245,8 +245,27 @@ export interface HiddenField {
   constantValue?: string;
 }
 
+/** Texts of the questionnaire a school may adapt (unless the catalog locks them). */
+export const CUSTOMIZABLE_TEXTS = ["title", "introduction", "closingText", "privacyNotice", "helpResources", "consentTitle", "consentText", "parentalConsentText"] as const;
+export type CustomizableText = (typeof CUSTOMIZABLE_TEXTS)[number];
+
+export interface CustomBlock {
+  id: string;
+  style: "title" | "subtitle" | "text" | "notice";
+  text: LocalizedText;
+  sectionRef: string;
+  /** Item after which the block appears; null/missing = start of the section. */
+  afterItemRef?: string | null;
+}
+
+export interface Customization {
+  textOverrides?: Partial<Record<CustomizableText, LocalizedText>>;
+  customBlocks?: CustomBlock[];
+}
+
 export interface Questionnaire {
   id: string;
+  lockedTexts?: CustomizableText[];
   title: LocalizedText;
   introduction?: LocalizedText;
   closingText?: LocalizedText;
@@ -322,5 +341,6 @@ export interface Project {
   targetPlatform?: string;
   schoolLabel?: string;
   internalNotes?: string;
+  customization?: Customization;
   savedAt?: string;
 }

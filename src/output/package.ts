@@ -1,5 +1,5 @@
 import type { Diagnostic } from "../core/diagnostics";
-import type { Catalog } from "../core/types";
+import type { Catalog, Customization } from "../core/types";
 import { createProject, projectFileName, serializeProject } from "../model/project";
 import { Selection } from "../model/selection";
 import { buildCodebook } from "./codebook";
@@ -23,6 +23,8 @@ export interface PackageInput {
   internalNotes?: string;
   /** Opt in: school label and notes go into the codebook (as in the single download). */
   codebookNotes?: boolean;
+  /** The school's adapted texts and text blocks (already applied to `catalog`); saved in the project file. */
+  customization?: Customization;
   now?: Date;
 }
 
@@ -46,6 +48,7 @@ export function buildPackage(input: PackageInput): PackageResult {
     ...(input.targetPlatform ? { targetPlatform: input.targetPlatform } : {}),
     ...(input.schoolLabel ? { schoolLabel: input.schoolLabel } : {}),
     ...(input.internalNotes ? { internalNotes: input.internalNotes } : {}),
+    ...(input.customization ? { customization: input.customization } : {}),
     now,
   };
 
