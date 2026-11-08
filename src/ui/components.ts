@@ -1,12 +1,18 @@
+/**
+ * Shared building blocks of the views: status chips, severity badges, the findings list and banners.
+ *
+ * Status and severity are always conveyed by text AND a symbol, never by colour alone (accessibility). All text goes
+ * through dom.h as text nodes, so catalog text in a finding can never become markup. No state, no actions.
+ */
+
 import type { CheckStatus, Diagnostic } from "../core/diagnostics";
 import { h } from "./dom";
 import { t, TextKey } from "./i18n";
 
-/** Shared building blocks. Status and severity are always conveyed by text AND a symbol, never by colour alone. */
-
 const STATUS_SYMBOL: Record<CheckStatus, string> = { pass: "✓", warning: "!", fail: "✕", notRun: "–" };
 const SEVERITY_SYMBOL: Record<Diagnostic["severity"], string> = { error: "✕", warning: "!", info: "i" };
 
+/** One check area as a list item: symbol, label and status word. */
 export function statusChip(labelKey: TextKey, status: CheckStatus): HTMLElement {
   return h(
     "li",
@@ -17,6 +23,7 @@ export function statusChip(labelKey: TextKey, status: CheckStatus): HTMLElement 
   );
 }
 
+/** The four check areas (technical, selection, rights, export) as one list. */
 export function statusChips(status: Record<"technical" | "selection" | "rights" | "export", CheckStatus>): HTMLElement {
   return h(
     "ul",
@@ -28,6 +35,7 @@ export function statusChips(status: Record<"technical" | "selection" | "rights" 
   );
 }
 
+/** Badge with symbol and word for error, warning or info. */
 export function severityBadge(sev: Diagnostic["severity"]): HTMLElement {
   return h(
     "span",
@@ -55,11 +63,15 @@ export function diagnosticsList(ds: readonly Diagnostic[], emptyText = t("diagno
         " ",
         h("span", { class: "diag-message" }, d.message),
         d.jsonPath ? h("span", { class: "diag-path muted" }, ` (${t("diagnostics.path")}: ${d.jsonPath || "/"})`) : null,
+        d.itemRef ? h("span", { class: "diag-item muted" }, ` [${t("diagnostics.item")}: ${d.itemRef}]`) : null,
+        d.targetPlatform ? h("span", { class: "diag-target muted" }, ` [${t("diagnostics.target")}: ${d.targetPlatform}]`) : null,
+        d.remediation ? h("span", { class: "diag-fix" }, " ", h("strong", null, t("diagnostics.fix") + ": "), d.remediation) : null,
       ),
     ),
   );
 }
 
+/** Notice box. Errors use role="alert" (announced at once), the others role="status". */
 export function banner(kind: "info" | "warning" | "error", text: string): HTMLElement {
   return h("div", { class: `banner banner-${kind}`, role: kind === "error" ? "alert" : "status" }, h("strong", null, text));
 }

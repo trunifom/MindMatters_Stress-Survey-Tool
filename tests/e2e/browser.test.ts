@@ -214,6 +214,29 @@ describe.skipIf(!executablePath)(`real browser (${executablePath ?? "none found"
     await context.close();
   });
 
+  it("the print view downloads as a real HTML page that the browser opens without script errors", async () => {
+    const { context, page } = await open();
+    await loadExample(page);
+    await page.click("[data-focus=tab-check]");
+    const [download] = await Promise.all([page.waitForEvent("download"), page.click("#test-export-html")]);
+    const file = (await download.path())!;
+    expect(download.suggestedFilename()).toBe("example_rich_1.0.0_html_TEST_print.html");
+    const printPage = await context.newPage();
+    const problems: string[] = [];
+    printPage.on("pageerror", (e) => problems.push(e.message));
+    printPage.on("console", (m) => {
+      if (m.type() === "error") problems.push(m.text());
+    });
+    // the downloaded temp file has no extension, so the browser would not treat it as a page: load its text
+    await printPage.setContent(readFileSync(file, "utf8"));
+    expect(await printPage.locator("h1").count()).toBe(1);
+    expect(await printPage.locator("[data-item]").count()).toBeGreaterThan(5);
+    expect(await printPage.locator("table.matrix").count()).toBe(1);
+    expect(await printPage.locator("script").count()).toBe(0);
+    expect(problems).toEqual([]);
+    await context.close();
+  });
+
   it("the ZIP package downloads as a real archive with the README and the exports", async () => {
     const { context, page } = await open();
     await loadExample(page);

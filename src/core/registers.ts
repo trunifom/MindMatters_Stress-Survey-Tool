@@ -1,15 +1,15 @@
+/**
+ * Register checks (stage "reference"): unique IDs, unique variable names, every reference resolves to the register
+ * named by the field, acyclic constructs and date order. JSON Schema cannot express any of this.
+ *
+ * Missing targets are bundled: one finding per distinct (kind, id) with the number of occurrences, instead of a
+ * cascade of follow-up errors (spec C02). Read-only; called from semantic.ts, and the loader only judges the
+ * initial selection if these checks found no error.
+ */
+
 import { Diagnostic, diag, pointer } from "./diagnostics";
 import { leafConditions } from "./features";
 import type { Catalog, SourceLink } from "./types";
-
-/**
- * Register checks (stage "reference"): unique IDs, unique variable names, every
- * reference resolves to the register named by the field, acyclic constructs and
- * date order. JSON Schema cannot express any of this.
- *
- * Missing targets are bundled: one finding per distinct (kind, id) with the number
- * of occurrences, instead of a cascade of follow-up errors (spec C02).
- */
 
 type RefKind =
   | "SOURCE"
@@ -32,6 +32,7 @@ const LABEL: Record<RefKind, string> = {
   SCORE_DEFINITION: "score definition",
 };
 
+/** Run all register checks (duplicate ids, duplicate variable names, dangling references, construct cycles, date order). */
 export function checkRegisters(c: Catalog): Diagnostic[] {
   const out: Diagnostic[] = [];
   out.push(...duplicateIds(c));

@@ -1,3 +1,12 @@
+/**
+ * Texts view: the school adapts questionnaire texts and catalog text blocks and adds its own text blocks.
+ *
+ * Texts the catalog locks (`lockedTexts`, `lockedNotes`) are shown but not editable. Questions and answer options are
+ * never touched here. Edits are applied when a field is left (change event), so typing never re-renders under the
+ * cursor. All changes go through state.ts, which rebuilds the derived catalog via model/customize; the catalog
+ * itself is never modified, the result is saved in the project file.
+ */
+
 import { CUSTOMIZABLE_TEXTS, CustomBlock, CustomizableText, LocalizedText } from "../../core/types";
 import { baseText, catalogNotes, isLocked, isNoteLocked } from "../../model/customize";
 import { h, richText } from "../dom";
@@ -16,14 +25,9 @@ import type { AppState, Store } from "../state";
 import { adminText } from "../content";
 import type { ViewContext } from "./registry";
 
-/**
- * Adapt texts: the school changes title, introduction, closing, privacy, help and consent texts (unless the
- * catalog locks them) and adds its own text blocks. Questions and answer options are never touched here.
- * Edits are applied when a field is left (change event), so typing never re-renders under the cursor.
- */
-
 const STYLES: Array<CustomBlock["style"]> = ["title", "subtitle", "text", "notice"];
 
+/** The texts tab: adaptable questionnaire texts, catalog text blocks and the school's own blocks. */
 export function renderTexts({ state: s, store }: ViewContext): HTMLElement {
   if (!s.loaded) return h("p", { class: "muted" }, t("import.noCatalog"));
   const eff = s.loaded.catalog;

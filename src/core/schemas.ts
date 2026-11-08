@@ -1,3 +1,12 @@
+/**
+ * Compiled JSON-Schema validators (Draft 2020-12) for the supported schema version.
+ *
+ * Schemas are imported from schema/<version>/ and bundled into the single-file build; nothing is fetched at runtime.
+ * This is the runtime-compiling variant used in Node and tests. The browser build swaps this file for the
+ * precompiled schemas.standalone.ts (tools/gen-validators.mjs) so no code is generated from strings (no
+ * `unsafe-eval` in the CSP, see docs/ARCHITEKTUR.md); the exports must therefore stay identical.
+ */
+
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv/dist/2020.js";
 import addFormatsModule from "ajv-formats";
@@ -5,12 +14,7 @@ import addFormatsModule from "ajv-formats";
 import catalogSchema040 from "../../schema/0.4.0/catalog.schema.json";
 import projectSchema040 from "../../schema/0.4.0/project.schema.json";
 
-/**
- * Compiled JSON-Schema validators (Draft 2020-12) for the supported schema
- * version. Schemas are imported from schema/<version>/ and bundled into the
- * single-file build; nothing is fetched at runtime.
- */
-
+/** Kind of document a schema validates. */
 export type DocKind = "catalog" | "project";
 
 // ajv and ajv-formats are CommonJS packages; unwrap the default export defensively
@@ -46,6 +50,7 @@ function compiled(kind: DocKind): Compiled {
   return c;
 }
 
+/** Validator for a whole catalog or project document (compiled on first use, then cached). */
 export function getValidator(kind: DocKind): ValidateFunction {
   return compiled(kind).root;
 }

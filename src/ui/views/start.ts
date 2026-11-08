@@ -1,3 +1,12 @@
+/**
+ * Start view, shown before a catalog is loaded: what the tool is for, what it can and cannot do, the four steps,
+ * the supported target systems (with their tier from output/registry) and the file drop zone.
+ *
+ * Also renders the result of a failed or migratable import (`importResult`). Loading itself is done by the handlers
+ * from app.ts; this file only draws and forwards the chosen file. A 0.3.0 file is never migrated silently: the user
+ * must confirm (state.confirmMigration).
+ */
+
 import { SUPPORTED_SCHEMA_VERSIONS, APP_VERSION } from "../../version";
 import { ADAPTERS, ADAPTER_IDS } from "../../output/registry";
 import { diagnosticsList } from "../components";
@@ -5,6 +14,7 @@ import { h } from "../dom";
 import { t, TextKey } from "../i18n";
 import type { AppState } from "../state";
 
+/** Actions the start view triggers; supplied by app.ts. */
 export interface StartHandlers {
   onFile(file: File): void;
   onDemo(): void;

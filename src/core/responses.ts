@@ -1,15 +1,15 @@
-import { Diagnostic, diag, pointer } from "./diagnostics";
-import type { Catalog, Item, OptionSet } from "./types";
-
 /**
  * Option set and response checks (stage "content"), spec B10, B12, B13.
  *
- * The key idea of B12: a catalog must never contain a required answer that no
- * respondent can give (e.g. exclusive code with minSelections >= 2, maxLength 0
- * for a required text). Such combinations are catalog errors, not hidden special
- * cases of the form.
+ * The key idea of B12: a catalog must never contain a required answer that no respondent can give (e.g. exclusive
+ * code with minSelections >= 2, maxLength 0 for a required text). Such combinations are catalog errors, not hidden
+ * special cases of the form. Read-only; called from semantic.ts.
  */
 
+import { Diagnostic, diag, pointer } from "./diagnostics";
+import type { Catalog, Item, OptionSet } from "./types";
+
+/** Ordinal option sets need unique, ascending ordinalPosition on all substantive options (ORDINAL_POSITIONS_INVALID). */
 export function checkOptionSets(c: Catalog): Diagnostic[] {
   const out: Diagnostic[] = [];
   c.optionSets.forEach((os, i) => {
@@ -48,6 +48,10 @@ const WIDGET_KINDS: Record<string, readonly string[]> = {
   slider: ["slider"],
 };
 
+/**
+ * Per item: ranges and lengths are consistent (RANGE_INVALID, SLIDER_RANGE_INVALID, RANKING_MAX_EXCEEDS_OPTIONS), a required answer is
+ * actually answerable (ANSWER_UNSATISFIABLE) and the widget can present the response kind (PRESENTATION_INCOMPATIBLE). Spec B12, B13.
+ */
 export function checkResponses(c: Catalog): Diagnostic[] {
   const out: Diagnostic[] = [];
   const optionSets = new Map<string, OptionSet>(c.optionSets.map((o) => [o.id, o]));

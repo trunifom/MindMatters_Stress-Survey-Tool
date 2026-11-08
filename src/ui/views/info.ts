@@ -1,3 +1,12 @@
+/**
+ * Information dialog (spec A09) for an item, module, scale or construct.
+ *
+ * Sections appear in the specified order and unknown facts are shown as "not documented" instead of being guessed.
+ * Texts of items whose display rights are not confirmed stay locked (rights come from content.displayDecision).
+ * Everything is inserted as text; links only for http(s) URLs (dom.externalLink). Opening, closing and focus are
+ * handled by the shell (app.ts), the target lives in AppState.info.
+ */
+
 import type { Catalog, Construct, Item, Module, ReferencePeriod, Scale, SourceLink } from "../../core/types";
 import { effectiveRights } from "../../model/rights";
 import { scoreAvailability } from "../../model/selection";
@@ -7,12 +16,6 @@ import { t, TextKey } from "../i18n";
 import { closeInfo, InfoTarget, Store } from "../state";
 import type { AppState } from "../state";
 
-/**
- * Information dialog (spec A09). Sections appear in the specified order and
- * unknown facts are shown as "not documented" instead of being guessed.
- * Texts of items whose display rights are not confirmed stay locked.
- */
-
 const notDocumented = (): HTMLElement => h("span", { class: "muted" }, t("info.notDocumented"));
 const section = (title: string, ...body: Array<Node | null>): HTMLElement => h("section", { class: "info-section" }, h("h3", null, title), ...body);
 const row = (label: string, value: Node | string | null | undefined): HTMLElement =>
@@ -20,6 +23,7 @@ const row = (label: string, value: Node | string | null | undefined): HTMLElemen
 const dl = (...rows: Array<HTMLElement | null>): HTMLElement => h("dl", { class: "info-dl" }, ...rows);
 const list = (items: Array<Node | string>): HTMLElement => h("ul", null, ...items.map((i) => h("li", null, i)));
 
+/** The modal dialog for `s.info`, or null if nothing is open or the target no longer exists. */
 export function renderInfoDialog(s: AppState, store: Store): HTMLElement | null {
   if (!s.loaded || !s.info) return null;
   const built = build(s, s.info);

@@ -1,16 +1,18 @@
+/**
+ * Selection model (spec A06, A07, A08, A11, B14, B18).
+ *
+ * Pure functions on immutable data: the DOM checkbox is never the source of truth. The same `mandatorySet` is used
+ * at start, for bulk actions, when loading a project and before export, so the results can never drift apart.
+ * Selections are returned in questionnaire order (never click order). Nothing here changes the catalog or throws on
+ * bad input; conflicts are reported as diagnostics (stage "selection") and the user decides.
+ */
+
 import { Diagnostic, diag, pointer } from "../core/diagnostics";
 import { leafConditions } from "../core/features";
 import { templateOrder } from "../core/structure";
 import type { Catalog, Item, Module, Project } from "../core/types";
 
-/**
- * Selection model (spec A06, A07, A08, A11, B14, B18).
- *
- * Pure functions on immutable data: the DOM checkbox is never the source of truth.
- * The same `mandatorySet` is used at start, for bulk actions, when loading a
- * project and before export, so the results can never drift apart.
- */
-
+/** Set of selected item ids. */
 export type Selection = ReadonlySet<string>;
 
 /** Why an item is mandatory: its own flag, or a mandatory allOrNothing module. */
@@ -19,6 +21,7 @@ export interface MandatoryReason {
   moduleId?: string;
 }
 
+/** Mandatory items with the reason (own flag and/or mandatory allOrNothing module). */
 export function mandatoryReasons(c: Catalog): Map<string, MandatoryReason> {
   const out = new Map<string, MandatoryReason>();
   for (const it of c.items) if (it.inclusionRequired) out.set(it.id, { item: true });
@@ -98,6 +101,11 @@ export function clearOptional(c: Catalog): Set<string> {
 // Checks
 // ---------------------------------------------------------------------------
 
+/**
+ * Report conflicts of a selection: missing mandatory items, partial wholeScale scales and allOrNothing modules (errors), partial
+ * other scales (warning), and selected items whose visibility trigger is not selected. `context` tags the findings so the UI can tell the
+ * catalog's own initial selection from a project.
+ */
 export function checkSelection(c: Catalog, selected: Selection, context: "initial" | "project"): Diagnostic[] {
   const out: Diagnostic[] = [];
   const mark = (d: Diagnostic): Diagnostic => ({ ...d, context });
@@ -148,6 +156,7 @@ export function checkInitialSelection(c: Catalog): Diagnostic[] {
 // Scores (T44)
 // ---------------------------------------------------------------------------
 
+/** Whether a documented score can be formed from the selection. */
 export interface ScoreAvailability {
   id: string;
   available: boolean;
@@ -166,6 +175,7 @@ export function scoreAvailability(c: Catalog, selected: Selection): ScoreAvailab
 // Overview by scale
 // ---------------------------------------------------------------------------
 
+/** Selected and total items of one scale. */
 export interface ScaleOverview {
   id: string;
   selected: number;
@@ -182,6 +192,7 @@ export function scaleOverview(c: Catalog, selected: Selection): ScaleOverview[] 
   });
 }
 
+/** Documented administration time of the selection, with what could not be counted. */
 export interface DocumentedDuration {
   /** Sum over instruments whose items are all selected and whose time has a source. */
   minMinutes: number;
@@ -221,6 +232,7 @@ export function documentedDuration(c: Catalog, selected: Selection): DocumentedD
 // Projects
 // ---------------------------------------------------------------------------
 
+/** Effective selection of a loaded project, the mandatory items that were added, and the findings. */
 export interface ProjectResult {
   /** Effective selection after adding mandatory items, in questionnaire order. */
   selection: string[];

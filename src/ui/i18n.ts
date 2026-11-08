@@ -49,7 +49,7 @@ const DE = {
   "start.targetsIntro": "Welche Datei erzeugt wird und wie weit Sie ihr vertrauen können, steht nach der Auswahl im Tab «Prüfung und Ausgabe».",
   "start.tier.adapter": "Importdatei",
   "start.tier.prototype": "Prototyp",
-  "start.tier.table": "Tabelle",
+  "start.tier.table": "Lesbar",
   "start.target.limesurvey": "Importdatei (TSV) für den Fragebogen-Import",
   "start.target.redcap": "Datenwörterbuch (CSV) zum Hochladen im Projekt",
   "start.target.qualtrics": "Importdatei (TXT). Kann keine Bedingungen und Slider",
@@ -57,6 +57,11 @@ const DE = {
   "start.target.googleForms": "Apps-Script, das das Formular erzeugt, Google Forms importiert keine Datei",
   "start.target.unipark": "Bauplan zum Nachbauen, ein Importformat ist nicht belegt",
   "start.target.csv": "Neutrale Tabelle für Menschen und eigene Auswertung",
+  "start.target.html": "Fragebogen wie auf Papier, im Browser als PDF speicherbar",
+  "start.target.markdown": "Fragebogen als Text für Dokumente und E-Mails",
+  "start.target.json": "Aufgelöste Kopie für eigene Skripte",
+  "start.target.spss": "Variablen- und Wertelabels für die Auswertung",
+  "start.target.r": "Variablen- und Wertelabels als R-Skript",
   "tab.structure": "Reihenfolge",
   "view.structure.intro": "Hier sehen Sie den Aufbau des Fragebogens. Was Sie verschieben dürfen, legt der Katalog fest: ganze Blöcke (zum Beispiel eine Skala) oder einzelne Fragen darin. Standardisierte Skalen bleiben in der veröffentlichten Reihenfolge.",
   "structure.title": "Reihenfolge der Blöcke und Fragen",
@@ -157,6 +162,22 @@ const DE = {
   "import.migrationText": "Diese Datei verwendet Schema {from}. Sie kann ausdrücklich nach {to} übernommen werden (rein additiv, Inhalt bleibt unverändert). Das geschieht nie automatisch.",
   "import.migrate": "Auf {to} übernehmen und laden",
   "import.cancel": "Abbrechen",
+  "out.exportFailed": "Der Export für {name} ist nicht möglich: {detail}",
+  "err.action": "«{what}» ist fehlgeschlagen: {detail}. Ihre Auswahl und Ihre Texte sind unverändert. Versuchen Sie es erneut oder speichern Sie zuerst das Projekt.",
+  "err.unexpected": "Unerwarteter Fehler: {detail}. Speichern Sie Ihr Projekt, bevor Sie weiterarbeiten, und laden Sie die Seite bei Bedarf neu.",
+  "err.file.empty": "Die Datei «{file}» ist leer.",
+  "err.file.tooLarge": "Die Datei «{file}» ist zu gross ({detail}).",
+  "err.file.notText": "Die Datei «{file}» ist keine JSON-Textdatei (vermutlich Excel, Word, ZIP oder ein Bild). Wählen Sie die Katalog- oder Projektdatei im Format JSON.",
+  "err.file.encoding": "Die Datei «{file}» enthält Zeichen, die nicht als UTF-8 gelesen werden können. Speichern Sie die Datei als «UTF-8» und laden Sie sie erneut.",
+  "err.file.unreadable": "Die Datei «{file}» konnte nicht gelesen werden. {detail}",
+  "err.crash.title": "Diese Ansicht konnte nicht angezeigt werden",
+  "err.crash.text": "Es ist ein unerwarteter Fehler aufgetreten. Ihre Auswahl ist noch im Speicher. Mit «Zur Fragenliste» kommen Sie zurück, speichern Sie dort zuerst das Projekt. Technische Ursache:",
+  "err.crash.retry": "Zur Fragenliste",
+  "act.saveProject": "Projekt speichern",
+  "act.saveReport": "Prüfbericht speichern",
+  "act.saveCodebook": "Codebuch speichern",
+  "act.savePackage": "ZIP-Paket speichern",
+  "act.export": "Export",
   "import.readError": "Die Datei konnte nicht gelesen werden.",
   "confirm.replaceUnsaved": "Es gibt ungesicherte Änderungen an der Auswahl. Beim Laden gehen sie verloren. Fortfahren?",
   "header.catalog": "Katalog",
@@ -198,6 +219,9 @@ const DE = {
   "overview.durationNone": "Bearbeitungszeit: für Ihre Auswahl ist keine Zeit dokumentiert. Es wird nichts geschätzt.",
   "diagnostics.none": "Keine Befunde.",
   "diagnostics.path": "Stelle",
+  "diagnostics.item": "Frage",
+  "diagnostics.target": "Ziel",
+  "diagnostics.fix": "Was tun",
   "project.loaded": "Projekt geladen.",
   "project.added": "{n} fehlende Pflichtitems wurden ergänzt: {ids}",
   "project.conflicts": "Das Projekt enthält ungelöste Konflikte. Sie werden nicht automatisch repariert.",
@@ -397,7 +421,7 @@ const DE = {
   "out.package": "Alles als ZIP-Paket speichern",
   "out.packageHint": "Eine Datei mit Projekt, Prüfbericht, Codebuch, allen möglichen Ausgaben und einer Übersicht, was fehlt und warum. Erzeugt in Ihrem Browser, nichts wird hochgeladen.",
   "out.packageDone": "Paket {file} wurde erstellt: {n} Dateien, {m} Ausgaben nicht möglich (Gründe in LIESMICH.txt).",
-  "out.adapterTable": "{name}: Tabelle für Menschen, kein Import",
+  "out.adapterTable": "{name}: Datei zum Lesen oder Weiterverarbeiten, kein Import",
   "out.exportFor": "Export für {name}",
   "out.testExportFor": "Testexport für {name}",
   "out.exportDone": "{file} wurde erstellt. Importieren Sie die Datei in {name} und prüfen Sie das Ergebnis anhand der Zuordnung.",
@@ -469,7 +493,7 @@ const EN: Record<Key, string> = {
   "start.targetsIntro": "Which file is created and how far you can trust it is shown after the selection in the tab “Check and output”.",
   "start.tier.adapter": "Import file",
   "start.tier.prototype": "Prototype",
-  "start.tier.table": "Table",
+  "start.tier.table": "Readable",
   "start.target.limesurvey": "Import file (TSV) for the survey import",
   "start.target.redcap": "Data dictionary (CSV) to upload in a project",
   "start.target.qualtrics": "Import file (TXT). Cannot carry conditions or sliders",
@@ -477,6 +501,11 @@ const EN: Record<Key, string> = {
   "start.target.googleForms": "Apps Script that creates the form, Google Forms imports no file",
   "start.target.unipark": "Build plan to follow by hand, no import format is documented",
   "start.target.csv": "Neutral table for people and own analysis",
+  "start.target.html": "Questionnaire as on paper, can be saved as PDF in the browser",
+  "start.target.markdown": "Questionnaire as text for documents and e-mails",
+  "start.target.json": "Resolved copy for your own scripts",
+  "start.target.spss": "Variable and value labels for the analysis",
+  "start.target.r": "Variable and value labels as an R script",
   "tab.structure": "Order",
   "view.structure.intro": "Here you see the structure of the questionnaire. The catalog decides what you may move: whole blocks (for example a scale) or single questions inside them. Standardized scales keep their published order.",
   "structure.title": "Order of blocks and questions",
@@ -577,6 +606,22 @@ const EN: Record<Key, string> = {
   "import.migrationText": "This file uses schema {from}. It can be taken over explicitly as {to} (purely additive, content unchanged). This never happens automatically.",
   "import.migrate": "Take over as {to} and load",
   "import.cancel": "Cancel",
+  "out.exportFailed": "The export for {name} is not possible: {detail}",
+  "err.action": "\"{what}\" failed: {detail}. Your selection and texts are unchanged. Try again, or save the project first.",
+  "err.unexpected": "Unexpected error: {detail}. Save your project before you continue, and reload the page if needed.",
+  "err.file.empty": "The file \"{file}\" is empty.",
+  "err.file.tooLarge": "The file \"{file}\" is too large ({detail}).",
+  "err.file.notText": "The file \"{file}\" is not a JSON text file (probably Excel, Word, ZIP or an image). Choose the catalog or project file in JSON format.",
+  "err.file.encoding": "The file \"{file}\" contains characters that cannot be read as UTF-8. Save the file as \"UTF-8\" and load it again.",
+  "err.file.unreadable": "The file \"{file}\" could not be read. {detail}",
+  "err.crash.title": "This view could not be shown",
+  "err.crash.text": "An unexpected error occurred. Your selection is still in memory. \"Back to the question list\" takes you back; save the project there first. Technical cause:",
+  "err.crash.retry": "Back to the question list",
+  "act.saveProject": "Save project",
+  "act.saveReport": "Save check report",
+  "act.saveCodebook": "Save codebook",
+  "act.savePackage": "Save ZIP package",
+  "act.export": "Export",
   "import.readError": "The file could not be read.",
   "confirm.replaceUnsaved": "There are unsaved changes to the selection. They will be lost when loading. Continue?",
   "header.catalog": "Catalog",
@@ -618,6 +663,9 @@ const EN: Record<Key, string> = {
   "overview.durationNone": "Administration time: none is documented for your selection. Nothing is estimated.",
   "diagnostics.none": "No findings.",
   "diagnostics.path": "Location",
+  "diagnostics.item": "Item",
+  "diagnostics.target": "Target",
+  "diagnostics.fix": "What to do",
   "project.loaded": "Project loaded.",
   "project.added": "{n} missing mandatory items were added: {ids}",
   "project.conflicts": "The project contains unresolved conflicts. They are not repaired automatically.",
@@ -817,7 +865,7 @@ const EN: Record<Key, string> = {
   "out.package": "Save everything as a ZIP package",
   "out.packageHint": "One file with project, check report, codebook, every possible output and an overview of what is missing and why. Created in your browser, nothing is uploaded.",
   "out.packageDone": "Package {file} was created: {n} files, {m} outputs not possible (reasons in LIESMICH.txt).",
-  "out.adapterTable": "{name}: table for people, not an import",
+  "out.adapterTable": "{name}: file to read or process further, not an import",
   "out.exportFor": "Export for {name}",
   "out.testExportFor": "Test export for {name}",
   "out.exportDone": "{file} was created. Import it into {name} and check the result against the mapping.",
@@ -842,24 +890,33 @@ const EN: Record<Key, string> = {
   "out.responsibility": "A test export must be labelled as a test artifact, kept apart from the school workflow and given a release responsibility. It does not bypass any rights prohibition.",
 };
 
+/** Interface language. Independent of the questionnaire language (AppState.language). */
 export type UiLang = "de" | "en";
+/** Key of an interface text. Both dictionaries are typed with the same keys, so a missing translation does not compile. */
 export type TextKey = Key;
 
 const dictionaries: Record<UiLang, Record<Key, string>> = { de: DE, en: EN };
 let current: UiLang = "de";
 
+/** Set the language `t` uses. Called by the shell before every render; a module-level setting, not state. */
 export function setUiLang(l: UiLang): void {
   current = l;
 }
+/** The language `t` currently uses. */
 export function getUiLang(): UiLang {
   return current;
 }
 
+/**
+ * Interface text for a key in the current language; `{name}` placeholders are replaced from `params` (unknown ones stay visible).
+ * Only for the application's own labels, never for catalog content.
+ */
 export function t(key: Key, params?: Record<string, string | number>): string {
   const s = dictionaries[current][key];
   return params ? s.replace(/\{(\w+)\}/g, (_m, k: string) => String(params[k] ?? `{${k}}`)) : s;
 }
 
+/** All keys, for tests that compare the two languages and for the static key check. */
 export function allKeys(): Key[] {
   return Object.keys(DE) as Key[];
 }

@@ -74,3 +74,21 @@ Google Forms kennt **keinen Dateiimport**. Der Prototyp erzeugt deshalb ein Apps
 
 Der Beispielkatalog enthält je einen davon, deshalb ist Google Forms dort nicht möglich. Die Oberfläche nennt die betroffenen Fragen und den Grund. Wählen Sie diese Fragen ab, oder bauen Sie sie in Google Forms von Hand nach. Ausserdem ist ein Katalog im Status «Entwurf» nur als gekennzeichneter Testexport ausgebbar. Das Script wurde noch nie in Google ausgeführt (Stufe Prototyp).
 
+## Offene Fragen aus der Prüfung der Adapter (8. November 2026)
+
+Die Adapter wurden gegen die öffentliche Dokumentation geprüft (Maskierung, Namensregeln, Kollisionen, Sonderzeichen). Gefundene Fehler sind behoben und getestet (`tests/unit/adapterAudit.test.ts`), unter anderem: Steuerzeichen in Texten (`EXPORT_TEXT_CHARACTER_INVALID`), Namenskollisionen mit selbst erzeugten Feldern, doppelte Antwortcodes nach Normalisierung, still verlorene Abschnittsanweisungen bei REDCap, Regler mit Schrittweite ungleich 1 bei Google Forms, Backticks und senkrechte Striche in Codes der Baupläne. Nicht entscheidbar ohne echtes System oder verlässliche Quelle:
+
+| Frage | Betrifft | Warum offen |
+|---|---|---|
+| Gibt es eine Liste reservierter Fragecodes (`id`, `token`, `lastpage`, `submitdate`, `self`)? | LimeSurvey | keine Liste gefunden |
+| Braucht der TSV-Import `related_id` bei Unterfragen und Antworten und die BOM? | LimeSurvey | der Adapter verlässt sich auf die Zeilenreihenfolge |
+| Maximale Länge von Variablen- und Formularnamen, doppelte oder endständige Unterstriche | REDCap | Quellen nennen 26, 32 und 100, keine ist verbindlich |
+| Wird der Suffix von Checkbox-Codes kleingeschrieben (`name___code`)? | REDCap | aus Erfahrung angenommen, nicht belegt |
+| Werden leere oder nur aus Leerzeichen bestehende Antworttexte abgewiesen? Titellänge? | Google Forms | nicht dokumentiert |
+| Soll die Schutzmarke gegen Formeln (`'` vor `= + - @`) auch in REDCap- und Qualtrics-Dateien stehen? | REDCap, Qualtrics | würde die Beschriftung im Zielsystem um ein Zeichen verändern |
+| Werden `[feld]` und Smart Variables in Beschriftungen als Piping gelesen? | REDCap | unklar, wann das greift |
+| Zeigt Qualtrics Blocknamen als Text oder als HTML (`&amp;`)? | Qualtrics | nicht geprüft |
+| Versteht der Ausdrucksmanager Zahlen in Exponentialschreibweise (`1e-7`)? | LimeSurvey | nicht geprüft |
+| Längenbegrenzungen für sehr lange Texte | alle | keine dokumentierten Grenzen gefunden, nirgends erzwungen |
+
+Diese Fragen beantwortet nur der Importtest an einer echten Instanz (siehe oben).

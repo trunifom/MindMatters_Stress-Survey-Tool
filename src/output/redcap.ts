@@ -47,6 +47,9 @@ const HEADER = [
   "Field Annotation",
 ] as const;
 
+/** Field names the adapter writes itself; an item must not take one of them. */
+const RESERVED = new Set(["record_id", "mm_intro", "mm_consent", "mm_consent_parents", "mm_privacy", "mm_closing", "mm_help"]);
+const RESERVED_OWNER = "(generated field)";
 const VAR_RE = /^[a-z][a-z0-9_]*$/;
 const CODE_RE = /^[A-Za-z0-9_]{1,50}$/;
 const rcCode = (o: Option): string => o.exportHints?.redcap?.code ?? o.code;
@@ -76,8 +79,8 @@ export function buildRedcap(c: Parameters<typeof openAdapter>[0], selection: Par
       });
       continue;
     }
-    if (n === "record_id" || names.has(n)) {
-      err("EXPORT_VARIABLE_NAME_DUPLICATE", `Items "${names.get(n) ?? "record_id"}" and "${id}" would both get the REDCap variable "${n}".`, { itemRef: id });
+    if (RESERVED.has(n) || names.has(n)) {
+      err("EXPORT_VARIABLE_NAME_DUPLICATE", `Items "${names.get(n) ?? RESERVED_OWNER}" and "${id}" would both get the REDCap variable "${n}".`, { itemRef: id, ...(RESERVED.has(n) ? { remediation: "Set exportHints.redcap.variableName in the catalog; the names record_id and mm_* are used by the export itself." } : {}) });
       continue;
     }
     names.set(n, id);
@@ -154,12 +157,18 @@ export function buildRedcap(c: Parameters<typeof openAdapter>[0], selection: Par
   function choices(item: Item): string | undefined {
     const os = ctx.optionSets.get(item.response.optionSetRef ?? "")?.options ?? [];
     const seen = new Set<string>();
+    const checkbox = item.response.kind === "multipleChoice";
+    if (os.length === 0) {
+      err("EXPORT_OPTION_CODE_INVALID", `Item "${item.id}" has no answer options; REDCap rejects a choice field without choices.`, { itemRef: item.id });
+      return undefined;
+    }
     const parts: string[] = [];
     for (const o of os) {
       const code = rcCode(o);
       const label = ctx.need(o.label, `Option "${o.code}" of "${item.id}"`, item.id);
-      if (!CODE_RE.test(code) || seen.has(code)) {
-        err(seen.has(code) ? "EXPORT_OPTION_CODE_DUPLICATE" : "EXPORT_OPTION_CODE_INVALID", `Item "${item.id}": the answer code "${code}" is not usable for REDCap (letters, digits, underscore; unique).`, {
+      const key = checkbox ? code.toLowerCase() : code; // checkbox codes become lowercase variable suffixes (name___code)
+      if (!CODE_RE.test(code) || seen.has(key)) {
+        err(seen.has(key) ? "EXPORT_OPTION_CODE_DUPLICATE" : "EXPORT_OPTION_CODE_INVALID", `Item "${item.id}": the answer code "${code}" is not usable for REDCap (letters, digits, underscore; unique).`, {
           itemRef: item.id,
           remediation: `Set exportHints.redcap.code on the option "${o.code}" of its option set.`,
         });
@@ -169,7 +178,7 @@ export function buildRedcap(c: Parameters<typeof openAdapter>[0], selection: Par
         err("EXPORT_TEXT_RESERVED", `Option "${o.code}" of "${item.id}": the label contains "|", which separates choices in REDCap.`, { itemRef: item.id });
         return undefined;
       }
-      seen.add(code);
+      seen.add(key);
       parts.push(`${code}, ${html(label)}`);
       if (o.exportHints?.redcap?.code) mapping.add("option.code", "exact", "Choice code taken from the option's exportHints.redcap.code.", item.id);
       if (o.role === "missing") mapping.add("option.missing", "transformed", "Missing-value options become ordinary choices; REDCap's missing data codes are project settings, not part of the data dictionary.", item.id);
@@ -178,6 +187,7 @@ export function buildRedcap(c: Parameters<typeof openAdapter>[0], selection: Par
   }
 
   // matrix groups: only consecutive single choices with the same option set
+  const usedGroups = new Set<string>();
   const matrixGroup = (sectionId: string, ids: string[]): Map<string, string> => {
     const out = new Map<string, string>();
     const first = ctx.items.get(ids[0] ?? "");
@@ -185,7 +195,13 @@ export function buildRedcap(c: Parameters<typeof openAdapter>[0], selection: Par
       const it = ctx.items.get(id);
       return it && it.response.kind === "singleChoice" && it.response.optionSetRef === first?.response.optionSetRef && !it.visibleWhen && !it.sensitivity;
     });
-    if (same) for (const id of ids) out.set(id, sectionId.toLowerCase().replace(/[^a-z0-9]+/g, "_"));
+    if (same) {
+      let g = sectionId.toLowerCase().replace(/[^a-z0-9]+/g, "_");
+      if (!/^[a-z]/.test(g)) g = "m_" + g;
+      while (usedGroups.has(g)) g += "_";
+      usedGroups.add(g);
+      for (const id of ids) out.set(id, g);
+    }
     return out;
   };
 
@@ -195,6 +211,10 @@ export function buildRedcap(c: Parameters<typeof openAdapter>[0], selection: Par
     const matrix = section.layout === "matrix" ? matrixGroup(section.id, ids) : new Map<string, string>();
     if (section.layout === "matrix" && matrix.size === 0) mapping.add("section.layout", "transformed", "The matrix layout is only written for consecutive single choices with the same answers; otherwise every item is an ordinary field.");
     let header: string | undefined = text(section.title, `The title of section "${section.id}"`);
+    if (section.instruction) {
+      header += "<br>" + text(section.instruction, `The instruction of section "${section.id}"`);
+      mapping.add("section.instruction", "transformed", "The section instruction is appended to the section header (after a line break); REDCap has no separate field for it.");
+    }
     for (const id of ids) {
       const item = ctx.items.get(id) as Item;
       const v = varOf.get(id);

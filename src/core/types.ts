@@ -6,14 +6,17 @@
  * required fields, and only checks what a schema cannot express.
  */
 
+/** Text per language code ("de", "en", ...). Which language is shown is decided by core/localized.ts, never here. */
 export type LocalizedText = Record<string, string>;
 
+/** Link from an element to a bibliographic Source with the kind of relation. */
 export interface SourceLink {
   sourceRef: string;
   relation: "original" | "translation" | "validation" | "scoring" | "background";
   locator?: string;
 }
 
+/** Optional explanatory texts shown to the organizer; never shown to participants. */
 export interface Documentation {
   summary?: LocalizedText;
   measurementExplanation?: LocalizedText;
@@ -23,14 +26,17 @@ export interface Documentation {
   interpretationNotes?: LocalizedText;
 }
 
+/** Vendor extension. `behavior` extensions change processing and must name a declared feature, `metadata` ones are inert. */
 export interface ExtensionEntry {
   kind: "metadata" | "behavior";
   version: string;
   featureId?: string;
   data: unknown;
 }
+/** Extensions by key. */
 export type Extensions = Record<string, ExtensionEntry>;
 
+/** Bibliographic source (register `sources`). */
 export interface Source {
   id: string;
   type: string;
@@ -44,6 +50,7 @@ export interface Source {
   citationText?: string;
 }
 
+/** Time window a question refers to ("last week"). */
 export interface ReferencePeriod {
   kind: "unspecified" | "current" | "general" | "relative";
   amount?: number;
@@ -51,6 +58,7 @@ export interface ReferencePeriod {
   label?: LocalizedText;
 }
 
+/** Rights of a text (register `rights`). Permissions start as "unknown" and only "permitted" releases an action (see model/rights.ts). */
 export interface RightsProfile {
   id: string;
   reviewStatus: "unreviewed" | "reviewed" | "clarificationRequired";
@@ -66,6 +74,7 @@ export interface RightsProfile {
   notes?: LocalizedText;
 }
 
+/** Measured concept (register `constructs`), optionally nested via parentRef (must be acyclic). */
 export interface Construct {
   id: string;
   label: LocalizedText;
@@ -76,6 +85,7 @@ export interface Construct {
   tags?: string[];
 }
 
+/** One form or version of a published instrument (register `instruments`). */
 export interface InstrumentForm {
   id: string;
   title: LocalizedText;
@@ -97,6 +107,7 @@ export interface InstrumentForm {
   extensions?: Extensions;
 }
 
+/** One answer option. `code` is the identity (never the label); role "missing" marks refusals and "don't know" answers. */
 export interface Option {
   code: string;
   label: LocalizedText;
@@ -107,6 +118,7 @@ export interface Option {
   exportHints?: Record<string, { code: string }>;
 }
 
+/** Shared answer list (register `optionSets`). The order is fixed; ordinal sets carry ordinalPosition. */
 export interface OptionSet {
   id: string;
   label: LocalizedText;
@@ -148,6 +160,7 @@ export interface Response {
   validationMessage?: LocalizedText;
 }
 
+/** Leaf of a visibility condition: item `itemRef` compared with `value` (an option code or a number as text). */
 export interface Condition {
   itemRef: string;
   operator:
@@ -161,12 +174,15 @@ export interface Condition {
     | "lessThanOrEqual";
   value: string;
 }
+/** Group of conditions that must all (`all`) or at least one of which (`any`) must hold. */
 export interface ConditionGroup {
   all?: Condition[];
   any?: Condition[];
 }
+/** Value of `Item.visibleWhen`. */
 export type ConditionOrGroup = Condition | ConditionGroup;
 
+/** Question or text block (register `items`). `inclusionRequired` makes it part of every selection, `answerRequired` makes an answer mandatory. */
 export interface Item {
   id: string;
   version: string;
@@ -204,6 +220,7 @@ export interface Item {
   extensions?: Extensions;
 }
 
+/** Group of items forming a scale; selectionPolicy decides whether it may only be selected as a whole. */
 export interface Scale {
   id: string;
   title?: LocalizedText;
@@ -217,6 +234,7 @@ export interface Scale {
   documentation?: Documentation;
 }
 
+/** Selectable group of items. "allOrNothing" modules switch as a unit. */
 export interface Module {
   id: string;
   title?: LocalizedText;
@@ -229,6 +247,7 @@ export interface Module {
   scaleRefs?: string[];
 }
 
+/** Section of the questionnaire template; order of sections and itemRefs is the order of the questionnaire. */
 export interface Section {
   id: string;
   title: LocalizedText;
@@ -240,6 +259,7 @@ export interface Section {
   reorder?: { movable?: boolean; itemsReorderable?: boolean };
 }
 
+/** Hidden variable filled by the survey platform, never shown to participants. */
 export interface HiddenField {
   id: string;
   variableName: string;
@@ -249,8 +269,10 @@ export interface HiddenField {
 
 /** Texts of the questionnaire a school may adapt (unless the catalog locks them). */
 export const CUSTOMIZABLE_TEXTS = ["title", "introduction", "closingText", "privacyNotice", "helpResources", "consentTitle", "consentText", "parentalConsentText"] as const;
+/** Key of a questionnaire text a school may adapt. */
 export type CustomizableText = (typeof CUSTOMIZABLE_TEXTS)[number];
 
+/** Own text block of a school, placed in a section after a given item. Becomes a `note` item only in the derived catalog (model/customize.ts). */
 export interface CustomBlock {
   id: string;
   style: "title" | "subtitle" | "text" | "notice";
@@ -260,6 +282,7 @@ export interface CustomBlock {
   afterItemRef?: string | null;
 }
 
+/** The school's adaptations stored in the project file. The catalog itself is never modified; model/customize.ts derives a separate catalog from it. */
 export interface Customization {
   textOverrides?: Partial<Record<CustomizableText, LocalizedText>>;
   /** Adapted wording of catalog text blocks (items of kind note), by item id. */
@@ -271,6 +294,7 @@ export interface Customization {
   customBlocks?: CustomBlock[];
 }
 
+/** Template of the questionnaire: texts, consent, hidden fields and the ordered sections. `lockedTexts`/`lockedNotes` mark standardized wording. */
 export interface Questionnaire {
   id: string;
   lockedTexts?: CustomizableText[];
@@ -279,19 +303,21 @@ export interface Questionnaire {
   title: LocalizedText;
   introduction?: LocalizedText;
   closingText?: LocalizedText;
-  consent?: { title?: LocalizedText; text: LocalizedText; parentalConsentText?: LocalizedText };
+  consent?: { title?: LocalizedText; text: LocalizedText; parentalConsentText?: LocalizedText; requiresParentalConsent?: boolean };
   privacyNotice?: LocalizedText;
   helpResources?: LocalizedText;
   hiddenFields?: HiddenField[];
   sections: Section[];
 }
 
+/** Mapping of raw answer codes to scores for one item; documentation only. */
 export interface ScoreMapping {
   itemRef: string;
   rawToScore: Array<{ code: string; score: number }>;
   missingCodes: string[];
 }
 
+/** Documented score (sum or mean) of a set of items. Nothing is computed from it. */
 export interface ScoreDefinition {
   id: string;
   title?: LocalizedText;
@@ -303,6 +329,7 @@ export interface ScoreDefinition {
   sourceLinks?: SourceLink[];
 }
 
+/** Evidence link of an instrument or scale to its sources. */
 export interface Evidence {
   id: string;
   targetType: "instrument" | "scale";
@@ -310,6 +337,7 @@ export interface Evidence {
   sourceLinks?: SourceLink[];
 }
 
+/** A complete catalog as read from JSON after structural validation. Treated as immutable everywhere: derived catalogs are new objects. */
 export interface Catalog {
   schemaVersion: string;
   documentType: "questionnaireCatalog";
@@ -341,6 +369,7 @@ export interface Catalog {
   extensions?: Extensions;
 }
 
+/** Saved selection of one school for exactly one catalog (id and version), plus language, local labels and customization. */
 export interface Project {
   schemaVersion: string;
   documentType: "questionnaireProject";

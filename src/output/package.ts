@@ -4,7 +4,7 @@ import { createProject, projectFileName, serializeProject } from "../model/proje
 import { Selection } from "../model/selection";
 import { buildCodebook } from "./codebook";
 import { buildCheckReport, reportFileName, serializeReport } from "./report";
-import { ADAPTERS } from "./registry";
+import { ADAPTERS, describeThrown } from "./registry";
 import { buildZip, ZipEntry } from "./zip";
 
 /**
@@ -35,7 +35,7 @@ export interface PackageResult {
   skipped: Array<{ platform: string; label: string; reasons: string[] }>;
 }
 
-const TIER_TEXT = { adapter: "Adapter, an keiner echten Instanz getestet", prototype: "Prototyp, ungeprüft", table: "Tabelle für Menschen, kein Import" } as const;
+const TIER_TEXT = { adapter: "Adapter, an keiner echten Instanz getestet", prototype: "Prototyp, ungeprüft", table: "Datei zum Lesen oder Weiterverarbeiten, kein Import" } as const;
 
 export function buildPackage(input: PackageInput): PackageResult {
   const { catalog: c, selection, language } = input;
@@ -52,22 +52,37 @@ export function buildPackage(input: PackageInput): PackageResult {
     now,
   };
 
-  const { project } = createProject(c, selection, meta);
-  if (project) {
-    const f = projectFileName(c);
-    entries.push({ name: f, data: serializeProject(project) });
-    included.push({ file: f, kind: "Projektdatei (Auswahl, keine Fragetexte)" });
-  }
+  /** One part of the package must never cost the others: a failure is listed under "not included" with its cause. */
+  const attempt = (platform: string, label: string, part: () => void): void => {
+    try {
+      part();
+    } catch (e) {
+      skipped.push({ platform, label, reasons: [`INTERNAL_ERROR: ${describeThrown(e)}`] });
+    }
+  };
 
-  const report = buildCheckReport({ catalog: c, loadDiagnostics: input.loadDiagnostics, selection, language, ...(input.targetPlatform ? { targetPlatform: input.targetPlatform } : {}) });
-  entries.push({ name: reportFileName(c), data: serializeReport(report) });
-  included.push({ file: reportFileName(c), kind: `Prüfbericht (${report.validity === "valid" ? "gültig" : "nicht gültiger Fragebogen"})` });
+  attempt("project", "Projektdatei", () => {
+    const { project } = createProject(c, selection, meta);
+    if (project) {
+      const f = projectFileName(c);
+      entries.push({ name: f, data: serializeProject(project) });
+      included.push({ file: f, kind: "Projektdatei (Auswahl, keine Fragetexte)" });
+    }
+  });
+
+  attempt("report", "Prüfbericht", () => {
+    const report = buildCheckReport({ catalog: c, loadDiagnostics: input.loadDiagnostics, selection, language, ...(input.targetPlatform ? { targetPlatform: input.targetPlatform } : {}) });
+    entries.push({ name: reportFileName(c), data: serializeReport(report) });
+    included.push({ file: reportFileName(c), kind: `Prüfbericht (${report.validity === "valid" ? "gültig" : "nicht gültiger Fragebogen"})` });
+  });
 
   const notes = input.codebookNotes && (input.schoolLabel || input.internalNotes) ? { schoolNotes: { ...(input.schoolLabel ? { schoolLabel: input.schoolLabel } : {}), ...(input.internalNotes ? { internalNotes: input.internalNotes } : {}) } } : {};
-  const codebook = buildCodebook(c, selection, { language, now, ...notes });
-  const cbName = `${c.catalog.id}_${c.catalog.version}_codebook.${language}.md`;
-  entries.push({ name: cbName, data: codebook.markdown });
-  included.push({ file: cbName, kind: "Codebuch (Beschreibung, kein Import)" });
+  attempt("codebook", "Codebuch", () => {
+    const codebook = buildCodebook(c, selection, { language, now, ...notes });
+    const cbName = `${c.catalog.id}_${c.catalog.version}_codebook.${language}.md`;
+    entries.push({ name: cbName, data: codebook.markdown });
+    included.push({ file: cbName, kind: "Codebuch (Beschreibung, kein Import)" });
+  });
 
   for (const [platform, entry] of Object.entries(ADAPTERS)) {
     const native = entry.build(c, selection, { language, mode: "native" });

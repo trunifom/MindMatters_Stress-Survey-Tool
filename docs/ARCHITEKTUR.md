@@ -27,12 +27,12 @@ Das HTML ist ein **Build-Ergebnis**. Gepflegt wird modularer TypeScript-Code mit
 src/core/       Laden (Syntax, doppelte Schlüssel, Grössenlimits), Schema-Prüfung (ajv, im Browser vorab erzeugt),
                 semantische Prüfung, Migration, Diagnosen
 src/model/      Auswahlzustand, wirksame Pflichtmenge, Exportmodell
-src/adapters/   je Zielsystem ein Ordner, reine Funktion: Exportmodell → {artifacts, diagnostics, mapping}
+src/output/     Exporte: je Ausgabe eine reine Funktion (Katalog, Auswahl, Sprache) → {content, diagnostics, mapping}; src/adapters/ enthält nur einen Verweis
 src/ui/         Ansichten (Liste, Info-Fenster, Vorschau, Prüfung/Ausgabe), Zustand, Texte (de/en)
-src/i18n/       UI-Texte (später)
+src/ui/i18n.ts  UI-Texte Deutsch/Englisch (src/i18n/ enthält nur einen Verweis)
 ```
 
-Abhängigkeitsrichtung: `ui → model → core`. `adapters` hängen nur von `model` und `core` ab. `core` kennt weder DOM noch Browser, läuft also identisch in Node (Tests) und im Browser.
+Abhängigkeitsrichtung im Kern: `ui → output → model → core`. Eine Ausnahme: `core/loader.ts` ruft `model` auf (Rechte, Anpassung, Auswahl), damit ein Projekt beim Laden gegen den angepassten Katalog geprüft wird. `output` hängt nur von `model` und `core` ab. `core` kennt weder DOM noch Browser, läuft also identisch in Node (Tests) und im Browser.
 
 ## Build zur Einzeldatei (`tools/build.mjs`)
 
@@ -107,3 +107,30 @@ Jeder Adapter nennt ID, Version, Zielsystem, Importweg und bekannte Grenzen. Er 
 
 `src/model/customize.ts` baut aus dem geladenen Katalog (`loaded.base`) und der `customization` des Projekts einen abgeleiteten Katalog (`loaded.catalog`). Alle Ansichten und alle Exporte lesen nur `loaded.catalog`. Der Loader wendet die Anpassung an, bevor die Auswahl eines Projekts geprüft wird, damit eigene Blöcke in der gespeicherten Auswahl vorkommen dürfen. Ansicht: `src/ui/views/texts.ts`. Darstellung (Hell/Dunkel, Schrift) lebt nur im Zustand (`theme`, `textSize`), als Attribute `data-theme` und `data-size` am Wurzelelement, ohne Speicherung (`src/ui/prefs.ts`).
 
+## Fehlerbehandlung und Exportschicht (ADR-010)
+
+**Fehler.** Drei Schichten, damit nichts still scheitert und nichts die Seite abbricht: Diagnosen (Datei und Auswahl), geschützte Handlungen (`src/ui/errors.ts`: `guarded`, `FileProblem`) und Auffangnetze (globale Handler, `renderCrashPanel`). Dazu sichert `guardBuild` in `src/output/registry.ts` jeden Export, und das ZIP-Paket sichert jeden Teil einzeln. Ausführlich: [FEHLERBEHANDLUNG.md](FEHLERBEHANDLUNG.md).
+
+**Exporte (`src/output/`).**
+
+```
+Katalog + Auswahl + Sprache
+        │
+        ▼
+  openAdapter (adapterBase.ts)   Rechte, Auswahlprüfung, Sprachprüfung, Textsteuerzeichen,
+        │                         Entwurfs-/Testkennzeichnung, Dateiname
+        ├─ limesurvey.ts, qualtrics.ts, redcap.ts, googleforms.ts, bauplan.ts (Zielsysteme)
+        ├─ csvtable.ts                                     (neutrale Tabelle)
+        ├─ document.ts  buildDocModel → HTML, Markdown, JSON   (lesbare Ausgaben)
+        └─ analysis.ts  buildDocModel → SPSS, R                (Auswertungsskripte)
+        │
+        ▼
+  registry.ts: ADAPTERS (Stufe adapter | prototype | table), jeder Eintrag durch guardBuild geschützt
+        │
+        ▼
+  AdapterResult { ok, content, fileName, diagnostics, mapping, assumptions, decision, testArtifact }
+```
+
+Gemeinsame Regeln aller Ausgaben: Wortlaut nur nach Rechteprüfung, eine Sprache pro Datei ohne Ersatzsprache, Entwurf nur als Testexport mit Kennzeichnung, Zielsystem-Grenzen als Fehler und nie als stilles Weglassen, deterministische Ausgabe (gleiche Eingabe, gleiche Datei). Diese Invarianten prüft `tests/unit/exportInvariants.test.ts` über alle Kataloge, Sprachen und Modi.
+
+**Neues Ausgabeformat hinzufügen:** Builder mit `openAdapter` schreiben, Texte nur über `ctx.need` holen, Zuordnungseinträge mit `ctx.mapping.add` setzen, in `registry.ts` mit ehrlicher Stufe eintragen, Test in `tests/unit/` ergänzen (die Invarianten greifen automatisch), Format in [AUSGABEN.md](AUSGABEN.md) beschreiben. Die Datei darf kein Zeichen `<` aus Tag-Literalen enthalten, die den Einzeldatei-Build stören würden (siehe `LT` in `document.ts`).

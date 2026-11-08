@@ -1,27 +1,38 @@
+/**
+ * School customization: adapted texts, added text blocks (titles, subtitles, text, notices) and a changed order.
+ *
+ * The catalog on disk is never changed. `applyCustomization` builds a derived catalog in memory (a deep copy), and
+ * everything else (list, preview, check, every export) works on that derived catalog, so the adapted wording can
+ * never differ between preview and export. Questions and answer options are never customizable.
+ *
+ * Rules:
+ *  - texts the catalog lists in `questionnaire.lockedTexts` and notes listed in `lockedNotes` are standardized
+ *    wording: an override is ignored and reported (CUSTOM_TEXT_LOCKED, CUSTOM_NOTE_LOCKED), never applied;
+ *  - a block is a note item of origin "own" with its own rights profile (the school wrote it);
+ *  - a block with an unknown section is skipped and reported, never attached somewhere else; an unknown anchor
+ *    item puts the block at the start of the section, with a warning;
+ *  - order changes only apply where the catalog allows them (`Section.reorder`) and are refused if they would put
+ *    the trigger of a visibility condition behind the dependent item (CUSTOM_ORDER_CONDITION);
+ *  - `normalizeCustomization` is the form written to the project file: no empty parts, stable key order.
+ *
+ * Depends on core only. The loader applies this before the project's selection is judged; the UI view
+ * src/ui/views/texts.ts edits the Customization that this module interprets.
+ */
+
 import { deepClone } from "../core/clone";
 import { Diagnostic, diag } from "../core/diagnostics";
 import { checkConditions } from "../core/structure";
 import { CUSTOMIZABLE_TEXTS, Catalog, CustomBlock, CustomizableText, Customization, Item, LocalizedText, RightsProfile, Section } from "../core/types";
 
-/**
- * School customization: adapted texts and added text blocks (titles, subtitles, text, notices).
- *
- * The catalog on disk is never changed. `applyCustomization` builds a derived catalog in memory, and
- * everything else (list, preview, check, every export) works on that derived catalog, so the adapted
- * wording can never differ between preview and export.
- *
- * Rules:
- *  - texts the catalog lists in `questionnaire.lockedTexts` are standardized wording: an override is
- *    ignored and reported, never applied;
- *  - a block is a note item of origin "own" with its own rights profile (the school wrote it);
- *  - a block with an unknown section is skipped and reported, never attached somewhere else.
- */
-
+/** Id of the rights profile that is added to the derived catalog for the school's own blocks (fully permitted, reviewed). */
 export const CUSTOM_RIGHTS_ID = "rights_custom_text";
+/** Prefix of ids of the school's own blocks. Catalog items must not use it; catalogNotes relies on it to tell them apart. */
 export const CUSTOM_ID_PREFIX = "custom_";
 
+/** True if the id belongs to a block of the school (not a catalog text block). */
 export const isCustomId = (id: string): boolean => id.startsWith(CUSTOM_ID_PREFIX);
 
+/** Result of applyCustomization: the derived catalog (the same object as the base if nothing was customized) and the findings. */
 export interface Customized {
   catalog: Catalog;
   /** Ids of the blocks that were applied, in the order of the customization. */
@@ -29,6 +40,7 @@ export interface Customized {
   diagnostics: Diagnostic[];
 }
 
+/** True if nothing remains after normalization, so that the project file gets no `customization` key. */
 export function isEmptyCustomization(c: Customization | undefined): boolean {
   return normalizeCustomization(c) === undefined;
 }
@@ -74,11 +86,14 @@ export function baseText(c: Catalog, key: CustomizableText): LocalizedText | und
   }
 }
 
+/** True if the catalog marks this questionnaire text as standardized wording (not adaptable). */
 export function isLocked(c: Catalog, key: CustomizableText): boolean {
   return (c.questionnaire.lockedTexts ?? []).includes(key);
 }
 
+/** True if the catalog allows moving the whole section (default: no, standardized instruments keep their order). */
 export const isSectionMovable = (s: Section): boolean => s.reorder?.movable === true;
+/** True if the catalog allows moving single items inside the section (default: no). */
 export const areItemsReorderable = (s: Section): boolean => s.reorder?.itemsReorderable === true;
 
 /** Applies the school's order. Moves that would put a condition's trigger behind the dependent item are refused. */
@@ -133,6 +148,7 @@ export function catalogNotes(c: Catalog): Item[] {
   return order.map((id) => byId.get(id)).filter((i): i is Item => !!i && i.response.kind === "note" && !isCustomId(i.id));
 }
 
+/** True if the catalog marks this text block (note item) as standardized wording. */
 export function isNoteLocked(c: Catalog, id: string): boolean {
   return (c.questionnaire.lockedNotes ?? []).includes(id);
 }
@@ -194,6 +210,11 @@ function setOverride(c: Catalog, key: CustomizableText, text: LocalizedText): vo
   }
 }
 
+/**
+ * Build the derived catalog: apply text overrides, note overrides, order and own blocks, in this order. Never mutates `base`.
+ * Problems are reported with CUSTOM_* codes (stage "selection", context "project") and the offending part is skipped, never repaired:
+ * locked texts, unknown targets, unknown sections (error), taken ids (error), unknown anchors, refused orders.
+ */
 export function applyCustomization(base: Catalog, custom: Customization | undefined): Customized {
   const diagnostics: Diagnostic[] = [];
   const norm = normalizeCustomization(custom);

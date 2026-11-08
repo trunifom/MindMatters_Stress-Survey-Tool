@@ -14,6 +14,7 @@ export interface Limits {
   maxStringLength: number;
 }
 
+/** Defaults used by parseStrictJson and the loader when the caller passes none (provisional, see above). */
 export const DEFAULT_LIMITS: Limits = {
   maxBytes: 10 * 1024 * 1024,
   maxDepth: 32,

@@ -1,14 +1,18 @@
+/**
+ * Presentation logic shared by the views: what text may be shown for an item, how a condition reads, which items
+ * match the filters.
+ *
+ * The key rule: item text is only shown where the rights allow display (model/rights, displayItems). A locked item
+ * yields `{ kind: "locked" }` and never its wording, also not through search. Participant-facing text falls back
+ * visibly (`fallback: true`), it is never silently replaced. No DOM here; the views build the elements.
+ */
+
 import { exactText, resolveText } from "../core/localized";
 import type { Catalog, Condition, ConditionOrGroup, Item } from "../core/types";
 import { ActionDecision, evaluateAction } from "../model/rights";
 import { mandatoryReasons, MandatoryReason } from "../model/selection";
 import { t } from "./i18n";
 import type { AppState } from "./state";
-
-/**
- * Presentation logic shared by the views: what text may be shown for an item,
- * how a condition reads, which items match the filters. No DOM here.
- */
 
 // --- rights: computed once per catalog object (the catalog never changes while loaded) -----------
 
@@ -25,6 +29,7 @@ export function displayDecision(c: Catalog): ActionDecision {
 }
 
 const mandatoryCache = new WeakMap<Catalog, Map<string, MandatoryReason>>();
+/** Mandatory items with reason, cached per catalog object (the loaded catalog never changes in place). */
 export function mandatoryOf(c: Catalog): Map<string, MandatoryReason> {
   let m = mandatoryCache.get(c);
   if (!m) {
@@ -34,6 +39,7 @@ export function mandatoryOf(c: Catalog): Map<string, MandatoryReason> {
   return m;
 }
 
+/** What may be shown for an item's wording: a lock, the text (with the language it is really in), or nothing. */
 export type ShownText =
   | { kind: "locked" }
   | { kind: "text"; text: string; language: string; fallback: boolean }
@@ -73,6 +79,7 @@ const OP: Record<Condition["operator"], string> = {
   lessThanOrEqual: "≤",
 };
 
+/** A visibility condition as a short readable line (operators as symbols, group members joined by "&" for all or "|" for any). */
 export function conditionText(vw: ConditionOrGroup): string {
   const one = (c: Condition) => `${c.itemRef} ${OP[c.operator]} ${c.value}`;
   if ("itemRef" in vw) return one(vw);
@@ -158,6 +165,7 @@ export function itemMatches(s: AppState, item: Item): boolean {
   return hay.some((x) => x.toLowerCase().includes(q));
 }
 
+/** Exact lookup without any fallback, re-exported so views need only this module. */
 export { exactText };
 
 /** The label for a response style (note items). */

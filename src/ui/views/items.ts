@@ -1,3 +1,11 @@
+/**
+ * Questions and modules view: search, filters, selection and the info buttons.
+ *
+ * Selection changes go through state.ts (which uses model/selection), never through the DOM: a checkbox only
+ * displays the state. Filters change what is listed, not the selection or the output order. Item texts are only
+ * shown where the display rights allow it (content.itemText); search does not look into locked texts.
+ */
+
 import type { Item, Module } from "../../core/types";
 import { mandatoryReasons } from "../../model/selection";
 import { templateOrder } from "../../core/structure";
@@ -259,4 +267,5 @@ function renderRow({ state: s, store }: Ctx, item: Item, mandatory: boolean): HT
   );
 }
 
+/** Re-exported for the tests of this view. */
 export { displayDecision, mandatoryOf };

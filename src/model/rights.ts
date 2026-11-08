@@ -1,20 +1,28 @@
+/**
+ * Rights and action matrix (spec B05, C03).
+ *
+ * This is a PRODUCT POLICY about declared rights, not a legal statement. The parser proves nothing about real
+ * permissions; it only refuses to act where the catalog does not declare, and a reviewer has confirmed, what the
+ * action needs. Without a confirmed "permitted" the text stays locked and exports stay blocked: unknown is never
+ * treated as allowed.
+ *
+ * Rights are resolved per affected item: Item.rightsRef, else the item's instrument rightsRef, else "unknown /
+ * unreviewed". An error in a permission an action does not need never blocks that action (modification=prohibited
+ * is compatible with permitted unchanged use). Catalog status adds rules: only "released" catalogs get a native
+ * export, "draft" output carries a watermark, "withdrawn" output a notice.
+ *
+ * The output layer asks evaluateAction (via output/adapterBase) before it writes anything. Depends on core only
+ * and on selection.ts for the questionnaire order.
+ */
+
 import { Diagnostic, diag } from "../core/diagnostics";
 import type { Catalog, Item, LocalizedText, RightsProfile } from "../core/types";
 import { orderedSelection, Selection } from "./selection";
 
 /**
- * Rights and action matrix (spec B05, C03).
- *
- * This is a PRODUCT POLICY about declared rights, not a legal statement. The
- * parser proves nothing about real permissions; it only refuses to act where the
- * catalog does not declare, and a reviewer has confirmed, what the action needs.
- *
- * Rights are resolved per affected item: Item.rightsRef, else the item's
- * instrument rightsRef, else "unknown / unreviewed". An error in a permission an
- * action does not need never blocks that action (modification=prohibited is
- * compatible with permitted unchanged use).
+ * What the application wants to do with item texts: show them, save a project (references only), save a check report, write a
+ * codebook with texts, export natively, or write a labelled development test export.
  */
-
 export type Action =
   | "displayItems"
   | "saveProject"
@@ -35,6 +43,7 @@ const NEEDS: Record<Action, readonly PermissionName[] | null> = {
   devTestExport: ["export", "redistribution", "electronicAdministration"], // never bypasses a prohibition
 };
 
+/** Rights that apply to one item and where they come from (item profile, instrument profile or nothing). */
 export interface EffectiveRights {
   source: "item" | "instrument" | "none";
   profileId?: string;
@@ -73,13 +82,19 @@ export function effectiveRights(c: Catalog, item: Item): EffectiveRights {
   return pick(item.rightsRef, "item") ?? pick(instrument?.rightsRef, "instrument") ?? UNKNOWN;
 }
 
+/** Why an item does not pass: profile not reviewed, or a needed permission unknown or prohibited. */
 export type BlockReason = "UNREVIEWED" | "PERMISSION_UNKNOWN" | "PERMISSION_PROHIBITED";
 
+/** One blocked item with all its reasons. */
 export interface ItemBlock {
   itemId: string;
   reasons: Array<{ reason: BlockReason; permission?: PermissionName; declaredPermitted?: boolean }>;
 }
 
+/**
+ * Decision for one action on a selection. Display and codebook only withhold the texts of blocked items (see `allowedItemIds`);
+ * an export is blocked as a whole as soon as one selected item or the catalog status blocks it.
+ */
 export interface ActionDecision {
   action: Action;
   /** True if the action may run completely: catalog status fine and no selected item blocked. */
@@ -101,6 +116,7 @@ export interface ActionDecision {
   diagnostics: Diagnostic[];
 }
 
+/** Options for evaluateAction. */
 export interface EvaluateOptions {
   /** Items to evaluate. Defaults to the whole catalog. */
   selection?: Selection;
@@ -108,6 +124,10 @@ export interface EvaluateOptions {
 
 const PLURAL = (n: number, one: string, many: string) => (n === 1 ? one : many);
 
+/**
+ * Decide whether `action` may run for the selection (whole catalog if omitted). Never throws and never changes anything. Findings
+ * are aggregated per distinct reason, not per item. Severity is a warning for displayItems (text locked) and an error for the rest.
+ */
 export function evaluateAction(c: Catalog, action: Action, options: EvaluateOptions = {}): ActionDecision {
   const status = c.catalog.status;
   const ids = options.selection ? orderedSelection(c, options.selection) : c.items.map((i) => i.id);

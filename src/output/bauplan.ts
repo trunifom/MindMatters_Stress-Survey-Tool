@@ -62,6 +62,14 @@ const ASSUMPTIONS: Record<PlanPlatform, readonly string[]> = {
 
 const NAMES: Record<PlanPlatform, string> = { unipark: "Unipark", surveymonkey: "SurveyMonkey" };
 
+/** A Markdown code span that no text can break out of: the fence is longer than any backtick run inside, newlines become spaces. */
+export function codeSpan(s: string): string {
+  const t = s.split(String.fromCharCode(13)).join(" ").split(String.fromCharCode(10)).join(" ");
+  const runs = t.match(/`+/g) ?? [];
+  const fence = "`".repeat(Math.max(0, ...runs.map((x) => x.length)) + 1);
+  return fence + (t.startsWith("`") || t.endsWith("`") ? " " + t + " " : t) + fence;
+}
+
 export function buildBauplan(platform: PlanPlatform, c: Parameters<typeof openAdapter>[0], selection: Parameters<typeof openAdapter>[1], options: AdapterOptions): AdapterResult {
   const ctx = openAdapter(c, selection, options, { platform, ext: "md", mime: "text/markdown;charset=utf-8", assumptions: ASSUMPTIONS[platform], suffix: "_bauplan" });
   if (ctx.early) return ctx.early;
@@ -88,7 +96,7 @@ export function buildBauplan(platform: PlanPlatform, c: Parameters<typeof openAd
   push("- [ ] Anonymität und Datenspeicherung nach dem Datenschutzkonzept der Schule einstellen (Teilnehmerverfolgung, IP-Speicherung, Erfassung von E-Mail-Adressen).");
   push("- [ ] Fortschrittsanzeige, Seitenaufteilung und Pflichtfeld-Hinweis einstellen.");
   if (q.consent) push("- [ ] Einwilligung als eigene Pflichtfrage bauen und die Umfrage bei Ablehnung beenden.");
-  if ((q.hiddenFields ?? []).length > 0) for (const h of q.hiddenFields ?? []) push(`- [ ] Verstecktes Feld \`${h.variableName}\` (${h.source}${h.constantValue ? `, Wert \`${h.constantValue}\`` : ""}) anlegen.`);
+  if ((q.hiddenFields ?? []).length > 0) for (const h of q.hiddenFields ?? []) push(`- [ ] Verstecktes Feld ${codeSpan(h.variableName)} (${md(h.source)}${h.constantValue ? `, Wert ${codeSpan(h.constantValue)}` : ""}) anlegen.`);
   push("- [ ] Nach dem Bauen: Vorschau durchgehen, Testantworten abgeben, Datenexport und Codes mit dem Codebuch vergleichen.", "");
   mapping.add("survey.settings", "manual", "All survey settings (title, anonymity, progress, consent, hidden fields) are set by hand; the plan lists them.");
   mapping.add("prototype", "manual", `PROTOTYPE: ${name} imports no questionnaire file; the whole questionnaire is built by hand from the plan.`);
@@ -115,7 +123,7 @@ export function buildBauplan(platform: PlanPlatform, c: Parameters<typeof openAd
       const item = ctx.items.get(id) as Item;
       const r = item.response;
       n++;
-      push(`#### ${n}. \`${item.variableName}\`${item.displayNumber ? ` (Nr. ${md(item.displayNumber)})` : ""}`, "");
+      push(`#### ${n}. ${codeSpan(item.variableName)}${item.displayNumber ? ` (Nr. ${md(item.displayNumber)})` : ""}`, "");
       push(`- Typ in ${name}: **${KIND_NAMES[platform][r.kind]}**`);
       push(`- Wortlaut: ${t(item.text, `Item "${id}"`, id)}`);
       if (item.instruction) push(`- Anweisung: ${t(item.instruction, `The instruction of "${id}"`, id)}`);
@@ -129,7 +137,7 @@ export function buildBauplan(platform: PlanPlatform, c: Parameters<typeof openAd
       const pairs = optionPairs(ctx, item);
       if (pairs.length > 0) {
         push("", "  | Code | Beschriftung | Hinweis |", "  |---|---|---|");
-        for (const p of pairs) push(`  | \`${p.code}\` | ${md(p.label)} | ${p.missing ? "Missing-Option (z. B. weiss nicht), als gewöhnliche Antwort anlegen" : ""} |`);
+        for (const p of pairs) push(`  | ${codeSpan(p.code).replace(/\|/g, "\\|")} | ${md(p.label)} | ${p.missing ? "Missing-Option (z. B. weiss nicht), als gewöhnliche Antwort anlegen" : ""} |`);
         push("", "  Setzen Sie die Codes in der Datenansicht, damit die Auswertung mit dem Codebuch übereinstimmt.");
       }
       push("");

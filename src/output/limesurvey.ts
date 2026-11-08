@@ -3,6 +3,7 @@ import { exactText } from "../core/localized";
 import type { Catalog, Condition, ConditionOrGroup, Item, LocalizedText, Option, Response } from "../core/types";
 import { evaluateAction } from "../model/rights";
 import { checkSelection, orderedSelection, Selection } from "../model/selection";
+import { hasUnexportableChars } from "./adapterBase";
 import { AdapterResult, MappingCollector } from "./mapping";
 
 /**
@@ -142,6 +143,10 @@ export function buildLimeSurvey(c: Catalog, selection: Selection, options: LimeS
     const t = exactText(lt, lang);
     if (t === undefined) {
       err("EXPORT_TEXT_MISSING", `${what} has no text in "${lang}". An export is never filled with another language.`, itemRef ? { itemRef } : {});
+      return "";
+    }
+    if (hasUnexportableChars(t)) {
+      err("EXPORT_TEXT_CHARACTER_INVALID", `${what} contains a control character (for example NUL) or a lone surrogate, which no target format carries faithfully.`, itemRef ? { itemRef } : {});
       return "";
     }
     return lsText(t);

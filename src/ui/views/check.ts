@@ -1,3 +1,13 @@
+/**
+ * Check and output view: findings, selection overview by scale, project details, the downloadable files (ZIP
+ * package, project, check report, codebook), rights per action and the export overview with one block per target.
+ *
+ * This view is the only place in the UI where files are produced. It never decides anything itself: what may be
+ * written comes from model/rights (evaluateAction) and from the adapters in src/output (registry.ts, which wraps
+ * every adapter in guardBuild). A blocked export is shown with its reasons and a disabled button, never hidden.
+ * Every user action is wrapped in `guarded` (errors.ts) so a failure becomes a notice and leaves the state as it was.
+ */
+
 import { resolveText } from "../../core/localized";
 import type { Customization } from "../../core/types";
 import { createProject, projectFileName, serializeProject } from "../../model/project";
@@ -10,12 +20,17 @@ import { ADAPTERS } from "../../output/registry";
 import { buildCheckReport, isReportStale, reportFileName, serializeReport, stateFingerprint } from "../../output/report";
 import { diagnosticsList } from "../components";
 import { downloadBytes, downloadText, h } from "../dom";
+import { guarded } from "../errors";
 import { t, TextKey } from "../i18n";
 import { counts, markSaved, rememberReport, savedCustomization, selectionDiagnostics, setCodebookNotes, setMeta } from "../state";
 import type { AppState, Store } from "../state";
 import type { ViewContext } from "./registry";
 
-/** The target systems the project plans to support. Adapters do not exist yet; they are listed, not offered. */
+/**
+ * Target systems a school can name as the planned target of the project (saved as `targetPlatform` in the project
+ * file and the check report). Only a label: it does not select or restrict the exports, all of them are offered
+ * from ADAPTERS in output/registry.ts.
+ */
 export const PLATFORMS: Array<[id: string, name: string]> = [
   ["limesurvey", "LimeSurvey"],
   ["redcap", "REDCap"],
@@ -197,12 +212,12 @@ function filesSection(s: AppState, store: Store): HTMLElement {
     "section",
     { class: "out-block", "aria-labelledby": "files-h" },
     h("h3", { id: "files-h" }, t("out.files")),
-    block(t("out.package"), t("out.packageHint"), h("button", { type: "button", class: "btn btn-primary", id: "save-package", "data-focus": "save-package", on: { click: () => savePackage(s, store) } }, t("out.package"))),
-    block(t("out.project"), t("out.projectHint"), h("button", { type: "button", class: "btn btn-primary", id: "save-project", "data-focus": "save-project", on: { click: () => saveProject(s, store) } }, t("out.project"))),
+    block(t("out.package"), t("out.packageHint"), h("button", { type: "button", class: "btn btn-primary", id: "save-package", "data-focus": "save-package", on: { click: () => guarded(store, "act.savePackage", () => savePackage(s, store)) } }, t("out.package"))),
+    block(t("out.project"), t("out.projectHint"), h("button", { type: "button", class: "btn btn-primary", id: "save-project", "data-focus": "save-project", on: { click: () => guarded(store, "act.saveProject", () => saveProject(s, store)) } }, t("out.project"))),
     block(
       t("out.report"),
       t("out.reportHint"),
-      h("button", { type: "button", class: "btn", id: "save-report", "data-focus": "save-report", on: { click: () => saveReport(s, store) } }, t("out.report")),
+      h("button", { type: "button", class: "btn", id: "save-report", "data-focus": "save-report", on: { click: () => guarded(store, "act.saveReport", () => saveReport(s, store)) } }, t("out.report")),
       [
         h("p", { id: "report-state", class: stale ? "badge sev-warning" : "muted", role: "status" }, reportState),
         conflicts ? h("p", { class: "badge sev-warning" }, t("out.reportConflict")) : null,
@@ -211,7 +226,7 @@ function filesSection(s: AppState, store: Store): HTMLElement {
     block(
       t("out.codebook"),
       t("out.codebookHint"),
-      h("button", { type: "button", class: "btn", id: "save-codebook", "data-focus": "save-codebook", on: { click: () => saveCodebook(s, store) } }, t("out.codebook")),
+      h("button", { type: "button", class: "btn", id: "save-codebook", "data-focus": "save-codebook", on: { click: () => guarded(store, "act.saveCodebook", () => saveCodebook(s, store)) } }, t("out.codebook")),
       [
         h("label", { class: "pv-opt" }, h("input", { type: "checkbox", id: "codebook-notes", "data-focus": "codebook-notes", checked: s.codebookNotes, on: { change: (ev) => setCodebookNotes(store, (ev.target as HTMLInputElement).checked) } }), " ", t("out.codebookNotes")),
         codebook.blockedItems.length > 0 ? h("p", { class: "badge sev-warning" }, t("out.codebookWithheld", { n: codebook.blockedItems.length })) : null,
@@ -252,7 +267,11 @@ function runExport(s: AppState, store: Store, platform: string, name: string, mo
   const adapter = ADAPTERS[platform]?.build;
   if (!adapter) return;
   const r = adapter(s.loaded!.catalog, s.selection, { language: s.language, mode });
-  if (!r.ok || r.content === undefined) return;
+  if (!r.ok || r.content === undefined) {
+    const first = r.diagnostics.find((d) => d.severity === "error");
+    store.set({ notice: { kind: "error", text: t("out.exportFailed", { name, detail: first ? `${first.code}: ${first.message}` : "?" }) } });
+    return;
+  }
   downloadText(r.fileName, r.content, r.mimeType);
   store.set({ notice: { kind: "info", text: t("out.exportDone", { file: r.fileName, name }) } });
 }
@@ -287,8 +306,8 @@ function adapterBlock(s: AppState, store: Store, platform: string, name: string)
     h(
       "div",
       { class: "toolbar" },
-      h("button", { type: "button", class: "btn btn-primary", id: `native-export-${platform}`, disabled: !native.ok, "aria-describedby": `native-reason-${platform}`, "data-focus": `native-export-${platform}`, on: { click: () => runExport(s, store, platform, name, "native") } }, t("out.exportFor", { name })),
-      h("button", { type: "button", class: "btn", id: `test-export-${platform}`, disabled: !test.ok, "aria-describedby": `native-reason-${platform}`, "data-focus": `test-export-${platform}`, on: { click: () => runExport(s, store, platform, name, "test") } }, t("out.testExportFor", { name })),
+      h("button", { type: "button", class: "btn btn-primary", id: `native-export-${platform}`, disabled: !native.ok, "aria-describedby": `native-reason-${platform}`, "data-focus": `native-export-${platform}`, on: { click: () => guarded(store, "act.export", () => runExport(s, store, platform, name, "native")) } }, t("out.exportFor", { name })),
+      h("button", { type: "button", class: "btn", id: `test-export-${platform}`, disabled: !test.ok, "aria-describedby": `native-reason-${platform}`, "data-focus": `test-export-${platform}`, on: { click: () => guarded(store, "act.export", () => runExport(s, store, platform, name, "test")) } }, t("out.testExportFor", { name })),
     ),
     h("p", { id: `native-reason-${platform}`, class: "muted" }, t("out.responsibility")),
     reasons.length > 0

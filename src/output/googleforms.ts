@@ -98,6 +98,10 @@ export function buildGoogleForms(c: Parameters<typeof openAdapter>[0], selection
       if (item.presentation?.optionOrder === "random") mapping.add("randomization", "manual", "Random answer order is a setting of the question; set it manually.", id);
       const labels = (): string[] | undefined => {
         const os = ctx.optionSets.get(r.optionSetRef ?? "")?.options ?? [];
+        if (os.length === 0) {
+          err("EXPORT_OPTION_CODE_INVALID", `Item "${id}" has no answer options; Google Forms throws on a choice question without choices.`, { itemRef: id });
+          return undefined;
+        }
         const ls = os.map((o) => ctx.need(o.label, `Option "${o.code}" of "${id}"`, id));
         if (new Set(ls).size !== ls.length || ls.some((x) => x === "")) {
           err("EXPORT_OPTION_CODE_DUPLICATE", `Item "${id}": Google Forms stores the label, so the option labels must be unique and not empty.`, { itemRef: id });
@@ -134,6 +138,8 @@ export function buildGoogleForms(c: Parameters<typeof openAdapter>[0], selection
           const v = hasLimits ? `FormApp.createTextValidation().requireNumberBetween(${lo}, ${hi}).build()` : r.kind === "integer" ? "FormApp.createTextValidation().requireWholeNumber().build()" : "FormApp.createTextValidation().requireNumber().build()";
           out.push(`  form.addTextItem().setTitle(${jsStr(t)}).setValidation(${v})${help}${req};`);
           mapping.add(`response.${r.kind}`, "transformed", "Text question with number validation.", id);
+          if (r.kind === "decimal" && r.maxDecimalPlaces !== undefined) mapping.add("response.decimalPlaces", "manual", "The maximum number of decimal places cannot be written.", id);
+          if (r.unit) mapping.add("response.unit", "manual", "The unit is not written; add it to the question text if it is not there.", id);
           if (r.kind === "integer" && hasLimits) mapping.add("response.wholeNumber", "manual", "With limits the check is 'number between'; the whole-number rule must be added manually.", id);
           if ((lo === undefined) !== (hi === undefined)) mapping.add("response.limits", "manual", "A single limit cannot be written; set it manually.", id);
           break;
@@ -157,6 +163,10 @@ export function buildGoogleForms(c: Parameters<typeof openAdapter>[0], selection
         case "slider": {
           const lo = Number(r.minimum);
           const hi = Number(r.maximum);
+          if (r.step !== undefined && r.step !== 1) {
+            err("EXPORT_RESPONSE_UNSUPPORTED", `Item "${id}": a Google Forms scale always has steps of 1; the catalog step ${r.step} is not written.`, { itemRef: id, remediation: "Deselect the item or build the scale in Google Forms by hand." });
+            break;
+          }
           if (!((lo === 0 || lo === 1) && Number.isInteger(hi) && hi >= 2 && hi <= 10)) {
             err("EXPORT_RESPONSE_UNSUPPORTED", `Item "${id}": a Google Forms scale runs from 0 or 1 to 2 up to 10; the catalog slider (${String(r.minimum)} to ${String(r.maximum)}) is not rescaled.`, { itemRef: id, remediation: "Deselect the item or build the scale in Google Forms by hand." });
             break;

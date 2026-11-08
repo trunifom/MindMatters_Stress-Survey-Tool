@@ -1,3 +1,11 @@
+/**
+ * The tabs of the main window as data: id, label, intro sentence and render function.
+ *
+ * To add a view: create views/<name>.ts that exports `render<Name>(ctx: ViewContext)`, add its id to `View` in
+ * state.ts, its texts (tab.<id>, view.<id>.intro) to i18n.ts and one line to VIEWS below. The shell (app.ts)
+ * needs no change.
+ */
+
 import type { AppState, Store, View } from "../state";
 import type { TextKey } from "../i18n";
 import { renderCheck } from "./check";
@@ -6,11 +14,13 @@ import { renderPreview } from "./preview";
 import { renderStructure } from "./structure";
 import { renderTexts } from "./texts";
 
+/** What a view receives: the current state and the store to call actions on. */
 export interface ViewContext {
   state: AppState;
   store: Store;
 }
 
+/** Description of one tab. */
 export interface ViewDef {
   id: View;
   label: TextKey;

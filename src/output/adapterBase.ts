@@ -51,6 +51,10 @@ const LABELS = {
   en: { test: "[TEST – not for productive use]", draft: "[DRAFT]" },
 } as const;
 
+/** C0 control characters (except tab, line feed, carriage return), DEL-free, noncharacters U+FFFE/U+FFFF and lone surrogates: no target format carries them faithfully. */
+const BAD_CHARS = new RegExp("[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]");
+export const hasUnexportableChars = (s: string): boolean => BAD_CHARS.test(s);
+
 export function openAdapter(c: Catalog, selection: Selection, options: AdapterOptions, spec: AdapterSpec): AdapterContext {
   const lang = options.language;
   const test = options.mode === "test";
@@ -91,6 +95,10 @@ export function openAdapter(c: Catalog, selection: Selection, options: AdapterOp
         err("EXPORT_TEXT_MISSING", `${what} has no text in "${lang}". An export is never filled with another language.`, itemRef ? { itemRef } : {});
         return "";
       }
+      if (hasUnexportableChars(t)) {
+        err("EXPORT_TEXT_CHARACTER_INVALID", `${what} contains a control character (for example NUL) or a lone surrogate, which no target format carries faithfully.`, itemRef ? { itemRef } : {});
+        return "";
+      }
       return t;
     },
     titleLabel() {
@@ -112,6 +120,13 @@ export function openAdapter(c: Catalog, selection: Selection, options: AdapterOp
   if (!c.languages.includes(lang)) {
     err("EXPORT_LANGUAGE_UNKNOWN", `The language "${lang}" is not a language of the catalog.`);
     ctx.early = result(false);
+    return ctx;
+  }
+  for (const id of ctx.selected) {
+    const item = ctx.items.get(id);
+    if (item?.sensitivity?.excludeFromExportByDefault) {
+      diagnostics.push(diag("export", "info", "EXPORT_SENSITIVE_INCLUDED", `Item "${id}" is sensitive and excluded from exports by default; it is included because it was selected explicitly.`, { itemRef: id, targetPlatform: spec.platform }));
+    }
   }
   return ctx;
 }

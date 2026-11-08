@@ -66,6 +66,37 @@ Nach dem Laden führen fünf nummerierte Schritte durch das Tool. Unter den Schr
 4. **Vorschau:** der ganze Fragebogen wie ihn Teilnehmende sehen. Nichts wird gespeichert.
 5. **Prüfung und Ausgabe:** Prüfbericht, Projekt speichern, Dateien für Ihr Umfrage-Tool, ZIP-Paket. Wenn ein Export nicht möglich ist, steht dort in einfachen Worten warum (zum Beispiel «Google Forms kennt keinen Schieberegler von 0 bis 100»), welche Fragen betroffen sind und was Sie tun können.
 
+## Ausgaben im Überblick
+
+Im Schritt «Prüfung und Ausgabe» erzeugen Sie:
+
+| Was | Wofür |
+|---|---|
+| **ZIP-Paket** | alles auf einmal, mit `LIESMICH.txt` (was drin ist, was fehlt und warum) |
+| **Projektdatei** | Ihre Auswahl, Texte und Reihenfolge später weiterbearbeiten (enthält keinen Katalogwortlaut) |
+| **Prüfbericht**, **Codebuch** | Protokoll der Prüfung und Beschreibung der Auswahl |
+| **LimeSurvey, Qualtrics** | Importdatei für das Umfragetool |
+| **REDCap, Google Forms** | Prototypen (Datenwörterbuch, Apps-Script), noch nie am echten System getestet |
+| **Unipark, SurveyMonkey** | Bauplan zum Nachbauen, weil beide keinen Dateiimport für Fragen haben |
+| **Neutrale Tabelle (CSV)** | die Auswahl als Tabelle, zum Prüfen oder Einfügen |
+| **Druckansicht (HTML)** | der Fragebogen wie auf Papier, im Browser über «Drucken» als PDF speicherbar, für Ethikantrag oder Elterninformation |
+| **Textdokument (Markdown)**, **Neutrales JSON** | Fragebogen als Text zum Weiterverwenden oder für eigene Skripte |
+| **SPSS-Syntax, R-Skript** | Variablen- und Wertelabels für die spätere Auswertung der Daten |
+
+Nach dem Import in ein Umfragetool lässt sich dort vieles ohnehin noch anpassen. Wichtig ist, dass Wortlaut, Antwortcodes und Reihenfolge stimmen. Prüfen Sie jede importierte Umfrage mit Testantworten.
+
+## Wenn etwas nicht klappt
+
+Oben auf der Seite erscheint eine Meldung, die sagt, **was** gescheitert ist und **warum**. Ihre Auswahl und Ihre Texte bleiben dabei erhalten. Typische Fälle:
+
+- **«… ist keine JSON-Textdatei»:** Sie haben eine Excel-, Word- oder ZIP-Datei gewählt. Wählen Sie die Katalog- oder Projektdatei (`.json`).
+- **«… ist zu gross» oder «… ist leer»:** falsche oder beschädigte Datei.
+- **Nicht UTF-8:** Die Datei in einem Editor als «UTF-8» speichern.
+- **Ein Export ist grau:** Unter dem Knopf stehen die Gründe mit Frage und «Was tun» (zum Beispiel «Google Forms kennt keinen Schieberegler»).
+- **«Unerwarteter Fehler»:** ein Fehler im Werkzeug. Speichern Sie zuerst die Projektdatei. Die technische Ursache steht in der Meldung und in der Browserkonsole (F12). Ein einzelner abgebrochener Export beeinträchtigt die anderen nicht.
+
+Mehr dazu: [FEHLERBEHANDLUNG.md](FEHLERBEHANDLUNG.md).
+
 ## Darstellung: Hell/Dunkel und Schriftgrösse
 
 Oben rechts, auf jeder Seite: **Dunkel/Hell** wechselt das Farbschema, **A+/A−** wechselt zwischen normaler und grosser Schrift (zwei Stufen). Beides gilt nur für den aktuellen Besuch und wird nicht gespeichert. Zu Beginn folgt das Farbschema Ihrer Systemeinstellung. Die Oberfläche startet immer auf Deutsch (umschaltbar auf English), die Fragensprache auf Deutsch, sobald der Katalog Deutsch enthält.

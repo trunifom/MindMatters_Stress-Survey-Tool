@@ -21,7 +21,7 @@ describe("start screen", () => {
     expect(m.qa(".step-card")).toHaveLength(4);
     expect(m.root.textContent).toContain("Das können Sie hier tun");
     expect(m.root.textContent).toContain("Das tut das Tool nicht");
-    expect(m.qa(".target")).toHaveLength(7);
+    expect(m.qa(".target")).toHaveLength(12);
     expect(m.q(".dropzone")).toBeTruthy();
   });
 

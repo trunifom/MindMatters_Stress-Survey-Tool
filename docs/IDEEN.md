@@ -83,3 +83,18 @@ Aufwand: S = Stunden, M = ein bis zwei Tage, L = mehrere Tage. Nutzen: ★ gerin
 3. **C1** Profil-JSON, sobald klar ist, was Schulen anpassen dürfen.
 4. **D2/D3** parallel, weil sie nur Zeit an Geräten brauchen.
 5. **C2** Autorenmodus, wenn die Kataloge wachsen sollen.
+
+## F. Qualität der Ausgaben und Fehlerbehandlung (8. November 2026)
+
+| # | Idee | Stand |
+|---|---|---|
+| F1 | Fehlerbehandlung in drei Schichten, Dateiprüfung vor dem Lesen, geschützte Exporte | **umgesetzt** (ADR-010) |
+| F2 | Druckansicht (HTML/PDF), Markdown, neutrales JSON | **umgesetzt** |
+| F3 | SPSS-Syntax und R-Skript mit Labels | **umgesetzt** als Prototyp |
+| F4 | Invariantentest über alle Ausgaben | **umgesetzt** |
+| F5 | Word (.docx) und Excel (.xlsx) als Ausgabe | offen: setzt Binärausgaben und Gegenprüfung an der echten Anwendung voraus (ADR-010, Punkt 5) |
+| F6 | Qualtrics-QSF (JSON) und LimeSurvey-LSS (XML) als umfassendere Importformate | offen: braucht Testzugänge, sonst ungeprüft |
+| F7 | Stata-Do-File und CSV-Datenvorlage (leere Datei mit den Spaltennamen des Zielsystems) | offen |
+| F8 | Spaltennamen der Datenausgabe je Zielsystem (Mehrfachwahl als eine Spalte je Antwort) in die SPSS/R-Skripte aufnehmen | offen: je Zielsystem zu belegen |
+| F9 | Zweisprachige Druckansicht (zwei Sprachen nebeneinander) | offen |
+| F10 | Längenbegrenzungen der Zielsysteme erzwingen | offen: keine verlässlichen Quellen, siehe [PROTOTYPEN.md](PROTOTYPEN.md) |

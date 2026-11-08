@@ -1,3 +1,15 @@
+/**
+ * Load pipeline (spec C01):
+ *   text -> syntax/duplicates/limits -> [explicit migration] -> structure (schema)
+ *        -> references and semantics -> initial selection -> usable catalog.
+ *
+ * The result is all-or-nothing: a catalog is only returned if no stage reported an error ("failed import is
+ * discarded transactionally"). Diagnostics of every stage that ran are always returned, so a broken file can
+ * still be analysed. loadProject additionally applies the school's customization (model/customize) before the
+ * saved selection is judged. This is the only place where core meets model; it never touches the DOM and never
+ * mutates a previously loaded catalog (see replaceCatalog).
+ */
+
 import { CheckStatus, Diagnostic, diag, hasErrors, statusOf } from "./diagnostics";
 import { DEFAULT_LIMITS, Limits } from "./limits";
 import { migrateToCurrent } from "./migrate";
@@ -9,16 +21,7 @@ import { evaluateAction } from "../model/rights";
 import { applyCustomization } from "../model/customize";
 import { applyProject, checkInitialSelection, initialSelection, ProjectResult } from "../model/selection";
 
-/**
- * Load pipeline (spec C01):
- *   text -> syntax/duplicates/limits -> [explicit migration] -> structure (schema)
- *        -> references and semantics -> initial selection -> usable catalog.
- *
- * The result is all-or-nothing: a catalog is only returned if no stage reported
- * an error ("failed import is discarded transactionally"). Diagnostics of every
- * stage that ran are always returned, so a broken file can still be analysed.
- */
-
+/** Options for loadCatalog and loadProject. */
 export interface LoadOptions {
   limits?: Limits;
   /**
@@ -36,6 +39,7 @@ export interface CheckStatuses {
   export: CheckStatus;
 }
 
+/** Result of loadCatalog. `catalog` and `initialSelection` exist only if `ok`; `diagnostics` are always present. */
 export interface CatalogLoad {
   /** True if the catalog can be used (no errors in any stage). */
   ok: boolean;
@@ -55,6 +59,10 @@ function statuses(ds: Diagnostic[], ran: { selection: boolean; rights?: boolean 
   };
 }
 
+/**
+ * Read a catalog from text. Never throws: every problem becomes a diagnostic. A 0.3.0 file is only migrated with `options.migrate`;
+ * rights limitations (unreviewed items) are reported as diagnostics but never make the catalog unusable.
+ */
 export function loadCatalog(text: string, options: LoadOptions = {}): CatalogLoad {
   const parsed = parseStrictJson(text, options.limits ?? DEFAULT_LIMITS);
   if (!parsed.ok) return { ok: false, diagnostics: parsed.diagnostics, status: statuses(parsed.diagnostics, { selection: false }) };
@@ -93,6 +101,7 @@ export function loadCatalog(text: string, options: LoadOptions = {}): CatalogLoa
   };
 }
 
+/** Result of loadProject. */
 export interface ProjectLoad {
   /** True if the project loaded without errors. */
   ok: boolean;
@@ -105,6 +114,11 @@ export interface ProjectLoad {
   diagnostics: Diagnostic[];
 }
 
+/**
+ * Read a project file for an already loaded catalog. Customization is applied first, then the selection is judged against the derived
+ * catalog. Missing mandatory items are added and reported, other conflicts stay as an editable intermediate state
+ * (`result` is still returned). A project of another catalog id/version yields PROJECT_CATALOG_MISMATCH and no result.
+ */
 export function loadProject(text: string, catalog: Catalog, options: LoadOptions = {}): ProjectLoad {
   const parsed = parseStrictJson(text, options.limits ?? DEFAULT_LIMITS);
   if (!parsed.ok) return { ok: false, diagnostics: parsed.diagnostics };
@@ -136,6 +150,7 @@ export function loadProject(text: string, catalog: Catalog, options: LoadOptions
 // Transactional replacement (T04, T42)
 // ---------------------------------------------------------------------------
 
+/** Minimal state held by the application: the usable catalog and its initial selection. */
 export interface LoadedCatalog {
   catalog: Catalog;
   initialSelection: Set<string>;

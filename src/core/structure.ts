@@ -1,11 +1,16 @@
+/**
+ * Structure checks (stage "content"): questionnaire template, conditions and modules. Spec B14, B15, B16.
+ *
+ *  - template: every item appears exactly once in the sections;
+ *  - conditions: trigger exists, stands earlier, operator and value fit the trigger, no cycles;
+ *  - modules: an item belongs to one module at most, scales are contained, defaults and mandatory items agree.
+ *
+ * Read-only; called from semantic.ts. templateOrder is also used by the UI and the output layer.
+ */
+
 import { Diagnostic, diag, pointer } from "./diagnostics";
 import { leafConditions } from "./features";
 import type { Catalog, Condition, Item } from "./types";
-
-/**
- * Structure checks (stage "content"): questionnaire template, conditions and
- * modules. Spec B14, B15, B16.
- */
 
 /** Position of every item in the template (section order, then item order). */
 export function templateOrder(c: Catalog): Map<string, number> {
@@ -20,6 +25,7 @@ export function templateOrder(c: Catalog): Map<string, number> {
   return order;
 }
 
+/** Every item exactly once in the questionnaire template (TEMPLATE_ITEM_DUPLICATE, TEMPLATE_ITEM_MISSING). */
 export function checkTemplate(c: Catalog): Diagnostic[] {
   const out: Diagnostic[] = [];
   const known = new Set(c.items.map((i) => i.id));
@@ -62,6 +68,10 @@ function operatorFits(op: Condition["operator"], kind: string): boolean {
   return NUMERIC_KINDS.has(kind); // greaterThan, greaterThanOrEqual, lessThan, lessThanOrEqual
 }
 
+/**
+ * Check visibility conditions: no self reference, trigger earlier in the template, operator fits the response kind, value is a valid
+ * code or number, and no cycles (CONDITION_* codes).
+ */
 export function checkConditions(c: Catalog): Diagnostic[] {
   const out: Diagnostic[] = [];
   const items = new Map<string, Item>(c.items.map((i) => [i.id, i]));
@@ -128,6 +138,10 @@ export function checkConditions(c: Catalog): Diagnostic[] {
   return out;
 }
 
+/**
+ * Check module membership and consistency (ITEM_IN_MULTIPLE_MODULES, MODULE_SCALE_NOT_CONTAINED, MODULE_DEFAULT_MISMATCH,
+ * MODULE_OPTIONAL_HAS_REQUIRED_ITEM).
+ */
 export function checkModules(c: Catalog): Diagnostic[] {
   const out: Diagnostic[] = [];
   const items = new Map<string, Item>(c.items.map((i) => [i.id, i]));

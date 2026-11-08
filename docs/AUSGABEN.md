@@ -7,11 +7,11 @@ Vier verschiedene Aktionen, die nicht verwechselt werden dürfen (Spec A12). Wel
 | Projektdatei | `<katalog>_<version>_project.json` | exakte Katalog-ID und -Version, Auswahl, Sprache, optional Schulbezeichnung und Notizen | Itemtexte, Regelüberschreibungen | Auswahl später weiterbearbeiten |
 | Prüfbericht | `<katalog>_<version>_check-report.json` | IDs, Pfade, Codes, Befunde, Rechtefolgen je Handlung | Wortlaut von Items, Antworten, Abschnitten | technisches Protokoll |
 | Codebuch | Markdown | Beschreibung der Auswahl mit Wortlaut, Antwortcodes, Einschränkungen, Quellen | HTML, gesperrte Wortlaute, Schulnotizen (ausser auf ausdrückliche Wahl) | Dokumentation für Verantwortliche, **kein Import** |
-| Nativer Export | je Zielsystem | (folgt mit den Adaptern) | | Umfrage im Zielsystem aufbauen |
+| Export | je Zielsystem | die Auswahl in dessen Importformat, Bauplan oder Skript (siehe [LIMESURVEY.md](LIMESURVEY.md), [QUALTRICS.md](QUALTRICS.md), [PROTOTYPEN.md](PROTOTYPEN.md)) | Wortlaut nur nach Rechteprüfung | Umfrage im Zielsystem aufbauen |
 
 Dateinamen enthalten nur Katalog-ID und Version (das Codebuch zusätzlich die Sprache), nie Schulbezeichnung oder Notizen.
 
-In der Oberfläche stehen die drei Dateien im Tab «Prüfung und Ausgabe». Darunter zeigt eine Übersicht je Handlung (Anzeige, Codebuch, regulärer Export, Entwicklungs-Testexport), ob sie nach der Rechtepolitik möglich ist, und die Gründe. Der Export selbst ist noch nicht verfügbar: Die Tasten sind gesperrt und alle Adapter als «geplant» gelistet.
+In der Oberfläche stehen die drei Dateien im Tab «Prüfung und Ausgabe». Darunter zeigt eine Übersicht je Handlung (Anzeige, Codebuch, regulärer Export, Entwicklungs-Testexport), ob sie nach der Rechtepolitik möglich ist, und die Gründe. Darunter steht je Ziel ein Block mit Export- und Testexport-Knopf, den Gründen, warum etwas nicht möglich ist, und der Zuordnung (`exact`, `transformed`, `manual`, `unsupported`). Was bei Fehlern geschieht: [FEHLERBEHANDLUNG.md](FEHLERBEHANDLUNG.md).
 
 ## Prüfbericht (`questionnaireCheckReport`, Version 1.0.0)
 
@@ -73,3 +73,61 @@ Im Tab «Prüfung und Ausgabe» zeigt die Übersicht je Skala `n von m Items`, Z
 
 Die **Bearbeitungszeit** wird nie geschätzt. Gezählt werden nur Instrumente, die vollständig gewählt sind und eine dokumentierte `administrationTime` mit Quelle tragen. Items ohne belegte Zeit werden als «nicht dokumentiert» genannt, das ist nicht null. Sonst steht «für Ihre Auswahl ist keine Zeit dokumentiert».
 
+## Lesbare und maschinenlesbare Ausgaben
+
+Fünf weitere Ausgaben liegen neben den Umfragetool-Exporten. Sie laufen wie jeder Export durch dieselbe Rechteprüfung (`openAdapter`): Wortlaut nur, wenn die Rechte ihn erlauben, ein Entwurf nur als gekennzeichneter Testexport, nur gültige Auswahl, nur eine Sprache pro Datei, **nie eine Ersatzsprache** (fehlender Text = `EXPORT_TEXT_MISSING`). Keine davon ist ein Import für ein Umfragetool.
+
+| Ausgabe | Datei | Zweck | Stufe |
+|---|---|---|---|
+| Druckansicht | `<katalog>_<version>_html_print.html` | Fragebogen wie auf Papier, im Browser als PDF speicherbar; für Ethikantrag, Elterninformation, Kontrolle | Lesbar |
+| Textdokument | `…_markdown_questionnaire.md` | Fragebogen als Markdown, zum Einfügen in Dokumente und E-Mails | Lesbar |
+| Neutrales JSON | `…_json_neutral.json` | aufgelöste Kopie für eigene Skripte | Lesbar |
+| SPSS-Syntax | `…_spss_labels.sps` | Variablen- und Wertelabels für die Auswertung | Prototyp |
+| R-Skript | `…_r_labels.R` | dasselbe als Basis-R | Prototyp |
+
+Alle fünf entstehen aus **einem** aufgelösten Modell (`buildDocModel` in `src/output/document.ts`). Wortlaut, Reihenfolge, Nummerierung und Antwortoptionen können deshalb nicht auseinanderlaufen.
+
+### Druckansicht (HTML)
+
+- Eine einzige Datei ohne Skript, ohne Ereignisbehandler, ohne externe Ressource. Eine `Content-Security-Policy` im Kopf (`default-src 'none'`) erzwingt das auch im Browser.
+- Aller Katalogtext wird maskiert (`& < > " '`), er kann nie zu HTML werden. Absätze (Leerzeile) und Listen (`- `) aus Textblöcken werden übernommen.
+- Fragen sind durchnummeriert, Textblöcke nicht. Pflichtfragen tragen ein Sternchen, Bedingungen stehen als «Nur wenn …» über der Frage.
+- Antworten: Einzelwahl ○, Mehrfachwahl ☐, Rangfolge ▢, Regler als Skala mit Endbeschriftung, Zahl/Text/Datum als Linie oder Feld. Ein Block mit gemeinsamer Antwortliste und Layout `matrix` oder `table` wird als **Tabelle** gedruckt.
+- Seitenumbrüche folgen `pageBreakBefore` der Abschnitte. Das Druckformat ist für A4 eingerichtet.
+
+### Markdown-Dokument
+
+Gleicher Inhalt als Text. Markdown-Zeichen und rohes HTML in Katalogtexten werden maskiert, damit der Text nicht als Formatierung gelesen wird.
+
+### Neutrales JSON
+
+```json
+{
+  "format": "mindmatters-neutral-questionnaire",
+  "formatVersion": "1.0.0",
+  "catalog": { "id": "…", "version": "1.0.0", "status": "released" },
+  "language": "de-CH",
+  "testArtifact": false,
+  "title": "…", "statusLabel": "", "introduction": "…", "consent": { "text": "…" },
+  "sections": [
+    { "id": "…", "title": "…", "layout": "matrix", "pageBreakBefore": false,
+      "items": [
+        { "id": "…", "variable": "…", "kind": "singleChoice", "number": 1, "text": "…",
+          "required": true, "condition": "…", "limits": "",
+          "options": [ { "code": "1", "label": "…", "missing": false } ] }
+      ] }
+  ]
+}
+```
+
+`formatVersion` folgt Semantic Versioning: neue optionale Felder erhöhen die Nebenversion, Umbenennungen die Hauptversion.
+
+### SPSS-Syntax und R-Skript
+
+Setzen **Variablenlabels** (`Nummer. Fragetext`) und **Wertelabels** für Einzelwahl und Rangfolge. Codes mit Rolle «keine Angabe» werden in SPSS als fehlende Werte (`MISSING VALUES`) und in R als `NA` behandelt.
+
+- **Annahme, die im Dateikopf steht:** Die Datenspalten heissen wie die Variablennamen des Katalogs. Ein Umfragetool kann Variablen umbenennen oder Mehrfachwahl in eine Spalte je Antwort aufteilen. Mehrfachwahl erhält daher nur das Label der Frage.
+- **Namensprüfung:** Ein Variablenname, den SPSS nicht verwenden kann (Anfang, Zeichen, Länge 64, reserviertes Wort), ist ein Fehler `EXPORT_VARIABLE_NAME_INVALID` mit der betroffenen Frage. Doppelte Namen sind ein Fehler `EXPORT_VARIABLE_NAME_DUPLICATE`.
+- **Maskierung:** SPSS-Texte mit `'` verdoppeln das Zeichen, Zeilenumbrüche werden Leerzeichen, Labels sind auf 256 (Variable) und 120 Zeichen (Wert) begrenzt. R-Texte maskieren `\`, `"` und Zeilenumbrüche.
+- Das R-Skript warnt beim Anwenden vor Spalten, die in den Daten fehlen (`Spalten nicht gefunden`), statt sie zu übergehen.
+- Beide Dateien wurden **nicht in SPSS oder R ausgeführt** (Stufe Prototyp).

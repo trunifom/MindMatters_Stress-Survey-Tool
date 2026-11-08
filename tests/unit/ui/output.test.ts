@@ -285,7 +285,12 @@ describe("rights per action and export overview", () => {
       "SurveyMonkey (Bauplan): prototype, unverified",
       "Google Forms (Apps Script): prototype, unverified",
       "Unipark (Bauplan): prototype, unverified",
-      "Neutrale Tabelle (CSV): table for people, not an import",
+      "Neutrale Tabelle (CSV): file to read or process further, not an import",
+      "Druckansicht (HTML, als PDF speicherbar): file to read or process further, not an import",
+      "Fragebogen als Textdokument (Markdown): file to read or process further, not an import",
+      "Neutrales JSON (für eigene Skripte): file to read or process further, not an import",
+      "SPSS-Syntax (Variablen- und Wertelabels): prototype, unverified",
+      "R-Skript (Variablen- und Wertelabels): prototype, unverified",
     ]);
     expect(m.q(".out-block .banner-info").textContent).toContain("None of this has been tested on a real instance");
     expect(m.q("#native-reason-limesurvey").textContent).toContain("does not bypass any rights prohibition");

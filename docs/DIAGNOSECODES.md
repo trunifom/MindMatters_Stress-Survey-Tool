@@ -171,6 +171,8 @@ Gilt für die Export-Adapter (`targetPlatform` nennt das Zielsystem). Ein Fehler
 | `EXPORT_TEXT_RESERVED` | error | ein Text enthält `[[` oder `]]`, die das Zielsystem als Tag liest (Qualtrics) |
 | `EXPORT_RESPONSE_UNSUPPORTED` | error | das Zielformat kennt den Antworttyp nicht (Qualtrics TXT: Slider); es gibt keinen Ersatz |
 | `EXPORT_HIDDEN_FIELD_INVALID` | error | ein verstecktes Feld hat einen Namen oder Wert, den das Zielsystem nicht annimmt |
+| `EXPORT_INTERNAL_ERROR` | error | ein Export ist unerwartet abgebrochen (Programmfehler, nicht Ihre Auswahl); Ziel und Ursache stehen in der Meldung, die übrigen Exporte funktionieren weiter |
+| `EXPORT_TEXT_CHARACTER_INVALID` | error | ein Text enthält ein Steuerzeichen (z. B. NUL) oder ein einzelnes Surrogat, das kein Zielformat unverändert trägt; es wird nie stillschweigend entfernt |
 
 ## Anpassungen der Schule (Stufe `selection`, Kontext `project`)
 

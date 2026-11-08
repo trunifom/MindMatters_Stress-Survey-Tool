@@ -1,3 +1,14 @@
+/**
+ * Application state and actions. No DOM here: everything is testable in Node.
+ *
+ * The selection lives in this state, never in the DOM checkboxes (spec C01). A failed import never touches the
+ * previous valid state (T04, T42). The state holds two catalogs: `loaded.base` (exactly as read) and
+ * `loaded.catalog` (with the school's customization applied); views and exports read only the latter, and the
+ * former is never modified. Every action is a plain function `(store, ...) => void` that sets a patch on the store,
+ * so views stay free of logic. Business rules (selection, rights, customization) are delegated to src/model and
+ * src/core; this file only coordinates them and records what changed (`dirty`).
+ */
+
 import { CheckStatus, Diagnostic, statusOf } from "../core/diagnostics";
 import { CatalogLoad, CheckStatuses, loadCatalog, loadProject, replaceCatalog } from "../core/loader";
 import type { Catalog, CustomBlock, CustomizableText, Customization, LocalizedText } from "../core/types";
@@ -7,25 +18,21 @@ import { checkSelection, clearOptional, initialSelection, mandatorySet, setItem,
 import { t, UiLang } from "./i18n";
 import type { Prefs, TextSize, Theme } from "./prefs";
 
-/**
- * Application state and actions. No DOM here: everything is testable in Node.
- *
- * The selection lives in this state, never in the DOM checkboxes (spec C01).
- * A failed import never touches the previous valid state (T04, T42).
- */
-
 /** German whenever the catalog offers it (de, then de-CH and other de-*), else the catalog's default. */
 export function preferredLanguage(c: Catalog): string {
   return c.languages.find((l) => l === "de") ?? c.languages.find((l) => l.toLowerCase().startsWith("de")) ?? c.catalog.defaultLanguage;
 }
 
+/** Tabs of the main window. */
 export type View = "items" | "structure" | "texts" | "preview" | "check";
 
+/** Message shown above the view (result of the last action). */
 export interface Notice {
   kind: "info" | "warning" | "error";
   text: string;
 }
 
+/** A loaded catalog with everything derived from it at load time. */
 export interface Loaded {
   /** The catalog with the school's adapted texts and text blocks applied. Everything works on this one. */
   catalog: Catalog;
@@ -37,6 +44,7 @@ export interface Loaded {
   fileName: string;
 }
 
+/** A file that needs the explicit 0.3.0 -> 0.4.0 migration and waits for the user's confirmation. */
 export interface PendingMigration {
   kind: "catalog" | "project";
   text: string;
@@ -44,6 +52,7 @@ export interface PendingMigration {
   from: string;
 }
 
+/** Search and filter of the question list. Filters only change what is listed, never the selection or the output order (T20). */
 export interface Filter {
   query: string;
   scope: "all" | "selected" | "mandatory" | "optional";
@@ -51,11 +60,13 @@ export interface Filter {
   constructId: string;
 }
 
+/** What the information dialog shows. */
 export interface InfoTarget {
   kind: "item" | "module" | "scale" | "construct";
   id: string;
 }
 
+/** Complete state of the page. Treated as immutable: the store replaces it on every change. */
 export interface AppState {
   uiLang: UiLang;
   theme: Theme;
@@ -90,6 +101,7 @@ export interface AppState {
   orderNotice: string | null;
 }
 
+/** Filter that shows everything. */
 export const EMPTY_FILTER: Filter = { query: "", scope: "all", moduleId: "", constructId: "" };
 
 /** German is the default interface language, always. Theme and text size are not stored anywhere. */
@@ -115,12 +127,14 @@ export function initialState(_hint?: string, prefs: Prefs = {}): AppState {
   };
 }
 
+/** Minimal observable store. Subscribers are called synchronously after each `set`. */
 export interface Store {
   get(): AppState;
   set(patch: Partial<AppState>): void;
   subscribe(fn: (s: AppState) => void): () => void;
 }
 
+/** Create a store holding `initial`. `set` merges a patch into a new state object and notifies all subscribers. */
 export function createStore(initial: AppState): Store {
   let state = initial;
   const listeners = new Set<(s: AppState) => void>();
@@ -238,6 +252,7 @@ export function confirmMigration(store: Store): void {
   else loadProjectText(store, p.text, p.fileName, true);
 }
 
+/** Drop a pending migration offer (the file stays rejected). */
 export function cancelMigration(store: Store): void {
   store.set({ pendingMigration: undefined });
 }
@@ -250,11 +265,13 @@ function changeSelection(store: Store, next: Set<string>): void {
   store.set({ selection: next, dirty: true });
 }
 
+/** Select or deselect one item (an optional allOrNothing module switches as a whole). Marks the project as changed. */
 export function toggleItem(store: Store, itemId: string, on: boolean): void {
   const s = store.get();
   if (s.loaded) changeSelection(store, setItem(s.loaded.catalog, s.selection, itemId, on));
 }
 
+/** Select or deselect all members of a module; mandatory members stay. Marks the project as changed. */
 export function switchModule(store: Store, moduleId: string, on: boolean): void {
   const s = store.get();
   if (s.loaded) changeSelection(store, setModule(s.loaded.catalog, s.selection, moduleId, on));
@@ -266,30 +283,46 @@ export function deselectAllOptional(store: Store): void {
   if (s.loaded) changeSelection(store, clearOptional(s.loaded.catalog));
 }
 
+/** Back to the catalog's initial selection. */
 export function restoreInitialSelection(store: Store): void {
   const s = store.get();
   if (s.loaded) changeSelection(store, new Set(initialSelection(s.loaded.catalog)));
 }
 
+/** Set the colour scheme (current visit only, nothing is stored). */
 export const setTheme = (store: Store, theme: Theme): void => store.set({ theme });
+/** Set the text size (current visit only, nothing is stored). */
 export const setTextSize = (store: Store, textSize: TextSize): void => store.set({ textSize });
+/** Show or hide the answer options in the question list. */
 export const setShowAnswers = (store: Store, on: boolean): void => store.set({ showAnswers: on });
+/** Open or close the "how it looks in the survey" section of a module. */
 export function setPreviewOpen(store: Store, id: string, open: boolean): void {
   const cur = store.get().openPreviews;
   if (cur.includes(id) === open) return;
   store.set({ openPreviews: open ? [...cur, id] : cur.filter((x) => x !== id) });
 }
+/** Switch the tab. */
 export const setView = (store: Store, view: View): void => store.set({ view });
+/** Switch the interface language. */
 export const setUiLanguage = (store: Store, uiLang: UiLang): void => store.set({ uiLang });
+/** Switch the questionnaire language of preview and exports (must be a catalog language). */
 export const setLanguage = (store: Store, language: string): void => store.set({ language });
+/** Change parts of the question filter. */
 export const setFilter = (store: Store, patch: Partial<Filter>): void => store.set({ filter: { ...store.get().filter, ...patch } });
+/** Open the information dialog. */
 export const openInfo = (store: Store, info: InfoTarget): void => store.set({ info });
+/** Close the information dialog. */
 export const closeInfo = (store: Store): void => store.set({ info: undefined });
+/** Hide the current notice. */
 export const dismissNotice = (store: Store): void => store.set({ notice: undefined });
+/** Record that the project was saved (clears the unsaved-changes flag). */
 export const markSaved = (store: Store): void => store.set({ dirty: false });
+/** Choose whether school label and notes go into the codebook (opt-in). */
 export const setCodebookNotes = (store: Store, on: boolean): void => store.set({ codebookNotes: on });
+/** Remember the last saved check report so that it can be recognised as outdated after a change. */
 export const rememberReport = (store: Store, fingerprint: string, at: string): void => store.set({ lastReport: { fingerprint, at } });
 
+/** Change school label, internal notes or target platform of the project. Marks the project as changed. */
 export function setMeta(store: Store, patch: Partial<Pick<AppState, "schoolLabel" | "internalNotes" | "targetPlatform">>): void {
   store.set({ ...patch, dirty: true });
 }
@@ -298,6 +331,7 @@ export function setMeta(store: Store, patch: Partial<Pick<AppState, "schoolLabel
 // Derived values
 // ---------------------------------------------------------------------------
 
+/** Findings about the current selection (derived on demand, never stale). */
 export function selectionDiagnostics(s: AppState): Diagnostic[] {
   return s.loaded ? checkSelection(s.loaded.catalog, s.selection, "project") : [];
 }
@@ -314,12 +348,14 @@ export function currentStatus(s: AppState): Record<"technical" | "selection" | "
   };
 }
 
+/** Numbers shown in the summary. */
 export interface Counts {
   items: number;
   modules: number;
   mandatory: number;
 }
 
+/** Selected items, touched modules and selected mandatory items. */
 export function counts(s: AppState): Counts {
   if (!s.loaded) return { items: 0, modules: 0, mandatory: 0 };
   const c = s.loaded.catalog;
@@ -328,6 +364,7 @@ export function counts(s: AppState): Counts {
   return { items: s.selection.size, modules, mandatory: [...mandatory].filter((id) => s.selection.has(id)).length };
 }
 
+/** Re-exported so views need only this module. */
 export { initialSelection };
 
 
@@ -362,6 +399,7 @@ export function setCustomText(store: Store, key: CustomizableText, language: str
   applyCustom(store, { ...s.customization, textOverrides: overrides });
 }
 
+/** Remove the school's adaptation of a questionnaire text; the text returns to the catalog wording. */
 export function resetCustomText(store: Store, key: CustomizableText): void {
   const s = store.get();
   const overrides = { ...(s.customization.textOverrides ?? {}) };
@@ -381,6 +419,7 @@ export function setNoteText(store: Store, id: string, language: string, text: st
   applyCustom(store, { ...s.customization, noteOverrides: notes });
 }
 
+/** Remove the school's adaptation of a catalog text block. */
 export function resetNoteText(store: Store, id: string): void {
   const s = store.get();
   const notes = { ...(s.customization.noteOverrides ?? {}) };
@@ -446,6 +485,7 @@ export function moveItem(store: Store, sectionId: string, itemId: string, delta:
   tryOrder(store, { ...s.customization, itemOrder });
 }
 
+/** Back to the order the catalog publishes (sections and items). */
 export function resetOrder(store: Store): void {
   const s = store.get();
   const custom = { ...s.customization };
@@ -465,6 +505,7 @@ export function addCustomBlock(store: Store, sectionRef: string, afterItemRef: s
   return id;
 }
 
+/** Change style, section or anchor of an own text block. */
 export function updateCustomBlock(store: Store, id: string, patch: Partial<Pick<CustomBlock, "style" | "sectionRef" | "afterItemRef">>): void {
   const s = store.get();
   const blocks = (s.customization.customBlocks ?? []).map((b) => (b.id === id ? { ...b, ...patch } : b));
@@ -487,6 +528,7 @@ export function setCustomBlockText(store: Store, id: string, language: string, t
   applyCustom(store, { ...s.customization, customBlocks: blocks });
 }
 
+/** Delete an own text block (it also leaves the selection). */
 export function removeCustomBlock(store: Store, id: string): void {
   const s = store.get();
   applyCustom(store, { ...s.customization, customBlocks: (s.customization.customBlocks ?? []).filter((b) => b.id !== id) });

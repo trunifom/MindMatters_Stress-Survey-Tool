@@ -57,7 +57,7 @@ Jeder Eintrag: Kontext, Entscheidung, Alternativen, Folgen. Neue Entscheidungen 
 - **Entscheidung:** Jede Ausgabe trägt eine Stufe, die im Konfigurator neben dem Namen steht:
   1. **Adapter** (LimeSurvey, Qualtrics): erzeugt eine Datei, die das System importiert, nach den Angaben der Herstellerseite, an keiner echten Instanz getestet.
   2. **Prototyp** (REDCap, Google Forms; Unipark und SurveyMonkey als Bauplan): aus allgemeinem Wissen oder sekundären Quellen geschrieben, nie gegen das echte System gelaufen, oder ein Dokument zum Nachbauen, weil das System nichts importiert.
-  3. **Tabelle** (neutrale CSV): für Menschen, kein Import.
+  3. **Tabelle** (neutrale CSV): für Menschen, kein Import. Seit ADR-010 gehören auch Druckansicht, Markdown und neutrales JSON zu dieser Stufe («lesbar»), SPSS und R sind Prototypen.
   Alle Stufen gelten dieselben Regeln aus ADR-007 (Rechte, Katalogstatus, eine Sprache, nichts still geändert, nichts weggelassen) und führen ihre Annahmen offen.
 - **Änderung gegenüber dem Stand vom 7. November:** REDCap wurde dort wegen der unbelegten Kopfzeile zunächst nicht gebaut. Mit der Vorgabe «möglichst alles, auch als Prototyp» entsteht es jetzt als Prototyp. Die Kopfzeile bleibt unbelegt und ist in der Annahmenliste und im Zuordnungsbericht (`prototype`) genannt.
 - **Gründe:** Schulen sollen einen Stand bekommen, an dem sie arbeiten können. Das Risiko liegt in einem still falschen Import, deshalb bleibt die Stufe sichtbar und der Weg zu «getestet» ist in [PROTOTYPEN.md](PROTOTYPEN.md) beschrieben.
@@ -77,6 +77,17 @@ Jeder Eintrag: Kontext, Entscheidung, Alternativen, Folgen. Neue Entscheidungen 
 9. **Reihenfolge nur, wenn der Katalog es erlaubt (Nachtrag 8. November 2026).** Jeder Abschnitt (Block, zum Beispiel eine Skala) trägt `reorder.movable` (ganzer Block verschiebbar) und `reorder.itemsReorderable` (Fragen einzeln verschiebbar). Beides ist **standardmässig falsch**, weil standardisierte Instrumente in der veröffentlichten Reihenfolge gefragt werden. Persönliche Angaben wie Alter oder Geschlecht stehen in einem Abschnitt mit `itemsReorderable: true`. Die Schule speichert `customization.sectionOrder` (nur die verschiebbaren Blöcke, feste behalten ihren Platz) und `customization.itemOrder` (je Abschnitt). Eine Reihenfolge, die den Auslöser einer Bedingung hinter die abhängige Frage setzt, wird nicht angewendet (`CUSTOM_ORDER_CONDITION`), in der Oberfläche bleibt die Verschiebung aus und ein Hinweis erscheint. Eigene Textblöcke behalten ihren Ankerpunkt. Neuer Schritt «Reihenfolge» (zweiter von fünf). Nach dem Import kann die Reihenfolge im Umfragetool ohnehin nochmals geändert werden.
 
 **Folgen.** Ein Projekt ohne Anpassungen sieht aus wie bisher (kein neuer Schlüssel). Wer die Projektdatei weitergibt, gibt die eigenen Texte der Schule weiter, aber keinen Katalogwortlaut. Exporte in einer Sprache ohne den eigenen Text melden den fehlenden Text wie bei jedem anderen Text (`EXPORT_TEXT_MISSING`).
+
+## ADR-010: Fehlerbehandlung in drei Schichten, lesbare und analysefertige Ausgaben
+
+**Entscheidung.**
+1. **Drei Schichten.** Diagnosen für Datei und Auswahl (mit Code, Stelle, Frage, Ziel, «Was tun»), geschützte Handlungen (`guarded`, `FileProblem`, `guardBuild`) und Auffangnetze für Unerwartetes (globale Handler, Absturzkarte). Ein Fehler stoppt die Handlung, nie das Werkzeug, und lässt den Arbeitsstand unverändert. Beschreibung: [FEHLERBEHANDLUNG.md](FEHLERBEHANDLUNG.md).
+2. **Ein Export darf die Seite nie abstürzen lassen.** Jeder Adapter wird in `registry.ts` von `guardBuild` umhüllt. Eine unerwartete Ausnahme wird zum Ergebnis `ok: false` mit `EXPORT_INTERNAL_ERROR` (Ziel und Ursache). Das ZIP-Paket sichert jeden Teil einzeln ab und nennt Gescheitertes in `LIESMICH.txt`.
+3. **Dateien werden vor dem Lesen geprüft:** leer, über dem Limit (10 MB), binär (ZIP-Signatur oder NUL) und nicht UTF-8 (Ersatzzeichen). Die Meldung nennt Datei und Grund. Begründung: Ohne diese Prüfung scheitert ein Excel-Anhang als unverständlicher JSON-Syntaxfehler.
+4. **Neue Ausgaben, alle aus einem Modell.** Druckansicht (HTML), Markdown, neutrales JSON, SPSS-Syntax und R-Skript entstehen aus `buildDocModel`. Sie laufen durch dieselbe Rechteprüfung wie die Umfragetool-Exporte, kennen keine Ersatzsprache und maskieren allen Text für ihr Zielformat. Die Druckansicht enthält kein Skript und trägt eine restriktive Content-Security-Policy. Stufen: Druckansicht, Markdown und JSON «lesbar» (Datei für Menschen oder eigene Skripte, kein Import), SPSS und R «Prototyp» (nie ausgeführt).
+5. **Keine Binärformate.** Word und Excel werden nicht erzeugt: Die Adapter liefern Text, und ein Binärformat ohne Gegenprüfung an der echten Anwendung wäre ein Risiko ohne Nutzen gegenüber HTML (als PDF druckbar) und CSV.
+
+**Folgen.** Zwölf Ausgabeziele statt sieben, neue Diagnosecodes (`EXPORT_INTERNAL_ERROR`, `EXPORT_VARIABLE_NAME_INVALID`, `EXPORT_VARIABLE_NAME_DUPLICATE`). Die Auswertungsskripte nehmen an, dass die Datenspalten wie die Katalogvariablen heissen, und sagen das im Dateikopf.
 
 ## Offene Entscheidungen
 - Lizenz des Repositories.

@@ -1,16 +1,17 @@
+/**
+ * Language checks (spec B01) on a structurally valid catalog (stage "content").
+ *
+ *  - every language key of every LocalizedText must be declared in `languages` (LANGUAGE_NOT_DECLARED);
+ *  - `catalog.defaultLanguage` must be one of `languages` (DEFAULT_LANGUAGE_NOT_LISTED);
+ *  - participant-facing texts missing in a declared language are reported per language (MISSING_TRANSLATION,
+ *    warning). Nothing is translated automatically; export in an affected language is blocked later by the
+ *    output layer. Administrative texts may fall back to the default language, so they are not reported.
+ *
+ * Read-only: never changes the catalog. Called from semantic.ts.
+ */
+
 import { Diagnostic, diag, pointer } from "./diagnostics";
 import type { Catalog } from "./types";
-
-/**
- * Language checks (spec B01):
- *  - every language key of every LocalizedText must be declared in `languages`
- *    (LANGUAGE_NOT_DECLARED);
- *  - `catalog.defaultLanguage` must be one of `languages`;
- *  - participant-facing texts missing in a declared language are reported per
- *    language (MISSING_TRANSLATION, warning). Nothing is translated automatically;
- *    export in an affected language is blocked later. Administrative texts may fall
- *    back to the default language, so they are not reported.
- */
 
 /** Keys whose object value is a LocalizedText (strings with the same key are plain text, e.g. Source.title). */
 const LOCALIZED_KEYS = new Set([
@@ -45,6 +46,10 @@ function isLocalizedShape(v: unknown): v is Record<string, string> {
   return isObject(v) && Object.values(v).every((x) => typeof x === "string");
 }
 
+/**
+ * Walk any document and collect every LocalizedText (by key name, see LOCALIZED_KEYS) with its JSON path and whether it is shown to
+ * participants. `extensions` and `data` are opaque and never walked; hidden fields are never participant-facing.
+ */
 export function collectLocalized(doc: unknown): Found[] {
   const found: Found[] = [];
   const walk = (node: unknown, path: string, key: string | undefined, participantCtx: boolean) => {
@@ -83,6 +88,7 @@ export function collectLocalized(doc: unknown): Found[] {
   return found;
 }
 
+/** Run the language checks described in the module comment; returns the findings, never throws. */
 export function checkLanguages(c: Catalog): Diagnostic[] {
   const out: Diagnostic[] = [];
   const declared = new Set(c.languages);

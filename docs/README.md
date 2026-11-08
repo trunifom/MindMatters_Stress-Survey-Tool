@@ -12,6 +12,7 @@
 | [LIMESURVEY.md](LIMESURVEY.md) | LimeSurvey-Export: Zuordnung, Namensregeln, belegte und ungeprüfte Annahmen, Importtest | Entwickler, Katalogpfleger |
 | [PROTOTYPEN.md](PROTOTYPEN.md) | REDCap, Google Forms, Unipark, SurveyMonkey und neutrale Tabelle: Zuordnung, Annahmen, Weg zu «getestet» | Entwickler, Katalogpfleger |
 | [QUALTRICS.md](QUALTRICS.md) | Qualtrics-Export (TXT Advanced Format): was das Format nicht kann, Zuordnung, Annahmen, Importtest | Entwickler, Katalogpfleger |
+| [FEHLERBEHANDLUNG.md](FEHLERBEHANDLUNG.md) | Wie Fehler gezeigt werden, wo man sucht, was getestet ist und wo die Grenzen liegen | alle |
 | [BROWSER.md](BROWSER.md) | Welche Browser belegt sind, was nicht, wie man den Nachweis erweitert | Entwickler, Projektleitung |
 | [RECHERCHE_Zielsysteme.md](RECHERCHE_Zielsysteme.md) | Importmöglichkeiten von LimeSurvey, REDCap, Qualtrics, SurveyMonkey, Google Forms, Unipark | Entwickler (Adapter) |
 | [DIAGNOSECODES.md](DIAGNOSECODES.md) | Register aller Diagnosecodes des Validators | Entwickler, Katalogpfleger |

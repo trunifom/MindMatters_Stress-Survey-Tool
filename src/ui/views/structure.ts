@@ -1,3 +1,12 @@
+/**
+ * Structure view: the order of the questionnaire.
+ *
+ * What may move is decided by the catalog (`section.reorder`): a whole block (a scale) or the single items inside
+ * it. Both are off by default, because standardized instruments are asked in the published order. Nothing here
+ * changes the wording of a question. A move that would put the trigger of a condition behind its dependent item is
+ * refused by state.ts (orderNotice) and explained here.
+ */
+
 import type { Item, Section } from "../../core/types";
 import { isCustomId } from "../../model/customize";
 import { adminText } from "../content";
@@ -7,14 +16,9 @@ import { moveItem, moveSection, movableSectionIds, resetOrder } from "../state";
 import type { AppState, Store } from "../state";
 import type { ViewContext } from "./registry";
 
-/**
- * Structure: the order of the questionnaire. What may move is decided by the catalog (`section.reorder`):
- * a whole block (a scale) or the single items inside it. Both are off by default, because standardized
- * instruments are asked in the published order. Nothing here changes the wording of a question.
- */
-
 const truncate = (x: string, n: number) => (x.length > n ? x.slice(0, n - 1).trimEnd() + "…" : x.replace(/\s+/g, " "));
 
+/** The structure tab: sections with arrows where the catalog allows moving, and a reset button once something was changed. */
 export function renderStructure({ state: s, store }: ViewContext): HTMLElement {
   if (!s.loaded) return h("p", { class: "muted" }, t("import.noCatalog"));
   const c = s.loaded.catalog;

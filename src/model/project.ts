@@ -1,17 +1,18 @@
+/**
+ * Creating and serializing project files (spec A11, B18, C03, C10).
+ *
+ * A project stores references only: exact catalog id and version, the questionnaire id, the language and the
+ * selected item ids. It never contains item texts of the catalog or rule overrides. The only texts it may carry
+ * are the school's own: adapted questionnaire texts and added text blocks (`customization`). Reading a project is
+ * done by core/loader.ts (loadProject); this file only writes. Depends on selection.ts and customize.ts.
+ */
+
 import { Diagnostic, diag } from "../core/diagnostics";
 import type { Catalog, Customization, Project } from "../core/types";
 import { normalizeCustomization } from "./customize";
 import { checkSelection, orderedSelection, Selection } from "./selection";
 
-/**
- * Creating and serializing project files (spec A11, B18, C03, C10).
- *
- * A project stores references only: exact catalog id and version, the
- * questionnaire id, the language and the selected item ids. It never contains
- * item texts of the catalog or rule overrides. The only texts it may carry are the
- * school's own: adapted questionnaire texts and added text blocks (`customization`).
- */
-
+/** Optional parts of a project file. */
 export interface CreateProjectOptions {
   /** Defaults to the catalog's default language. Must be a catalog language. */
   language?: string;
@@ -26,6 +27,7 @@ export interface CreateProjectOptions {
   now?: Date;
 }
 
+/** Project (absent only for an unknown language) and the selection findings. */
 export interface CreateProjectResult {
   /** Undefined only if the project cannot be expressed (unknown language). */
   project?: Project;
@@ -42,6 +44,10 @@ const clean = (s: string | undefined): string | undefined => {
   return t ? t : undefined;
 };
 
+/**
+ * Build the project object for a selection. Items are written in questionnaire order, never click order; keys have a fixed order so
+ * files diff well. A selection with conflicts can still be saved: the conflicts come back as diagnostics, nothing is repaired.
+ */
 export function createProject(c: Catalog, selected: Selection, options: CreateProjectOptions = {}): CreateProjectResult {
   const language = options.language ?? c.catalog.defaultLanguage;
   if (!c.languages.includes(language)) {

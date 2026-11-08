@@ -1,14 +1,15 @@
-import { deepClone } from "./clone";
-import { Diagnostic, diag } from "./diagnostics";
-
 /**
  * Explicit schema migration (never implicit, see ADR-003 and test T06).
  *
- * 0.3.0 -> 0.4.0 is purely additive: every 0.4.0 field is optional, so a valid
- * 0.3.0 document becomes a valid 0.4.0 document by changing `schemaVersion`.
- * The input is never mutated; the caller decides whether to use the result.
+ * 0.3.0 -> 0.4.0 is purely additive: every 0.4.0 field is optional, so a valid 0.3.0 document becomes a valid
+ * 0.4.0 document by changing `schemaVersion`. The input is never mutated; the caller decides whether to use the
+ * result. Only the loader calls this, and only when the user asked for the migration.
  */
 
+import { deepClone } from "./clone";
+import { Diagnostic, diag } from "./diagnostics";
+
+/** Outcome of a migration: the migrated copy plus an info diagnostic, or errors if there is no path. */
 export type MigrationResult =
   | { ok: true; doc: Record<string, unknown>; diagnostics: Diagnostic[] }
   | { ok: false; diagnostics: Diagnostic[] };
@@ -16,6 +17,7 @@ export type MigrationResult =
 const isObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null && !Array.isArray(v);
 
+/** Migrate a 0.3.0 document to the current schema version. Returns a deep copy; any other version or a non-object fails with a diagnostic. */
 export function migrateToCurrent(input: unknown): MigrationResult {
   if (!isObject(input)) {
     return {

@@ -1,13 +1,14 @@
-import type { LocalizedText } from "./types";
-
 /**
  * Resolution of LocalizedText (spec B01).
  *
- * Nothing is translated automatically. Participant-facing text that is missing
- * in the requested language is NOT silently replaced: callers get `fallback: true`
- * and decide (a preview marks it, an export in that language is blocked).
- * Administrative text may fall back visibly to the default language.
+ * Nothing is translated automatically. Participant-facing text that is missing in the requested language is NOT
+ * silently replaced: callers get `fallback: true` and decide (a preview marks it, an export in that language is
+ * blocked). Administrative text may fall back visibly to the default language. Pure functions, no state.
  */
+
+import type { LocalizedText } from "./types";
+
+/** A resolved text with the language it is really in; `fallback` is true if that is not the requested language. */
 export interface ResolvedText {
   text: string;
   /** The language the text is actually in. */
@@ -16,6 +17,10 @@ export interface ResolvedText {
   fallback: boolean;
 }
 
+/**
+ * Text in the requested language, else the default language, else the first available one; `fallback` tells which happened.
+ * Use only where a visible fallback is acceptable (previews, administrative text). Returns undefined if there is no text at all.
+ */
 export function resolveText(
   value: LocalizedText | undefined,
   language: string,

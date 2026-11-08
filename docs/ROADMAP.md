@@ -10,6 +10,7 @@
 | M4 | Ausgaben | Codebuch (Markdown), Prüfbericht (JSON) | erledigt (Datenseite) |
 | M5 | Erster Adapter | LimeSurvey (TSV), Test an echter Instanz | Adapter umgesetzt und getestet (Struktur, Gates, Browser-Download); **Importtest an echter Instanz offen** |
 | M6 | Weitere Adapter | REDCap, Qualtrics, SurveyMonkey, Google Forms (Skript), Unipark | Qualtrics (Adapter) und REDCap, Google Forms, SurveyMonkey, Unipark (Prototypen, [PROTOTYPEN.md](PROTOTYPEN.md)) umgesetzt; **keine Instanz getestet** |
+| M6b | Qualität der Ausgaben | Prüfung aller Adapter gegen die Dokumentation, Fehlerbehandlung in drei Schichten, Druckansicht, Markdown, neutrales JSON, SPSS, R, Invariantentests über alle Ausgaben | umgesetzt ([ADR-010](ENTSCHEIDUNGEN.md), [FEHLERBEHANDLUNG.md](FEHLERBEHANDLUNG.md)); offene Fragen in [PROTOTYPEN.md](PROTOTYPEN.md) |
 | M7 | Profil-JSON | Schulanpassung ohne Code-Varianten | offen |
 | M8 | Autorenmodus / CSV-Pflege | eigene Fragen, CSV-Import | offen |
 

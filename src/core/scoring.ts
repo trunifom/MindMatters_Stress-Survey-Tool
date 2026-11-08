@@ -1,10 +1,17 @@
+/**
+ * Score definition checks (stage "content"), spec B17.
+ *
+ * Scoring is documentation only: nothing is computed anywhere in the application. The checks make sure the
+ * documented mapping is complete and consistent (exactly one mapping per item, every option code scored or
+ * declared missing, roles matching) so that nobody relies on a half-defined score. Read-only; called from semantic.ts.
+ */
+
 import { Diagnostic, diag, pointer } from "./diagnostics";
 import type { Catalog, Item, OptionSet } from "./types";
 
 /**
- * Score definition checks (stage "content"), spec B17. Scoring is documentation
- * only: nothing is computed. The checks make sure the documented mapping is
- * complete and consistent so that nobody relies on a half-defined score.
+ * Check every scoring definition; all findings are errors with a SCORE_* code. Items that do not resolve are skipped here because
+ * registers.ts reports them (MISSING_ITEM, MISSING_OPTION_SET).
  */
 export function checkScoring(c: Catalog): Diagnostic[] {
   const out: Diagnostic[] = [];

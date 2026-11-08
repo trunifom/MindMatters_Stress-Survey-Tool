@@ -1,6 +1,3 @@
-import { Diagnostic, diag, pointer } from "./diagnostics";
-import { DEFAULT_LIMITS, Limits } from "./limits";
-
 /**
  * Strict JSON reader (spec B01, C01, C09).
  *
@@ -9,12 +6,17 @@ import { DEFAULT_LIMITS, Limits } from "./limits";
  *  - hard limits for size, depth, node count and string length (LIMIT_EXCEEDED);
  *  - errors carry line/column and a JSON Pointer;
  *  - a leading BOM is tolerated, any other trailing content is an error;
- *  - keys such as "__proto__" are stored as ordinary own properties, so
- *    untrusted input can never touch the prototype chain.
+ *  - keys such as "__proto__" are stored as ordinary own properties, so untrusted input can never touch the
+ *    prototype chain.
  *
- * Depth is limited, so the recursive descent cannot overflow the stack.
+ * Depth is limited, so the recursive descent cannot overflow the stack. Every catalog and project file passes
+ * through here first; nothing else in the application calls JSON.parse on user files.
  */
 
+import { Diagnostic, diag, pointer } from "./diagnostics";
+import { DEFAULT_LIMITS, Limits } from "./limits";
+
+/** Parsed value, or diagnostics (never an exception). */
 export type ParseResult =
   | { ok: true; value: unknown }
   | { ok: false; diagnostics: Diagnostic[] };
@@ -33,6 +35,10 @@ class ParseFailure extends Error {
 const WS = new Set([" ", "\t", "\n", "\r"]);
 const NUMBER = /-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/y;
 
+/**
+ * Parse untrusted text under the given limits (DEFAULT_LIMITS if omitted). Never throws; failures are JSON_SYNTAX_ERROR,
+ * JSON_DUPLICATE_KEY or LIMIT_EXCEEDED diagnostics.
+ */
 export function parseStrictJson(text: string, limits: Limits = DEFAULT_LIMITS): ParseResult {
   const bytes = new TextEncoder().encode(text).length;
   if (bytes > limits.maxBytes) {

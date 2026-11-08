@@ -6,9 +6,12 @@
  * system setting; the buttons change it for the current visit.
  */
 
+/** Colour scheme of the page. */
 export type Theme = "light" | "dark";
+/** Text size of the page (two steps). */
 export type TextSize = "normal" | "large";
 
+/** Display preferences given to initialState; never read from or written to browser storage. */
 export interface Prefs {
   theme?: Theme;
   textSize?: TextSize;

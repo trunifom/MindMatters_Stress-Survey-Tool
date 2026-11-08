@@ -1,15 +1,16 @@
+/**
+ * Structural validation (pipeline stage "structure"):
+ *  1. version/type gate: unsupported or migratable versions never reach the schema (T06: no silent migration);
+ *  2. JSON Schema (Draft 2020-12) validation with errors translated to stable diagnostic codes and cleaned of
+ *     oneOf-branch noise (at most 200 findings).
+ *
+ * Read-only. Validators come from ./schemas; the loader calls validateStructure for catalogs and projects.
+ */
+
 import type { ErrorObject } from "ajv/dist/2020.js";
 import { Diagnostic, diag, pointer } from "./diagnostics";
 import { getValidator, getDefValidator, DocKind } from "./schemas";
 import { MIGRATABLE_SCHEMA_VERSIONS, SUPPORTED_SCHEMA_VERSIONS } from "../version";
-
-/**
- * Structural validation (pipeline stages "structure"):
- *  1. version/type gate: unsupported or migratable versions never reach the schema
- *     (T06: no silent migration);
- *  2. JSON Schema (Draft 2020-12) validation with errors translated to stable
- *     diagnostic codes and cleaned of oneOf-branch noise.
- */
 
 const EXPECTED_TYPE: Record<DocKind, string> = {
   catalog: "questionnaireCatalog",
@@ -21,6 +22,10 @@ const MAX_STRUCTURE_DIAGNOSTICS = 200;
 const isObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null && !Array.isArray(v);
 
+/**
+ * Gate before the schema: `schemaVersion` must be supported (a migratable one reports SCHEMA_VERSION_MIGRATION_REQUIRED) and
+ * `documentType` must match the kind. Does not look at anything else.
+ */
 export function checkVersionAndType(doc: unknown, kind: DocKind): Diagnostic[] {
   if (!isObject(doc)) {
     return [diag("structure", "error", "DOCUMENT_NOT_OBJECT", "The document root must be a JSON object.", { jsonPath: "" })];

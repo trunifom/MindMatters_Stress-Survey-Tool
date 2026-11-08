@@ -1,3 +1,12 @@
+/**
+ * Questionnaire preview and answer previews.
+ *
+ * Shows the selected items in questionnaire order the way participants would see them, plus small disabled answer
+ * controls for the question list. Nothing is collected: every control is disabled, there is no form, nothing is
+ * stored. Conditions are shown as a structure preview, not simulated. Texts follow content.ts: locked items show
+ * no wording, a text missing in the chosen language is marked and never replaced silently.
+ */
+
 import { templateOrder } from "../../core/structure";
 import type { Item, Option, OptionSet, Section } from "../../core/types";
 import { conditionText, displayDecision, shownText } from "../content";

@@ -4,6 +4,21 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 
 ## [Unveröffentlicht]
 
+### Hinzugefügt (Fehlerbehandlung)
+- Drei Schichten: Diagnosen mit Stelle, Frage, Ziel und «Was tun»; geschützte Handlungen (`guarded`); Auffangnetze für Unerwartetes (globale Handler, Absturzkarte statt weisser Seite). Beschreibung in `docs/FEHLERBEHANDLUNG.md`, Entscheidung in ADR-010.
+- Dateien werden vor dem Lesen geprüft: leer, über 10 MB, binär (ZIP/Excel/Word), nicht UTF-8. Die Meldung nennt Datei und Grund.
+- Jeder Export ist durch `guardBuild` geschützt (`EXPORT_INTERNAL_ERROR` statt Absturz). Das ZIP-Paket sichert jeden Teil einzeln und nennt Gescheitertes in `LIESMICH.txt`.
+- Fehlgeschlagener Export zeigt die Ursache statt still nichts zu tun.
+
+### Hinzugefügt (Ausgaben)
+- Druckansicht (HTML, ohne Skript, mit restriktiver Content-Security-Policy, Matrixblöcke als Tabelle), Markdown-Dokument, neutrales JSON (`mindmatters-neutral-questionnaire` 1.0.0), SPSS-Syntax und R-Skript mit Variablen- und Wertelabels. Alle aus einem Modell (`buildDocModel`), mit Rechteprüfung, ohne Ersatzsprache, mit Maskierung für das Zielformat.
+- Invariantentest über alle Ausgaben, Kataloge, Sprachen und Modi (`tests/unit/exportInvariants.test.ts`).
+
+### Geändert (Prüfung der Adapter)
+- Steuerzeichen und einzelne Surrogate in Texten sind ein Fehler (`EXPORT_TEXT_CHARACTER_INVALID`) statt stiller Beschädigung. `EXPORT_SENSITIVE_INCLUDED` gilt für alle Adapter.
+- Qualtrics und REDCap erkennen Namenskollisionen mit selbst erzeugten Feldern und doppelte Codes nach Normalisierung. REDCap übernimmt Abschnittsanweisungen, Google Forms meldet Regler mit Schrittweite ungleich 1, die Baupläne maskieren Codes in Markdown.
+- Offene Fragen, die nur ein echtes System klärt, stehen in `docs/PROTOTYPEN.md`.
+
 ### Hinzugefügt (Reihenfolge)
 - Schema 0.4.0 (additiv): `section.reorder` (`movable`, `itemsReorderable`, beides standardmässig falsch) im Katalog, `customization.sectionOrder` und `customization.itemOrder` im Projekt. Diagnosecodes `CUSTOM_ORDER_LOCKED`, `CUSTOM_ORDER_UNKNOWN`, `CUSTOM_ORDER_CONDITION`.
 - Neuer Schritt «Reihenfolge» mit Pfeilen für Blöcke und Fragen. Verschiebungen, die eine Bedingung verletzen, werden verweigert. Im Beispielkatalog sind «Schule» (standardisierte Skala) als Block verschiebbar, die Fragen darin fest, und «Mehr» mit einzeln verschiebbaren Fragen.

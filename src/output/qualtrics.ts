@@ -3,6 +3,7 @@ import { exactText } from "../core/localized";
 import type { Catalog, Item, LocalizedText, Option } from "../core/types";
 import { evaluateAction } from "../model/rights";
 import { checkSelection, orderedSelection, Selection } from "../model/selection";
+import { hasUnexportableChars } from "./adapterBase";
 import { AdapterResult, MappingCollector } from "./mapping";
 
 /**
@@ -105,9 +106,19 @@ export function buildQualtrics(c: Catalog, selection: Selection, options: Qualtr
       err("EXPORT_TEXT_RESERVED", `${what} contains "[[" or "]]", which Qualtrics reads as a tag.`, itemRef ? { itemRef } : {});
       return "";
     }
+    if (hasUnexportableChars(t)) {
+      err("EXPORT_TEXT_CHARACTER_INVALID", `${what} contains a control character (for example NUL) or a lone surrogate, which no target format carries faithfully.`, itemRef ? { itemRef } : {});
+      return "";
+    }
     return qText(t);
   };
 
+  /** A block name that ends with "]" would run into the closing "]]" of the tag and is ambiguous: its square brackets are written as round brackets and reported. */
+  const brackets = (n: string, what: string): string => {
+    if (!n.endsWith("]")) return n;
+    mapping.add("block.name", "transformed", `Square brackets in a block name that ends with "]" are written as round brackets because "]" would end the [[Block:...]] tag (${what}).`);
+    return n.split("[").join("(").split("]").join(")");
+  };
   const q = c.questionnaire;
   const titleBase = need(c.catalog.title, "The catalog title");
   const prefix = test ? ui.testTitle : c.catalog.status === "draft" ? ui.draftTitle : "";
@@ -120,6 +131,21 @@ export function buildQualtrics(c: Catalog, selection: Selection, options: Qualtr
     }
     out.push(h.source === "constant" && h.constantValue !== undefined ? `[[ED:${h.variableName}:${h.constantValue}]]` : `[[ED:${h.variableName}]]`);
     mapping.add("hiddenFields", h.source === "constant" ? "exact" : "transformed", h.source === "constant" ? "Constant hidden field as embedded data." : "Hidden field from a URL parameter or panel is declared as embedded data; the value must be passed in the survey link.");
+  }
+
+  // Every [[ID:...]] of the file, synthetic ones included, must be unique (case-insensitive).
+  const usedIds = new Map<string, string>();
+  const claimId = (id: string, owner: string, itemRef?: string): void => {
+    const clash = usedIds.get(id.toLowerCase());
+    if (clash !== undefined) err("EXPORT_VARIABLE_NAME_DUPLICATE", `${owner} and ${clash} would both get the export tag "${id}".`, itemRef ? { itemRef } : {});
+    else usedIds.set(id.toLowerCase(), owner);
+  };
+  // Reserve the generated tags first so that an item cannot silently collide with them.
+  for (const [id, lt] of [["mm_intro", q.introduction], ["mm_consent", q.consent?.text], ["mm_consent_parents", q.consent?.parentalConsentText], ["mm_privacy", q.privacyNotice], ["mm_closing", q.closingText], ["mm_help", q.helpResources]] as Array<[string, LocalizedText | undefined]>) {
+    if (lt !== undefined) usedIds.set(id, `the generated text block "${id}"`);
+  }
+  for (const s of q.sections) {
+    if (s.instruction && s.itemRefs.some((x) => selected.has(x))) claimId(`mm_s_${s.id.replace(/[^A-Za-z0-9_]/g, "_")}`, `the instruction of section "${s.id}"`);
   }
 
   const dbQuestion = (id: string, text: string): void => {
@@ -135,7 +161,7 @@ export function buildQualtrics(c: Catalog, selection: Selection, options: Qualtr
   ];
   const introPresent = introParts.filter(([, lt]) => lt !== undefined);
   if (introPresent.length > 0) {
-    out.push(`[[Block:${prefix ? prefix + " " : ""}${titleBase || ui.intro}]]`);
+    out.push(`[[Block:${prefix ? prefix + " " : ""}${brackets(titleBase || ui.intro, "the catalog title")}]]`);
     for (const [id, lt, what] of introPresent) dbQuestion(id, need(lt, what));
   }
   if (q.consent) mapping.add("consent", "manual", "The consent text is shown as a text block. A consent choice, its forced answer and the end of the survey on refusal must be set up manually in Qualtrics.");
@@ -156,6 +182,11 @@ export function buildQualtrics(c: Catalog, selection: Selection, options: Qualtr
       return;
     }
     seenNames.set(name.toLowerCase(), item.id);
+    const generated = usedIds.get(name.toLowerCase());
+    if (generated !== undefined) {
+      err("EXPORT_VARIABLE_NAME_DUPLICATE", `Item "${item.id}" would get the export tag "${name}", which this export already uses for ${generated}.`, { itemRef: item.id, remediation: "Set exportHints.qualtrics.variableName in the catalog." });
+      return;
+    }
     if (item.visibleWhen) {
       err("EXPORT_CONDITION_UNSUPPORTED", `Item "${item.id}": Qualtrics TXT import cannot carry display logic. The question would be shown to everyone, so it is not exported.`, {
         itemRef: item.id,
@@ -185,11 +216,11 @@ export function buildQualtrics(c: Catalog, selection: Selection, options: Qualtr
             remediation: `Set exportHints.qualtrics.code (an integer) on the option "${o.code}" of its option set.`,
           });
           bad = true;
-        } else if (codes.has(code)) {
+        } else if (codes.has(String(Number(code)))) {
           err("EXPORT_OPTION_CODE_DUPLICATE", `Item "${item.id}": two options would both get the recode value ${code}.`, { itemRef: item.id });
           bad = true;
         }
-        codes.add(code);
+        codes.add(String(Number(code)));
         if (o.exportHints?.qualtrics?.code) mapping.add("option.code", "exact", "Recode value taken from the option's exportHints.qualtrics.code.", item.id);
         if (o.role === "missing") mapping.add("option.missing", "transformed", "Missing-value options (don't know, refused) become ordinary choices.", item.id);
       }
@@ -242,7 +273,10 @@ export function buildQualtrics(c: Catalog, selection: Selection, options: Qualtr
     }
   }
 
-  const blockName = (lt: LocalizedText, id: string): string => need(lt, `The title of section "${id}"`).replace(/:/g, " ");
+  const blockName = (lt: LocalizedText, id: string): string => {
+    const n = need(lt, `The title of section "${id}"`).replace(/:/g, " ");
+    return brackets(n, `section "${id}"`);
+  };
   for (const section of q.sections) {
     const inSel = section.itemRefs.filter((x) => selected.has(x));
     if (inSel.length === 0) continue;

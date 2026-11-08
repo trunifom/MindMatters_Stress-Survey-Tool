@@ -1,7 +1,17 @@
+/**
+ * Application shell: mounts the page, re-renders on every state change and keeps focus, caret and dialog focus.
+ *
+ * Draws the header, the status chips, notices and the active view (from views/registry) from the AppState, and
+ * turns file selections into store actions. It never holds state of its own besides the previous info target, and
+ * never changes the catalog. A view that throws is replaced by the crash panel (errors.ts) so the page is never
+ * blank. Everything user visible reads from the store; actions live in state.ts, texts in i18n.ts.
+ */
+
 import { resolveText } from "../core/localized";
 import { APP_VERSION } from "../version";
 import { banner, statusChips } from "./components";
 import { clear, h, readFileText } from "./dom";
+import { describeError, fileProblemText, renderCrashPanel } from "./errors";
 import { setUiLang, t, UiLang } from "./i18n";
 import { renderInfoDialog } from "./views/info";
 import {
@@ -26,6 +36,7 @@ import { renderStart } from "./views/start";
 import demoCatalog from "../../examples/catalog_rich_0_4_0.json";
 import { VIEWS } from "./views/registry";
 
+/** Things the shell needs from the outside, so tests can replace them. */
 export interface AppEnv {
   /** Confirmation before unsaved changes are discarded (T42). */
   confirm(message: string): boolean;
@@ -44,7 +55,13 @@ export function mountApp(root: HTMLElement, store: Store, env: AppEnv): () => vo
     document.documentElement.setAttribute("data-size", state.textSize);
     const focus = captureFocus();
     clear(root);
-    root.appendChild(buildApp(state, store, env));
+    try {
+      root.appendChild(buildApp(state, store, env));
+    } catch (e) {
+      // a view that cannot be drawn must not leave a blank page: show the cause and a way back
+      console.error("[MindMatters] rendering failed", e);
+      root.appendChild(renderCrashPanel(e, () => (store.get().view === "items" ? render() : setView(store, "items"))));
+    }
     restoreFocus(focus);
 
     // Dialog focus: move into the dialog when it opens, back to its trigger when it closes.
@@ -345,8 +362,9 @@ async function importCatalog(file: File, store: Store, env: AppEnv): Promise<voi
   if (s.loaded && s.dirty && !env.confirm(t("confirm.replaceUnsaved"))) return;
   try {
     loadCatalogText(store, await readFileText(file), file.name);
-  } catch {
-    store.set({ notice: { kind: "error", text: t("import.readError") } });
+  } catch (e) {
+    console.error("[MindMatters] catalog import failed", e);
+    store.set({ notice: { kind: "error", text: fileProblemText(e, file.name) } });
   }
 }
 
@@ -355,7 +373,8 @@ async function importProject(file: File, store: Store, env: AppEnv): Promise<voi
   if (s.dirty && !env.confirm(t("confirm.replaceUnsaved"))) return;
   try {
     loadProjectText(store, await readFileText(file), file.name);
-  } catch {
-    store.set({ notice: { kind: "error", text: t("import.readError") } });
+  } catch (e) {
+    console.error("[MindMatters] project import failed", e);
+    store.set({ notice: { kind: "error", text: fileProblemText(e, file.name) } });
   }
 }

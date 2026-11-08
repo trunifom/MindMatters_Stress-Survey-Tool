@@ -1,11 +1,14 @@
+/**
+ * Feature registry (spec B19): which behaviour-critical features a catalog uses and whether it declares them.
+ *
+ * A catalog must list every feature it uses in `requiredFeatures`; an unknown required feature blocks normal
+ * processing, so an older application never silently mishandles a newer catalog (read-only diagnosis stays possible).
+ * This module only reads the catalog and returns diagnostics (stage "content"); it never changes it. Called from
+ * semantic.ts, shares leafConditions with registers.ts and structure.ts.
+ */
+
 import { Diagnostic, diag, pointer } from "./diagnostics";
 import type { Catalog, Condition, ConditionOrGroup } from "./types";
-
-/**
- * Feature registry (spec B19). A catalog must declare every behaviour-critical
- * feature it uses in `requiredFeatures`. Unknown required features block normal
- * processing (read-only diagnosis stays possible).
- */
 
 /** Features this application version implements. */
 export const SUPPORTED_FEATURES = [
@@ -34,6 +37,7 @@ export function leafConditions(vw: ConditionOrGroup | undefined): Condition[] {
   return [...(vw.all ?? []), ...(vw.any ?? [])];
 }
 
+/** True if a visibility condition needs the "compoundVisibility" feature: any group (all/any) or any operator beyond equals, notEquals and contains. */
 export function isCompound(vw: ConditionOrGroup): boolean {
   if (!("itemRef" in vw)) return true;
   return !BASIC_OPERATORS.has(vw.operator);
@@ -62,6 +66,10 @@ export function usedFeatures(c: Catalog): Map<string, string> {
   return used;
 }
 
+/**
+ * Report missing always-required features (REQUIRED_FEATURE_MISSING), unknown required features (UNKNOWN_FEATURE) and used but undeclared
+ * features, including behaviour extensions (FEATURE_NOT_DECLARED). All findings are errors.
+ */
 export function checkFeatures(c: Catalog): Diagnostic[] {
   const out: Diagnostic[] = [];
   const declared = new Set(c.requiredFeatures);

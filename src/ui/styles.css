@@ -346,3 +346,7 @@ fieldset.pv-question legend { padding: 0 .35rem; font-weight: 600; white-space: 
 .structure-text { flex: 1 1 14rem; min-width: 0; overflow-wrap: anywhere; }
 .btn-icon { min-width: 2.2rem; }
 @media print { .structure-card .btn { display: none; } }
+
+/* Fehleranzeige */
+.crash-panel { border-color: var(--danger, #b91c1c); }
+.crash-detail { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface-2); border: 1px solid var(--border); border-radius: .4rem; padding: .6rem .8rem; }

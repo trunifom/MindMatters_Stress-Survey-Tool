@@ -4,7 +4,7 @@ Offline-Konfigurator für psychometrische Fragebogen. Eine **einzige, eigenstän
 
 Kein Server, keine Installation, kein Konto, keine Internetverbindung. Das Tool erhebt **keine** Teilnehmerantworten.
 
-> **Status: frühe Entwicklung.** Fertig sind das JSON-Schema (0.4.0), der Validierungskern, das Auswahlmodell mit Pflichtmenge und Projekten, die Rechte-Handlungsmatrix, Codebuch und Prüfbericht sowie die Oberfläche als Einzeldatei (Laden, Auswählen, Info-Fenster, Vorschau, Projekt/Prüfbericht/Codebuch speichern). **Ausgaben für sieben Ziele** in drei benannten Stufen (ADR-008): *Adapter* für LimeSurvey und Qualtrics ([docs/LIMESURVEY.md](docs/LIMESURVEY.md), [docs/QUALTRICS.md](docs/QUALTRICS.md)), *Prototypen* für REDCap, Google Forms, Unipark und SurveyMonkey ([docs/PROTOTYPEN.md](docs/PROTOTYPEN.md)) und eine neutrale Tabelle. **Keines davon ist an einem echten System getestet.** Qualtrics (TXT) kann weder Bedingungen noch Slider. Dazu ein **ZIP-Paket** mit allem, eine Übersicht nach Skala, Druckansicht und eine Content-Security-Policy **ohne `unsafe-eval`**. **Noch nicht vorhanden:** Tests an echten Zielsystemen, CSV-Import und Profil-JSON sowie der Browsernachweis über Edge 156 hinaus (Firefox, Safari und weitere sind nicht getestet, siehe [docs/BROWSER.md](docs/BROWSER.md)). Details: [docs/ABNAHMETESTS.md](docs/ABNAHMETESTS.md) (25 von 45 Abnahmetests abgedeckt), [docs/ROADMAP.md](docs/ROADMAP.md), [docs/IDEEN.md](docs/IDEEN.md) (alle weiteren Ideen), [CHANGELOG.md](CHANGELOG.md), [docs/BENUTZERHANDBUCH.md](docs/BENUTZERHANDBUCH.md).
+> **Status: frühe Entwicklung.** Fertig sind das JSON-Schema (0.4.0), der Validierungskern, das Auswahlmodell mit Pflichtmenge und Projekten, die Rechte-Handlungsmatrix, Codebuch und Prüfbericht sowie die Oberfläche als Einzeldatei (Laden, Auswählen, Info-Fenster, Vorschau, Projekt/Prüfbericht/Codebuch speichern). **Ausgaben für zwölf Ziele** in drei benannten Stufen (ADR-008, ADR-010): *Adapter* für LimeSurvey und Qualtrics ([docs/LIMESURVEY.md](docs/LIMESURVEY.md), [docs/QUALTRICS.md](docs/QUALTRICS.md)), *Prototypen* für REDCap, Google Forms, Unipark und SurveyMonkey ([docs/PROTOTYPEN.md](docs/PROTOTYPEN.md)) und lesbare Dateien (neutrale Tabelle, Druckansicht als HTML/PDF, Markdown, neutrales JSON) sowie Auswertungsskripte (SPSS, R). **Keines der Umfragetool-Exporte ist an einem echten System getestet.** Qualtrics (TXT) kann weder Bedingungen noch Slider. Dazu ein **ZIP-Paket** mit allem, eine Übersicht nach Skala, Druckansicht und eine Content-Security-Policy **ohne `unsafe-eval`**. **Noch nicht vorhanden:** Tests an echten Zielsystemen, CSV-Import und Profil-JSON sowie der Browsernachweis über Edge 156 hinaus (Firefox, Safari und weitere sind nicht getestet, siehe [docs/BROWSER.md](docs/BROWSER.md)). Details: [docs/ABNAHMETESTS.md](docs/ABNAHMETESTS.md) (25 von 45 Abnahmetests abgedeckt), [docs/ROADMAP.md](docs/ROADMAP.md), [docs/IDEEN.md](docs/IDEEN.md) (alle weiteren Ideen), [CHANGELOG.md](CHANGELOG.md), [docs/BENUTZERHANDBUCH.md](docs/BENUTZERHANDBUCH.md).
 
 ## Grundidee
 
@@ -23,7 +23,7 @@ Schulspezifische Wünsche werden über **Daten** gelöst, nicht über eigene HTM
 schema/        JSON-Schemas, versioniert (0.3.0 unverändert, 0.4.0 aktuell)
 docs/          Dokumentation (Index: docs/README.md)
 examples/      Beispielkataloge für Entwickler und Katalogpfleger
-src/           Anwendungscode (TypeScript): core, model, adapters, ui
+src/           Anwendungscode (TypeScript): core (Prüfung), model (Auswahl, Projekt, Rechte, Anpassung), output (Exporte), ui (Oberfläche)
 tests/         Unit-Tests (Vitest), Konformanztests (Python), Fixtures
 tools/         Build- und Hilfsskripte
 ```
@@ -34,7 +34,7 @@ Voraussetzungen: Node.js ≥ 20, Python ≥ 3.10 (nur für den Konformanz-Gegenc
 
 ```bash
 npm install
-npm test                                         # Unit-Tests (Vitest, 590 Tests)
+npm test                                         # Unit-Tests (Vitest, 709 Tests)
 npm run typecheck                                # TypeScript-Prüfung
 npm run build                                    # dist/mindmatters.html (eine Datei)
 npm run test:e2e                                 # Browser-Tests gegen dist/mindmatters.html (braucht Edge oder Chrome)
@@ -43,7 +43,7 @@ python -I tests/conformance/validate_schema.py   # Schema-Konformanz
 
 ## Dokumentation
 
-Alles liegt unter [docs/](docs/README.md): Benutzerhandbuch, Architektur, Entscheidungsprotokoll, Recherche zu den Zielsystemen, Diagnosecodes, Abnahmetests, Roadmap. Das JSON-Format ist unter [schema/README.md](schema/README.md) beschrieben.
+Alles liegt unter [docs/](docs/README.md): Benutzerhandbuch, Architektur, Entscheidungsprotokoll, Fehlerbehandlung, Ausgaben und Exporte, Recherche zu den Zielsystemen, Diagnosecodes, Abnahmetests, Roadmap. Jedes Modul unter `src/` hat eine eigene README. Das JSON-Format ist unter [schema/README.md](schema/README.md) beschrieben.
 
 ## Versionierung
 
