@@ -58,6 +58,21 @@ Aufwand: S = Stunden, M = ein bis zwei Tage, L = mehrere Tage. Nutzen: ★ gerin
 | D7 | Fortlaufende Prüfung (Tests bei jedem Push) | ★★★ | S | offen. Braucht eine Entscheidung zum Hosting |
 | D8 | Lizenz des Repositories | ★★★ | S | offen, Entscheidung der Projektleitung |
 
+## E. Rückmeldungen nach dem ersten Ausprobieren (8. November 2026)
+
+| # | Idee | Stand |
+|---|---|---|
+| E1 | Startbildschirm mit Ziel, Ablauf, «Das können Sie tun / Das tut das Tool nicht», Zielsystemen und Ablageplatz für die Datei; Beispielkatalog mit einem Klick | **umgesetzt** |
+| E2 | Hell/Dunkel und zwei Schriftgrössen über die ganze Seite | **umgesetzt** (bewusst nicht gespeichert, ADR-009) |
+| E3 | Deutsch als Standard (Oberfläche und Fragensprache, wenn der Katalog Deutsch führt) | **umgesetzt** |
+| E4 | Übersichtlichere Oberfläche: vier nummerierte Schritte, Hinweis je Ansicht, Weiter/Zurück, mitlaufende Auswahlzeile | **umgesetzt** |
+| E5 | Antwortmöglichkeiten unter jeder Frage und Modulvorschau in der Liste | **umgesetzt** |
+| E6 | Texte anpassen und eigene Textblöcke, gesperrte Standardtexte | **umgesetzt** (ADR-009) |
+| E7 | Google Forms: Gründe in einfachen Worten, was der Katalog verlangt und das Ziel nicht kann | **umgesetzt** |
+| E8 | Anpassbare Texte auch für `note`-Items des Katalogs und Reihenfolge der eigenen Blöcke per Knopf (hoch/runter) | offen |
+| E9 | Sprachen der eigenen Texte nebeneinander bearbeiten | offen |
+| E10 | Speichern der Darstellung (Thema, Schrift) nur, wenn die Projektleitung die Aussage «nichts wird gespeichert» ändert | offen, Entscheidung |
+
 ## Reihenfolge, die ich vorschlage
 
 1. **D8** (Lizenz) und **A8** (Anfrage bei Tivian) sind Entscheidungen, keine Arbeit. Beides blockiert später.

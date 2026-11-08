@@ -66,9 +66,11 @@ describe.skipIf(!executablePath)(`real browser (${executablePath ?? "none found"
     return { context, page, requests, errors };
   }
 
-  const loadExample = async (page: Page) => {
+  /** Loads the example. The tool opens it in German; most tests below check the English wording, so they switch. */
+  const loadExample = async (page: Page, language: string | null = "en") => {
     await page.setInputFiles("#catalog-file", example);
     await page.waitForSelector("#cat-h");
+    if (language) await page.selectOption("select[data-focus=language]", language);
   };
 
   it("T01/T02: runs from file:// offline, makes no request except to itself, and shows no errors", async () => {
@@ -291,6 +293,7 @@ describe.skipIf(!executablePath)(`real browser (${executablePath ?? "none found"
     const { context, page } = await open();
     await page.setInputFiles("#catalog-file", file);
     await page.waitForSelector("#cat-h");
+    await page.selectOption("select[data-focus=language]", "en");
     await page.click("[data-focus=tab-preview]");
     await page.waitForSelector(".pv");
     await page.waitForTimeout(300);
@@ -303,7 +306,7 @@ describe.skipIf(!executablePath)(`real browser (${executablePath ?? "none found"
   it("responsive: no horizontal scrolling on a phone-sized screen, in every view", async () => {
     const { context, page } = await open({ viewport: { width: 375, height: 700 } });
     await loadExample(page);
-    for (const tab of ["items", "preview", "check"]) {
+    for (const tab of ["items", "texts", "preview", "check"]) {
       await page.click(`[data-focus=tab-${tab}]`);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow, tab).toBeLessThanOrEqual(0);
@@ -349,6 +352,56 @@ describe.skipIf(!executablePath)(`real browser (${executablePath ?? "none found"
     console.log(`T40 browser: ${(size / 1e6).toFixed(2)} MB, ${doc.items.length} items, shown after ${ms} ms (${browserVersion})`);
     expect(ms).toBeLessThan(5000);
     expect(await page.locator("li.item").count()).toBe(doc.items.length);
+    await context.close();
+  });
+  it("German by default, light/dark and two text sizes work on the whole page, example catalog loads with one click", async () => {
+    const { context, page, errors } = await open();
+    expect(await page.textContent("h1")).toBe("MindMatters Fragebogen-Konfigurator");
+    expect(await page.locator(".step-card").count()).toBe(4);
+    const bg = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+    const light = await bg();
+    await page.click("#theme-toggle");
+    expect(await page.evaluate(() => document.documentElement.getAttribute("data-theme"))).toBe("dark");
+    expect(await bg()).not.toBe(light);
+    const size = () => page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize));
+    const normal = await size();
+    await page.click("#size-toggle");
+    expect(await size()).toBeGreaterThan(normal);
+    await page.click("#size-toggle");
+    expect(await size()).toBe(normal);
+    await page.click("#load-demo");
+    await page.waitForSelector("#cat-h");
+    expect(await page.textContent("#cat-h")).toBe("Beispiel für die Funktionen von 0.4.0");
+    expect(await page.inputValue("select[data-focus=language]")).toBe("de-CH");
+    // dark mode and large text survive loading a catalog, and the answer options are visible under the questions
+    expect(await page.evaluate(() => document.documentElement.getAttribute("data-theme"))).toBe("dark");
+    expect(await page.locator(".answer-preview").count()).toBeGreaterThan(3);
+    expect(errors).toEqual([]);
+    await context.close();
+  });
+
+  it("an own text block and an adapted text reach the export and the saved project", async () => {
+    const { context, page, errors } = await open();
+    await loadExample(page, "en");
+    await page.click("[data-focus=tab-texts]");
+    await page.fill("#new-block-text", "Welcome to our school survey");
+    await page.click("#new-block-add");
+    await page.fill("#text-introduction", "Our own introduction");
+    await page.locator("#text-introduction").blur();
+    await page.click("[data-focus=tab-preview]");
+    const preview = (await page.textContent(".pv")) ?? "";
+    expect(preview).toContain("Welcome to our school survey");
+    expect(preview).toContain("Our own introduction");
+    await page.click("[data-focus=tab-check]");
+    const [download] = await Promise.all([page.waitForEvent("download"), page.click("#save-project")]);
+    const file = (await download.path())!;
+    const project = JSON.parse(readFileSync(file, "utf8"));
+    expect(project.customization.customBlocks[0].text.en).toBe("Welcome to our school survey");
+    expect(project.customization.textOverrides.introduction.en).toBe("Our own introduction");
+    expect(project.selectedItemIds).toContain("custom_1");
+    // the catalog wording itself is not in the project file
+    expect(JSON.stringify(project)).not.toContain("Software test only");
+    expect(errors).toEqual([]);
     await context.close();
   });
 });

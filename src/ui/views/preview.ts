@@ -229,3 +229,20 @@ function control(s: AppState, item: Item): Node[] {
       return [];
   }
 }
+
+/** One question or text block exactly as the preview shows it (used for the module preview in the list). */
+export function renderItemPreview(s: AppState, item: Item): HTMLElement {
+  return renderItem(s, item);
+}
+
+/**
+ * The answer options of a question as small, disabled controls, for the question list. Text blocks and
+ * locked items have none. Choice answers are laid out in a row so a whole scale is visible at a glance.
+ */
+export function answerPreview(s: AppState, item: Item): HTMLElement | null {
+  if (item.response.kind === "note") return null;
+  if (!displayDecision(s.loaded!.catalog).allowedItemIds.includes(item.id)) return null;
+  const nodes = control(s, item);
+  if (nodes.length === 0) return null;
+  return h("div", { class: "answer-preview", role: "group", "aria-label": t("items.answerPreviewLabel") }, h("div", { class: "pv-answers pv-horizontal" }, ...nodes));
+}

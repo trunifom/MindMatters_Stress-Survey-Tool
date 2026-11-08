@@ -102,3 +102,8 @@ Nicht versioniert (`.gitignore`): `Dokumente_Start/` (lokale Ausgangsunterlagen)
 ## Adapter-Vertrag (Kurzfassung)
 
 Jeder Adapter nennt ID, Version, Zielsystem, Importweg und bekannte Grenzen. Er liefert pro Feature einen Abbildungsstatus `exact | transformed | manual | unsupported | blocked | untested`. Pflichtitems werden nie wegen Adaptergrenzen weggelassen. Grundlage: [RECHERCHE_Zielsysteme.md](RECHERCHE_Zielsysteme.md).
+
+## Anpassungen der Schule (ADR-009)
+
+`src/model/customize.ts` baut aus dem geladenen Katalog (`loaded.base`) und der `customization` des Projekts einen abgeleiteten Katalog (`loaded.catalog`). Alle Ansichten und alle Exporte lesen nur `loaded.catalog`. Der Loader wendet die Anpassung an, bevor die Auswahl eines Projekts geprüft wird, damit eigene Blöcke in der gespeicherten Auswahl vorkommen dürfen. Ansicht: `src/ui/views/texts.ts`. Darstellung (Hell/Dunkel, Schrift) lebt nur im Zustand (`theme`, `textSize`), als Attribute `data-theme` und `data-size` am Wurzelelement, ohne Speicherung (`src/ui/prefs.ts`).
+

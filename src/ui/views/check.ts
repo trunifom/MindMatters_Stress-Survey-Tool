@@ -1,4 +1,5 @@
 import { resolveText } from "../../core/localized";
+import type { Customization } from "../../core/types";
 import { createProject, projectFileName, serializeProject } from "../../model/project";
 import { Action, ActionDecision, evaluateAction } from "../../model/rights";
 import { documentedDuration, scaleOverview, scoreAvailability } from "../../model/selection";
@@ -10,7 +11,7 @@ import { buildCheckReport, isReportStale, reportFileName, serializeReport, state
 import { diagnosticsList } from "../components";
 import { downloadBytes, downloadText, h } from "../dom";
 import { t, TextKey } from "../i18n";
-import { counts, markSaved, rememberReport, selectionDiagnostics, setCodebookNotes, setMeta } from "../state";
+import { counts, markSaved, rememberReport, savedCustomization, selectionDiagnostics, setCodebookNotes, setMeta } from "../state";
 import type { AppState, Store } from "../state";
 import type { ViewContext } from "./registry";
 
@@ -126,6 +127,7 @@ function metaOptions(s: AppState) {
     ...(s.targetPlatform ? { targetPlatform: s.targetPlatform } : {}),
     ...(s.schoolLabel ? { schoolLabel: s.schoolLabel } : {}),
     ...(s.internalNotes ? { internalNotes: s.internalNotes } : {}),
+    ...(savedCustomization(s) ? { customization: savedCustomization(s) as Customization } : {}),
   };
 }
 
@@ -170,6 +172,7 @@ function savePackage(s: AppState, store: Store): void {
     ...(s.schoolLabel ? { schoolLabel: s.schoolLabel } : {}),
     ...(s.internalNotes ? { internalNotes: s.internalNotes } : {}),
     codebookNotes: s.codebookNotes,
+    ...(savedCustomization(s) ? { customization: savedCustomization(s) as Customization } : {}),
   });
   downloadBytes(r.fileName, r.bytes, "application/zip");
   markSaved(store);
@@ -254,6 +257,12 @@ function runExport(s: AppState, store: Store, platform: string, name: string, mo
   store.set({ notice: { kind: "info", text: t("out.exportDone", { file: r.fileName, name }) } });
 }
 
+const WHY: Record<string, TextKey> = {
+  EXPORT_RESPONSE_UNSUPPORTED: "out.why.EXPORT_RESPONSE_UNSUPPORTED",
+  EXPORT_CONDITION_UNSUPPORTED: "out.why.EXPORT_CONDITION_UNSUPPORTED",
+  CATALOG_NOT_RELEASED: "out.why.CATALOG_NOT_RELEASED",
+};
+
 function adapterBlock(s: AppState, store: Store, platform: string, name: string): HTMLElement {
   const c = s.loaded!.catalog;
   const adapter = (ADAPTERS[platform] as NonNullable<(typeof ADAPTERS)[string]>).build;
@@ -282,7 +291,17 @@ function adapterBlock(s: AppState, store: Store, platform: string, name: string)
       h("button", { type: "button", class: "btn", id: `test-export-${platform}`, disabled: !test.ok, "aria-describedby": `native-reason-${platform}`, "data-focus": `test-export-${platform}`, on: { click: () => runExport(s, store, platform, name, "test") } }, t("out.testExportFor", { name })),
     ),
     h("p", { id: `native-reason-${platform}`, class: "muted" }, t("out.responsibility")),
-    reasons.length > 0 ? h("div", { id: `export-why-${platform}` }, h("h5", null, t("out.exportWhy")), diagnosticsList(reasons)) : null,
+    reasons.length > 0
+      ? h(
+          "div",
+          { id: `export-why-${platform}` },
+          h("h5", null, t("out.exportWhy")),
+          // plain words first (once per kind of problem), the exact findings with codes and items below
+          h("ul", { class: "why-list" }, ...[...new Set(reasons.map((d) => d.code))].filter((code) => code in WHY).map((code) => h("li", null, t(WHY[code] as TextKey)))),
+          reasons.some((d) => d.code.startsWith("EXPORT_")) ? h("p", { class: "muted" }, t("out.whyHow")) : null,
+          diagnosticsList(reasons),
+        )
+      : null,
     source.mapping.length > 0
       ? h(
           "details",

@@ -23,12 +23,25 @@ export interface Harness {
 }
 
 /** Mount the app into a fresh document body with a stubbed confirm. */
-export function mount(uiLang: "de" | "en" = "en"): Harness {
+/**
+ * The tool shows German texts whenever a catalog offers German. Most tests were written when a catalog
+ * opened in its own default language, so by default a freshly loaded catalog still starts in that language
+ * ("catalogDefault"). Pass "tool" to see what the tool really chooses.
+ */
+export function mount(uiLang: "de" | "en" = "en", startLanguage: "catalogDefault" | "tool" = "catalogDefault"): Harness {
   document.body.innerHTML = "";
   const root = document.createElement("div");
   root.id = "app";
   document.body.appendChild(root);
-  const store = createStore({ ...initialState(uiLang), uiLang });
+  const raw = createStore({ ...initialState(uiLang), uiLang });
+  const store: Store = {
+    ...raw,
+    set(patch) {
+      const fresh = patch.loaded && "targetPlatform" in patch && patch.language; // a catalog load, not a project load
+      if (fresh && startLanguage === "catalogDefault") patch = { ...patch, language: patch.loaded!.catalog.catalog.defaultLanguage };
+      raw.set(patch);
+    },
+  };
   let answer = true;
   const confirms: string[] = [];
   const unmount = mountApp(root, store, {

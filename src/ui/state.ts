@@ -1,9 +1,11 @@
 import { CheckStatus, Diagnostic, statusOf } from "../core/diagnostics";
 import { CatalogLoad, CheckStatuses, loadCatalog, loadProject, replaceCatalog } from "../core/loader";
-import type { Catalog } from "../core/types";
+import type { Catalog, CustomBlock, CustomizableText, Customization, LocalizedText } from "../core/types";
+import { applyCustomization, cleanText, nextBlockId, normalizeCustomization } from "../model/customize";
 import { evaluateAction } from "../model/rights";
 import { checkSelection, clearOptional, initialSelection, mandatorySet, setItem, setModule } from "../model/selection";
-import { detectUiLang, t, UiLang } from "./i18n";
+import { t, UiLang } from "./i18n";
+import type { Prefs, TextSize, Theme } from "./prefs";
 
 /**
  * Application state and actions. No DOM here: everything is testable in Node.
@@ -12,7 +14,12 @@ import { detectUiLang, t, UiLang } from "./i18n";
  * A failed import never touches the previous valid state (T04, T42).
  */
 
-export type View = "items" | "preview" | "check";
+/** German whenever the catalog offers it (de, then de-CH and other de-*), else the catalog's default. */
+export function preferredLanguage(c: Catalog): string {
+  return c.languages.find((l) => l === "de") ?? c.languages.find((l) => l.toLowerCase().startsWith("de")) ?? c.catalog.defaultLanguage;
+}
+
+export type View = "items" | "texts" | "preview" | "check";
 
 export interface Notice {
   kind: "info" | "warning" | "error";
@@ -20,7 +27,10 @@ export interface Notice {
 }
 
 export interface Loaded {
+  /** The catalog with the school's adapted texts and text blocks applied. Everything works on this one. */
   catalog: Catalog;
+  /** The catalog exactly as loaded from the file. */
+  base: Catalog;
   initial: Set<string>;
   loadDiagnostics: Diagnostic[];
   status: CheckStatuses;
@@ -48,6 +58,8 @@ export interface InfoTarget {
 
 export interface AppState {
   uiLang: UiLang;
+  theme: Theme;
+  textSize: TextSize;
   view: View;
   loaded?: Loaded;
   selection: Set<string>;
@@ -68,13 +80,25 @@ export interface AppState {
   lastReport?: { fingerprint: string; at: string };
   /** Explicit choice: put school label and notes into the codebook (default: no). */
   codebookNotes: boolean;
+  /** Adapted texts and own text blocks of the school (saved in the project file). */
+  customization: Customization;
+  /** Show the answer options under each question in the list. */
+  showAnswers: boolean;
+  /** Modules whose "how it looks in the survey" section is open. */
+  openPreviews: string[];
 }
 
 export const EMPTY_FILTER: Filter = { query: "", scope: "all", moduleId: "", constructId: "" };
 
-export function initialState(navigatorLanguage?: string): AppState {
+/** German is the default interface language, always. Theme and text size are not stored anywhere. */
+export function initialState(_hint?: string, prefs: Prefs = {}): AppState {
   return {
-    uiLang: detectUiLang(navigatorLanguage),
+    uiLang: "de",
+    theme: prefs.theme ?? "light",
+    textSize: prefs.textSize ?? "normal",
+    customization: {},
+    showAnswers: true,
+    openPreviews: [],
     view: "items",
     selection: new Set(),
     language: "",
@@ -134,9 +158,11 @@ export function loadCatalogText(store: Store, text: string, fileName: string, mi
 
   if (result.ok && result.catalog && result.initialSelection && state) {
     store.set({
-      loaded: { catalog: result.catalog, initial: result.initialSelection, loadDiagnostics: result.diagnostics, status: result.status, fileName },
+      loaded: { catalog: result.catalog, base: result.catalog, initial: result.initialSelection, loadDiagnostics: result.diagnostics, status: result.status, fileName },
       selection: new Set(result.initialSelection),
-      language: result.catalog.catalog.defaultLanguage,
+      language: preferredLanguage(result.catalog),
+      customization: {},
+      openPreviews: [],
       targetPlatform: "",
       schoolLabel: "",
       internalNotes: "",
@@ -165,7 +191,7 @@ export function loadCatalogText(store: Store, text: string, fileName: string, mi
 export function loadProjectText(store: Store, text: string, fileName: string, migrate = false): void {
   const s = store.get();
   if (!s.loaded) return;
-  const r = loadProject(text, s.loaded.catalog, { migrate });
+  const r = loadProject(text, s.loaded.base, { migrate });
 
   if (!r.result || !r.project) {
     const offer = migrationOffer(text, fileName, "project", r.diagnostics);
@@ -180,11 +206,13 @@ export function loadProjectText(store: Store, text: string, fileName: string, mi
 
   const added = r.result.addedMandatory;
   const conflicts = r.diagnostics.some((d) => d.severity === "error");
-  const lang = s.loaded.catalog.languages.includes(r.project.language) ? r.project.language : s.language;
+  const lang = s.loaded.base.languages.includes(r.project.language) ? r.project.language : s.language;
   const parts: string[] = [t("project.loaded")];
   if (added.length) parts.push(t("project.added", { n: added.length, ids: added.join(", ") }));
   if (conflicts) parts.push(t("project.conflicts"));
   store.set({
+    loaded: { ...s.loaded, catalog: r.catalog ?? s.loaded.base },
+    customization: r.project.customization ?? {},
     selection: new Set(r.result.selection),
     language: lang,
     targetPlatform: r.project.targetPlatform ?? "",
@@ -235,9 +263,17 @@ export function deselectAllOptional(store: Store): void {
 
 export function restoreInitialSelection(store: Store): void {
   const s = store.get();
-  if (s.loaded) changeSelection(store, new Set(s.loaded.initial));
+  if (s.loaded) changeSelection(store, new Set(initialSelection(s.loaded.catalog)));
 }
 
+export const setTheme = (store: Store, theme: Theme): void => store.set({ theme });
+export const setTextSize = (store: Store, textSize: TextSize): void => store.set({ textSize });
+export const setShowAnswers = (store: Store, on: boolean): void => store.set({ showAnswers: on });
+export function setPreviewOpen(store: Store, id: string, open: boolean): void {
+  const cur = store.get().openPreviews;
+  if (cur.includes(id) === open) return;
+  store.set({ openPreviews: open ? [...cur, id] : cur.filter((x) => x !== id) });
+}
 export const setView = (store: Store, view: View): void => store.set({ view });
 export const setUiLanguage = (store: Store, uiLang: UiLang): void => store.set({ uiLang });
 export const setLanguage = (store: Store, language: string): void => store.set({ language });
@@ -288,3 +324,83 @@ export function counts(s: AppState): Counts {
 }
 
 export { initialSelection };
+
+
+// ---------------------------------------------------------------------------
+// School customization: adapted texts and own text blocks
+// ---------------------------------------------------------------------------
+
+/**
+ * Apply a new customization: rebuild the derived catalog, keep the selection of everything that still
+ * exists, select new blocks and drop removed ones. The original catalog is never touched.
+ */
+function applyCustom(store: Store, custom: Customization): void {
+  const s = store.get();
+  if (!s.loaded) return;
+  const old = new Set(s.loaded.catalog.items.map((i) => i.id));
+  const next = applyCustomization(s.loaded.base, custom);
+  const exists = new Set(next.catalog.items.map((i) => i.id));
+  const selection = new Set([...s.selection].filter((id) => exists.has(id)));
+  for (const id of next.blockIds) if (!old.has(id)) selection.add(id);
+  store.set({ loaded: { ...s.loaded, catalog: next.catalog }, customization: custom, selection, dirty: true });
+}
+
+/** Set (or, with empty text, remove) the text of one language of an adaptable questionnaire text. */
+export function setCustomText(store: Store, key: CustomizableText, language: string, text: string): void {
+  const s = store.get();
+  const current: LocalizedText = { ...(s.customization.textOverrides?.[key] ?? {}) };
+  if (text.trim() === "") delete current[language];
+  else current[language] = text;
+  const overrides = { ...(s.customization.textOverrides ?? {}) };
+  if (Object.keys(current).length > 0) overrides[key] = current;
+  else delete overrides[key];
+  applyCustom(store, { ...s.customization, textOverrides: overrides });
+}
+
+export function resetCustomText(store: Store, key: CustomizableText): void {
+  const s = store.get();
+  const overrides = { ...(s.customization.textOverrides ?? {}) };
+  delete overrides[key];
+  applyCustom(store, { ...s.customization, textOverrides: overrides });
+}
+
+/** Add a block at the start of a section or after an item. Returns its id. */
+export function addCustomBlock(store: Store, sectionRef: string, afterItemRef: string | null, style: CustomBlock["style"], language: string, text: string): string | undefined {
+  const s = store.get();
+  if (!s.loaded) return undefined;
+  const id = nextBlockId(s.loaded.base, s.customization);
+  const clean = cleanText({ [language]: text }) ?? { [language]: "…" };
+  const block: CustomBlock = { id, style, text: clean, sectionRef, ...(afterItemRef ? { afterItemRef } : {}) };
+  applyCustom(store, { ...s.customization, customBlocks: [...(s.customization.customBlocks ?? []), block] });
+  return id;
+}
+
+export function updateCustomBlock(store: Store, id: string, patch: Partial<Pick<CustomBlock, "style" | "sectionRef" | "afterItemRef">>): void {
+  const s = store.get();
+  const blocks = (s.customization.customBlocks ?? []).map((b) => (b.id === id ? { ...b, ...patch } : b));
+  applyCustom(store, { ...s.customization, customBlocks: blocks });
+}
+
+/** Set or clear the text of one language. A block that loses its last language is removed. */
+export function setCustomBlockText(store: Store, id: string, language: string, text: string): void {
+  const s = store.get();
+  const blocks: CustomBlock[] = [];
+  for (const b of s.customization.customBlocks ?? []) {
+    if (b.id !== id) {
+      blocks.push(b);
+      continue;
+    }
+    const lt: LocalizedText = { ...b.text, [language]: text };
+    if (text.trim() === "") delete lt[language];
+    if (Object.keys(lt).length > 0) blocks.push({ ...b, text: lt });
+  }
+  applyCustom(store, { ...s.customization, customBlocks: blocks });
+}
+
+export function removeCustomBlock(store: Store, id: string): void {
+  const s = store.get();
+  applyCustom(store, { ...s.customization, customBlocks: (s.customization.customBlocks ?? []).filter((b) => b.id !== id) });
+}
+
+/** The customization as it will be written to the project file. */
+export const savedCustomization = (s: AppState): Customization | undefined => normalizeCustomization(s.customization);

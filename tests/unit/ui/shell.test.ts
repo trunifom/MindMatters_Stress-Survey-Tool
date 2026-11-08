@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { allKeys, setUiLang, t, detectUiLang } from "../../../src/ui/i18n";
+import { allKeys, setUiLang, t } from "../../../src/ui/i18n";
 import { chooseFile, click, exampleText, fixtureText, mount } from "./helpers";
 import { loadCatalogText } from "../../../src/ui/state";
 import { h, richText, safeHttpUrl, externalLink } from "../../../src/ui/dom";
@@ -13,16 +13,13 @@ describe("start view", () => {
     const m = mount("en");
     expect(m.q("h1").textContent).toBe("MindMatters questionnaire configurator");
     expect(m.root.textContent).toContain("Nothing is uploaded, nothing is stored");
-    expect(m.qa(".steps li").map((x) => x.textContent)).toEqual(["Load", "Select", "Check", "Output"]);
+    expect(m.qa(".step-card h3").map((x) => x.textContent)).toEqual(["Load the catalog", "Select questions", "Adapt texts", "Check and output"]);
     expect(m.q("label[for=catalog-file]").textContent).toBe("Load catalog (JSON)");
     expect(m.root.textContent).toContain("Supported catalog version: 0.4.0");
     expect(m.q("#catalog-file").getAttribute("accept")).toContain(".json");
   });
 
   it("is German by default for German browsers and can be switched", () => {
-    expect(detectUiLang("de-CH")).toBe("de");
-    expect(detectUiLang("en-US")).toBe("en");
-    expect(detectUiLang(undefined)).toBe("de");
     const m = mount("de");
     expect(m.q("h1").textContent).toBe("MindMatters Fragebogen-Konfigurator");
     click(m.q("[data-focus=ui-lang-en]"));
@@ -146,12 +143,13 @@ describe("unsaved changes (T42)", () => {
 });
 
 describe("language of the questions", () => {
-  it("is offered for multilingual catalogs and defaults to the catalog default", async () => {
-    const m = mount("en");
+  it("is offered for multilingual catalogs and defaults to German when the catalog offers it", async () => {
+    const m = mount("en", "tool");
     await chooseFile(m.q<HTMLInputElement>("#catalog-file"), "rich.json", exampleText());
     const sel = m.q<HTMLSelectElement>("select[data-focus=language]");
     expect(Array.from(sel.options).map((o) => o.value)).toEqual(["en", "de-CH"]);
-    expect(sel.value).toBe("en");
+    // German is the default whenever the catalog offers it, although the catalog's own default is English
+    expect(sel.value).toBe("de-CH");
   });
 });
 

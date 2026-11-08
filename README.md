@@ -34,7 +34,7 @@ Voraussetzungen: Node.js ≥ 20, Python ≥ 3.10 (nur für den Konformanz-Gegenc
 
 ```bash
 npm install
-npm test                                         # Unit-Tests (Vitest, 540 Tests)
+npm test                                         # Unit-Tests (Vitest, 573 Tests)
 npm run typecheck                                # TypeScript-Prüfung
 npm run build                                    # dist/mindmatters.html (eine Datei)
 npm run test:e2e                                 # Browser-Tests gegen dist/mindmatters.html (braucht Edge oder Chrome)

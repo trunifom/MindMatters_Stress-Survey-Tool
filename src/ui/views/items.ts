@@ -10,11 +10,14 @@ import {
   deselectAllOptional,
   openInfo,
   restoreInitialSelection,
+  setPreviewOpen,
+  setShowAnswers,
   selectionDiagnostics,
   setFilter,
   switchModule,
   toggleItem,
 } from "../state";
+import { answerPreview, renderItemPreview } from "./preview";
 import type { ViewContext } from "./registry";
 
 /** Questions and modules: search, filters, selection and the info buttons. */
@@ -56,6 +59,13 @@ export function renderItems({ state: s, store }: ViewContext): HTMLElement {
     h(
       "div",
       { class: "toolbar" },
+      h(
+        "label",
+        { class: "check-inline", for: "show-answers" },
+        h("input", { id: "show-answers", type: "checkbox", checked: s.showAnswers, "data-focus": "show-answers", on: { change: (ev) => setShowAnswers(store, (ev.target as HTMLInputElement).checked) } }),
+        " ",
+        t("items.showAnswers"),
+      ),
       h("button", { type: "button", class: "btn", "data-focus": "deselect-all", on: { click: () => deselectAllOptional(store) } }, t("items.deselectAll")),
       h("button", { type: "button", class: "btn", "data-focus": "restore", on: { click: () => restoreInitialSelection(store) } }, t("items.restore")),
     ),
@@ -170,12 +180,33 @@ function renderGroup({ state: s, store }: Ctx, module: Module | undefined, items
       : null,
   );
   const desc = module && adminText(s, module.description);
+  const chosen = module ? module.itemRefs.filter((id) => s.selection.has(id)).length : items.filter((i) => s.selection.has(i.id)).length;
+  const total = module ? module.itemRefs.length : items.length;
   return h(
     "section",
     { class: "group", "aria-label": heading },
     head,
+    h("p", { class: "muted group-count" }, t("items.selectedOf", { n: chosen, m: total })),
     desc ? h("p", { class: "muted" }, desc) : null,
+    module ? modulePreview({ state: s, store }, module) : null,
     h("ul", { class: "items" }, ...items.map((it) => renderRow({ state: s, store }, it, reasons.has(it.id)))),
+  );
+}
+
+/** "How the module looks in the survey": the module's items as participants see them, rendered only when opened. */
+function modulePreview({ state: s, store }: Ctx, module: Module): HTMLElement {
+  const open = s.openPreviews.includes(module.id);
+  const c = s.loaded!.catalog;
+  const body = open ? h("div", { class: "pv module-pv", lang: s.language }, ...module.itemRefs.map((id) => c.items.find((i) => i.id === id)).filter((i): i is Item => !!i).map((i) => renderItemPreview(s, i))) : null;
+  return h(
+    "details",
+    {
+      class: "module-preview",
+      open,
+      on: { toggle: (ev) => setPreviewOpen(store, module.id, (ev.target as HTMLDetailsElement).open) },
+    },
+    h("summary", { "data-focus": `mod-preview-${module.id}` }, t("items.modulePreview")),
+    body,
   );
 }
 
@@ -216,13 +247,14 @@ function renderRow({ state: s, store }: Ctx, item: Item, mandatory: boolean): HT
       "div",
       { class: "item-main" },
       checkbox,
-      h("label", { for: checkboxId, class: shown.kind === "locked" ? "locked" : "" }, label),
+      h("label", { for: checkboxId, class: `${shown.kind === "locked" ? "locked" : ""}${isNote ? ` note-${item.response.style ?? "text"}` : ""}`.trim() }, label),
       h(
         "button",
         { type: "button", class: "btn btn-small info-btn", "aria-label": t("items.info", { id: item.id }), "data-focus": `info-item-${item.id}`, on: { click: () => openInfo(store, { kind: "item", id: item.id }) } },
         "i",
       ),
     ),
+    s.showAnswers ? h("div", { class: "item-answers" }, answerPreview(s, item) ?? (isNote ? null : null)) : null,
     h("div", { class: "item-meta", id: `${checkboxId}-meta` }, ...meta, item.visibleWhen ? h("span", { class: "muted" }, " " + t("items.condition", { cond: conditionText(item.visibleWhen) })) : null),
   );
 }

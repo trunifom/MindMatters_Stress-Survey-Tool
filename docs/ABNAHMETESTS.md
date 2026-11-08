@@ -2,7 +2,7 @@
 
 Die 45 Abnahmetests T01–T45 stammen aus den Ausgangsunterlagen (lokal, nicht im Repo). Diese Tabelle zeigt, welcher automatische Test den jeweiligen Punkt belegt. Sie ist die einzige Stelle, die den Stand ehrlich ausweist: **«abgedeckt»** heisst, der Test läuft und besteht auf dem Entwicklungsrechner. **«teilweise»** heisst, die Datenseite (Validator, Modell) ist getestet, die Benutzeroberfläche oder der Export fehlt noch. **«offen»** heisst, nichts davon existiert.
 
-Stand: 7. November 2026 · 540 Unit-Tests (davon UI unter jsdom) · 14 Browser-Tests (Edge 156) (Vitest) · 62 Konformanzprüfungen (Python)
+Stand: 8. November 2026 · 573 Unit-Tests (davon UI unter jsdom) · 16 Browser-Tests (Edge 156) (Vitest) · 62 Konformanzprüfungen (Python)
 
 | ID | Test | Stand | Nachweis / fehlender Teil |
 |---|---|---|---|

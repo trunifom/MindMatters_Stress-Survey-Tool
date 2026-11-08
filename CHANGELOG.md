@@ -116,3 +116,14 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 - `docs/IDEEN.md`: alle Ideen mit Nutzen, Aufwand und Stand.
 - 25 neue Unit-Tests und 2 Browser-Tests (ZIP-Download, Druckmodus). Die Datei ist von 370 auf rund 525 KiB gewachsen, weil erzeugte Prüffunktionen mehr Platz brauchen als die Laufzeit-Variante (Verbesserung D4 offen).
 
+### Hinzugefügt (Rückmeldungen nach dem Ausprobieren, siehe docs/IDEEN.md, Abschnitt E)
+- **Startbildschirm** neu: Ziel, vier Schritte, «Das können Sie hier tun» und «Das tut das Tool nicht», alle sieben Zielsysteme mit Stufe, Ablagefeld per Drag-and-drop, Beispielkatalog mit einem Klick.
+- **Hell/Dunkel** und **zwei Schriftgrössen** über die ganze Seite (nicht im Browser gespeichert, ADR-009).
+- **Deutsch als Standard:** Oberfläche immer Deutsch, Fragensprache Deutsch, sobald der Katalog `de`/`de-*` führt.
+- **Übersichtlichere Oberfläche:** vier nummerierte Schritte, Hinweis je Ansicht, Weiter/Zurück, mitlaufende Auswahlzeile, Karten und Abstände überarbeitet.
+- **Antwortmöglichkeiten unter jeder Frage** und «So sieht das Modul in der Umfrage aus».
+- **Texte anpassen** und **eigene Textblöcke** (Titel, Zwischentitel, Text, Hinweis); standardisierte Texte sind gesperrt (`questionnaire.lockedTexts`); Speicherung in der Projektdatei (`customization`, Schema 0.4.0 additiv); abgeleiteter Katalog für Vorschau und alle Exporte. Neue Diagnosecodes `CUSTOM_*`.
+- **Exportgründe in einfachen Worten** (Google Forms, REDCap, Qualtrics) mit Hinweis, was zu tun ist.
+- 33 neue Unit-Tests, 2 neue Browser-Tests; Beispielkatalog sperrt die Einwilligungstexte.
+- Datei jetzt rund 593 KiB (Beispielkatalog eingebettet, neue Ansichten).
+

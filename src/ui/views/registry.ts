@@ -3,6 +3,7 @@ import type { TextKey } from "../i18n";
 import { renderCheck } from "./check";
 import { renderItems } from "./items";
 import { renderPreview } from "./preview";
+import { renderTexts } from "./texts";
 
 export interface ViewContext {
   state: AppState;
@@ -12,12 +13,15 @@ export interface ViewContext {
 export interface ViewDef {
   id: View;
   label: TextKey;
+  /** One sentence under the heading that says what to do here. */
+  intro: TextKey;
   render(ctx: ViewContext): HTMLElement;
 }
 
 /** Views offered as tabs, in order. */
 export const VIEWS: ViewDef[] = [
-  { id: "items", label: "tab.items", render: renderItems },
-  { id: "preview", label: "tab.preview", render: renderPreview },
-  { id: "check", label: "tab.check", render: renderCheck },
+  { id: "items", label: "tab.items", intro: "view.items.intro", render: renderItems },
+  { id: "texts", label: "tab.texts", intro: "view.texts.intro", render: renderTexts },
+  { id: "preview", label: "tab.preview", intro: "view.preview.intro", render: renderPreview },
+  { id: "check", label: "tab.check", intro: "view.check.intro", render: renderCheck },
 ];

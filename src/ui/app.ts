@@ -11,15 +11,19 @@ import {
   loadCatalogText,
   loadProjectText,
   setLanguage,
+  setTextSize,
+  setTheme,
   setUiLanguage,
   setView,
   Store,
+  counts,
   currentStatus,
   dismissNotice,
   closeInfo,
   InfoTarget,
 } from "./state";
 import { renderStart } from "./views/start";
+import demoCatalog from "../../examples/catalog_rich_0_4_0.json";
 import { VIEWS } from "./views/registry";
 
 export interface AppEnv {
@@ -36,6 +40,8 @@ export function mountApp(root: HTMLElement, store: Store, env: AppEnv): () => vo
     const state = store.get();
     setUiLang(state.uiLang);
     document.documentElement.lang = state.uiLang;
+    document.documentElement.setAttribute("data-theme", state.theme);
+    document.documentElement.setAttribute("data-size", state.textSize);
     const focus = captureFocus();
     clear(root);
     root.appendChild(buildApp(state, store, env));
@@ -127,6 +133,7 @@ function restoreFocus(f: FocusInfo | undefined): void {
 function buildApp(s: AppState, store: Store, env: AppEnv): HTMLElement {
   const handlers = {
     onFile: (file: File) => void importCatalog(file, store, env),
+    onDemo: () => loadCatalogText(store, JSON.stringify(demoCatalog), "beispielkatalog.json"),
     onConfirmMigration: () => confirmMigration(store),
     onCancelMigration: () => cancelMigration(store),
   };
@@ -134,8 +141,13 @@ function buildApp(s: AppState, store: Store, env: AppEnv): HTMLElement {
   const header = h(
     "header",
     { class: "app-header" },
-    h("h1", null, t("app.title")),
-    uiLanguageSwitch(s, store),
+    h(
+      "div",
+      { class: "brand" },
+      h("span", { class: "brand-mark", "aria-hidden": "true" }, "MM"),
+      h("div", null, h("h1", null, t("app.title")), h("p", { class: "tagline muted" }, t("app.tagline"))),
+    ),
+    h("div", { class: "header-controls" }, uiLanguageSwitch(s, store), displayControls(s, store)),
   );
 
   const content = s.loaded ? loadedContent(s, store, env) : renderStart(s, handlers, env.appVersion ?? APP_VERSION);
@@ -159,6 +171,42 @@ function noticeBanner(s: AppState, store: Store): Node | null {
     h("strong", null, s.notice.text),
     " ",
     h("button", { type: "button", class: "btn btn-small", on: { click: () => dismissNotice(store) } }, "×"),
+  );
+}
+
+/** Light/dark and two text sizes, available on every screen. */
+function displayControls(s: AppState, store: Store): HTMLElement {
+  const dark = s.theme === "dark";
+  const large = s.textSize === "large";
+  return h(
+    "div",
+    { class: "display-controls", role: "group", "aria-label": t("pref.group") },
+    h(
+      "button",
+      {
+        type: "button",
+        class: "btn btn-small",
+        id: "theme-toggle",
+        "data-focus": "theme-toggle",
+        "aria-label": t(dark ? "pref.toLightLabel" : "pref.toDarkLabel"),
+        on: { click: () => setTheme(store, dark ? "light" : "dark") },
+      },
+      h("span", { "aria-hidden": "true" }, dark ? "☀ " : "☾ "),
+      t(dark ? "pref.toLight" : "pref.toDark"),
+    ),
+    h(
+      "button",
+      {
+        type: "button",
+        class: "btn btn-small",
+        id: "size-toggle",
+        "data-focus": "size-toggle",
+        "aria-label": t(large ? "pref.smallerLabel" : "pref.largerLabel"),
+        on: { click: () => setTextSize(store, large ? "normal" : "large") },
+      },
+      h("span", { "aria-hidden": "true" }, large ? "A− " : "A+ "),
+      t(large ? "pref.smaller" : "pref.larger"),
+    ),
   );
 }
 
@@ -205,15 +253,54 @@ function loadedContent(s: AppState, store: Store, env: AppEnv): HTMLElement {
 
   const views = VIEWS;
   const active = views.find((v) => v.id === s.view) ?? (views[0] as (typeof views)[number]);
+  const idx = views.indexOf(active);
   const tabs = h(
     "nav",
     { class: "tabs", "aria-label": t("tabs.label") },
-    ...views.map((v) =>
-      h("button", { type: "button", class: "tab", "aria-current": v.id === active.id ? "page" : false, "data-focus": `tab-${v.id}`, on: { click: () => setView(store, v.id) } }, t(v.label)),
+    ...views.map((v, i) =>
+      h(
+        "button",
+        { type: "button", class: "tab", "aria-current": v.id === active.id ? "page" : false, "data-focus": `tab-${v.id}`, on: { click: () => setView(store, v.id) } },
+        h("span", { class: "tab-no", "aria-hidden": "true" }, String(i + 1)),
+        " ",
+        t(v.label),
+      ),
     ),
   );
+  const cnt = counts(s);
+  const bar = h(
+    "div",
+    { class: "stepbar" },
+    tabs,
+    h(
+      "p",
+      { class: "summary-bar", role: "status", "aria-label": t("bar.label") },
+      h("strong", null, t("bar.label") + ": "),
+      t("summary.items", { n: cnt.items }),
+      " · ",
+      t("summary.modules", { n: cnt.modules }),
+      " · ",
+      t("summary.mandatory", { n: cnt.mandatory }),
+      s.dirty ? h("span", { class: "badge sev-warning", id: "dirty-badge-bar" }, "! " + t("out.unsaved")) : null,
+    ),
+  );
+  const prev = views[idx - 1];
+  const next = views[idx + 1];
+  const nav = h(
+    "div",
+    { class: "view-nav" },
+    prev ? h("button", { type: "button", class: "btn", "data-focus": "nav-back", on: { click: () => goTo(store, prev.id) } }, "← " + t("nav.back", { to: t(prev.label) })) : h("span"),
+    h("span", { class: "muted" }, t("nav.step", { n: idx + 1, m: views.length })),
+    next ? h("button", { type: "button", class: "btn btn-primary", "data-focus": "nav-next", on: { click: () => goTo(store, next.id) } }, t("nav.next", { to: t(next.label) }) + " →") : h("span"),
+  );
 
-  return h("div", { class: "loaded" }, ...banners, info, tabs, active.render({ state: s, store }));
+  return h("div", { class: "loaded" }, ...banners, info, bar, h("p", { class: "view-intro" }, t(active.intro)), active.render({ state: s, store }), nav);
+}
+
+/** Switch the step and bring its top into view, so a long list does not leave the reader at the bottom. */
+function goTo(store: Store, view: Parameters<typeof setView>[1]): void {
+  setView(store, view);
+  window.scrollTo({ top: 0 });
 }
 
 function fact(label: string, value: Node | string): HTMLElement {

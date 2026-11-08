@@ -55,3 +55,28 @@ Beim Schliessen des Tabs oder beim Laden einer anderen Datei fragt der Browser n
 - Es gibt keine Kataloge zum Bearbeiten im Browser und keinen CSV-Import.
 - Das Tool berechnet keine Scores, Normen oder Diagnosen. Es prüft nicht, ob ein Instrument fachlich für Ihre Schule geeignet ist, und es ersetzt keine Rechteklärung. Die Rechteangaben sind Erklärungen des Herausgebers.
 - Welche Browser tatsächlich getestet sind, steht in [BROWSER.md](BROWSER.md). Alles dort nicht Genannte ist nur ein Ziel, kein Nachweis.
+
+## Aufbau der Oberfläche (vier Schritte)
+
+Nach dem Laden führen vier nummerierte Schritte durch das Tool. Unter den Schritten steht immer Ihre Auswahl (Anzahl Items, Module, Pflichtbestandteile). Unter jeder Ansicht führen «Zurück» und «Weiter» zum nächsten Schritt.
+
+1. **Fragen und Module:** auswählen. Unter jeder Frage sehen Sie die Antwortmöglichkeiten so, wie sie in der Umfrage erscheinen (Skalen, Ja/Nein, Schieberegler, Eingabefelder). Der Schalter «Antwortmöglichkeiten unter den Fragen zeigen» blendet sie aus. Bei Modulen zeigt «So sieht das Modul in der Umfrage aus» alle Fragen des Moduls als Vorschau. Mit «i» öffnen Sie Hintergrund und Quellen.
+2. **Texte anpassen:** siehe unten.
+3. **Vorschau:** der ganze Fragebogen wie ihn Teilnehmende sehen. Nichts wird gespeichert.
+4. **Prüfung und Ausgabe:** Prüfbericht, Projekt speichern, Dateien für Ihr Umfrage-Tool, ZIP-Paket. Wenn ein Export nicht möglich ist, steht dort in einfachen Worten warum (zum Beispiel «Google Forms kennt keinen Schieberegler von 0 bis 100»), welche Fragen betroffen sind und was Sie tun können.
+
+## Darstellung: Hell/Dunkel und Schriftgrösse
+
+Oben rechts, auf jeder Seite: **Dunkel/Hell** wechselt das Farbschema, **A+/A−** wechselt zwischen normaler und grosser Schrift (zwei Stufen). Beides gilt nur für den aktuellen Besuch und wird nicht gespeichert. Zu Beginn folgt das Farbschema Ihrer Systemeinstellung. Die Oberfläche startet immer auf Deutsch (umschaltbar auf English), die Fragensprache auf Deutsch, sobald der Katalog Deutsch enthält.
+
+## Texte anpassen und eigene Textblöcke
+
+Im Schritt «Texte anpassen» ändern Sie Titel, Einleitung, Schlusstext, Datenschutzhinweis, Hilfs- und Beratungsangebote und die Einwilligungstexte. Unter jedem Feld steht der Originaltext des Katalogs, «Auf Original zurücksetzen» macht Ihre Änderung rückgängig. Eine Änderung wird übernommen, sobald Sie das Feld verlassen.
+
+- **Gesperrte Texte** (Schloss) sind standardisierter Wortlaut, zum Beispiel aus dem Originalinstrument oder eine vorgeschriebene Einwilligung. Sie lassen sich nicht ändern.
+- **Fragen und Antwortoptionen** sind nie anpassbar.
+- Sie bearbeiten immer die Texte **einer Sprache** (die Sprache der Fragen im Katalogkopf). Fehlt Ihr Text in einer anderen Sprache des Katalogs, steht eine Warnung dort, und der Export in dieser Sprache meldet den fehlenden Text.
+- **Eigene Textblöcke:** Art (Titel, Zwischentitel, Text, Hinweis), Abschnitt und Position wählen, Text eingeben, «Block einfügen». Leerzeile = neuer Absatz, Zeilen mit «- » werden zur Liste. Ihre Blöcke erscheinen in Vorschau und Export und lassen sich in der Fragenliste an- und abwählen.
+
+Ihre Anpassungen stehen in der **Projektdatei** (nicht im Katalog). Wer das Projekt wieder lädt, bekommt sie zurück. Die Projektdatei enthält keinen Katalogwortlaut, nur Ihre eigenen Texte.
+

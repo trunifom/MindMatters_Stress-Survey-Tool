@@ -63,3 +63,14 @@ Eine Zeile je gewähltem Item mit Reihenfolge, Abschnitt, ID, Variable, Typ, Wor
 2. Im Zielsystem importieren bzw. ausführen und das Ergebnis mit der Zuordnung im Konfigurator vergleichen.
 3. Abweichungen hier und in der Annahmenliste des Adapters festhalten, Adapter korrigieren, Tests ergänzen.
 4. Erst danach die Stufe in `src/ui/views/check.ts` (`tier`) von «Prototyp» anheben und die README anpassen.
+
+## Warum kann Google Forms einen Katalog manchmal nicht ausgeben?
+
+Google Forms kennt **keinen Dateiimport**. Der Prototyp erzeugt deshalb ein Apps-Script, das Sie in Google Apps Script einfügen und ausführen, und das dann das Formular anlegt. Nicht jede Frage lässt sich so abbilden. Der Export bricht für diese Frage mit einem Fehler ab (statt sie still wegzulassen, ADR-007):
+
+- **Schieberegler:** Google kennt nur Skalen von 0 oder 1 bis höchstens 10. Ein Regler von 0 bis 100 wird nicht umgerechnet.
+- **Rangfolge:** Google Forms hat keine Rangfrage.
+- **Bedingungen** («Frage nur zeigen, wenn …»): Das Script erzeugt keine Verzweigung, die Frage würde sonst allen gezeigt.
+
+Der Beispielkatalog enthält je einen davon, deshalb ist Google Forms dort nicht möglich. Die Oberfläche nennt die betroffenen Fragen und den Grund. Wählen Sie diese Fragen ab, oder bauen Sie sie in Google Forms von Hand nach. Ausserdem ist ein Katalog im Status «Entwurf» nur als gekennzeichneter Testexport ausgebbar. Das Script wurde noch nie in Google ausgeführt (Stufe Prototyp).
+
