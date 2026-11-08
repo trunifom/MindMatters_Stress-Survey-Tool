@@ -364,6 +364,25 @@ export function resetCustomText(store: Store, key: CustomizableText): void {
   applyCustom(store, { ...s.customization, textOverrides: overrides });
 }
 
+/** Set (or, with empty text, remove) the text of one language of a text block of the catalog. */
+export function setNoteText(store: Store, id: string, language: string, text: string): void {
+  const s = store.get();
+  const current: LocalizedText = { ...(s.customization.noteOverrides?.[id] ?? {}) };
+  if (text.trim() === "") delete current[language];
+  else current[language] = text;
+  const notes = { ...(s.customization.noteOverrides ?? {}) };
+  if (Object.keys(current).length > 0) notes[id] = current;
+  else delete notes[id];
+  applyCustom(store, { ...s.customization, noteOverrides: notes });
+}
+
+export function resetNoteText(store: Store, id: string): void {
+  const s = store.get();
+  const notes = { ...(s.customization.noteOverrides ?? {}) };
+  delete notes[id];
+  applyCustom(store, { ...s.customization, noteOverrides: notes });
+}
+
 /** Add a block at the start of a section or after an item. Returns its id. */
 export function addCustomBlock(store: Store, sectionRef: string, afterItemRef: string | null, style: CustomBlock["style"], language: string, text: string): string | undefined {
   const s = store.get();

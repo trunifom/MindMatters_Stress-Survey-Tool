@@ -176,6 +176,8 @@ Gilt für die Export-Adapter (`targetPlatform` nennt das Zielsystem). Ein Fehler
 
 | Code | Schwere | Bedeutung |
 |---|---|---|
+| `CUSTOM_NOTE_LOCKED` | warning | Der Katalog sperrt den Textblock (`questionnaire.lockedNotes`). Die Anpassung wurde nicht angewendet |
+| `CUSTOM_NOTE_NO_TARGET` | warning | Die angepasste ID ist kein Textblock (`note`) des Katalogs. Die Anpassung wurde nicht angewendet |
 | `CUSTOM_TEXT_LOCKED` | warning | Der Katalog markiert den Text als standardisiert (`questionnaire.lockedTexts`). Die Anpassung wurde nicht angewendet |
 | `CUSTOM_TEXT_NO_TARGET` | warning | Titel oder Elterntext der Einwilligung angepasst, der Katalog hat aber keine Einwilligung |
 | `CUSTOM_BLOCK_SECTION_UNKNOWN` | error | Der Abschnitt des eigenen Blocks gibt es in diesem Katalog nicht. Block übersprungen |

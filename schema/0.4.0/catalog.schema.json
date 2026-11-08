@@ -1749,6 +1749,14 @@
               "parentalConsentText"
             ]
           }
+        },
+        "lockedNotes": {
+          "type": "array",
+          "uniqueItems": true,
+          "description": "Ids of text blocks (items of kind note) whose wording is standardized and must not be changed by a school. Every other text block of the catalog may be adapted.",
+          "items": {
+            "$ref": "#/$defs/Id"
+          }
         }
       }
     },

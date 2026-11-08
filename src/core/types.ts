@@ -260,12 +260,16 @@ export interface CustomBlock {
 
 export interface Customization {
   textOverrides?: Partial<Record<CustomizableText, LocalizedText>>;
+  /** Adapted wording of catalog text blocks (items of kind note), by item id. */
+  noteOverrides?: Record<string, LocalizedText>;
   customBlocks?: CustomBlock[];
 }
 
 export interface Questionnaire {
   id: string;
   lockedTexts?: CustomizableText[];
+  /** Ids of text blocks (notes) with standardized wording. */
+  lockedNotes?: string[];
   title: LocalizedText;
   introduction?: LocalizedText;
   closingText?: LocalizedText;

@@ -4,6 +4,10 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.1.0/). Schema-Ver
 
 ## [Unveröffentlicht]
 
+### Hinzugefügt (Textblöcke des Katalogs)
+- Titel und Textblöcke des Katalogs sind anpassbar: `customization.noteOverrides` im Projekt, `questionnaire.lockedNotes` im Katalog (Schema 0.4.0, additiv), Diagnosecodes `CUSTOM_NOTE_LOCKED` und `CUSTOM_NOTE_NO_TARGET`. Neuer Abschnitt im Schritt «Texte anpassen».
+- Beispielkatalog erweitert: Untertitel in der Einleitung, Zwischentitel mit Übergangstext vor dem zweiten Teil und neuer Abschnitt «Abschluss» mit Dankestitel und -text. Alle Texte sind anpassbar, gesperrt bleiben nur die Einwilligungstexte.
+
 ### Hinzugefügt
 - Repository-Grundgerüst: `.gitignore`, README, Dokumentationsindex, Architektur, Entscheidungsprotokoll, Roadmap, Beitragsrichtlinien.
 - JSON-Schema 0.3.0 (Katalog, Projekt) als strukturelle Umsetzung des ursprünglichen Datenvertrags.

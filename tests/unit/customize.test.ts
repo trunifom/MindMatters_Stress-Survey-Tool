@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { hasErrors } from "../../src/core/diagnostics";
 import { loadCatalog, loadProject } from "../../src/core/loader";
 import type { Catalog, Customization } from "../../src/core/types";
-import { applyCustomization, baseText, CUSTOM_RIGHTS_ID, isEmptyCustomization, nextBlockId, normalizeCustomization } from "../../src/model/customize";
+import { applyCustomization, baseText, catalogNotes, CUSTOM_RIGHTS_ID, isEmptyCustomization, nextBlockId, normalizeCustomization } from "../../src/model/customize";
 import { createProject, serializeProject } from "../../src/model/project";
 import { buildNeutralCsv } from "../../src/output/csvtable";
 import { buildPackage } from "../../src/output/package";
@@ -123,6 +123,56 @@ describe("applyCustomization", () => {
     expect(normalizeCustomization({ textOverrides: { title: { en: " " } }, customBlocks: [{ id: "custom_1", style: "text", text: { en: "" }, sectionRef: "intro" }] })).toBeUndefined();
     const n = normalizeCustomization({ customBlocks: [{ id: "custom_1", style: "text", text: { en: "a", de: " " }, sectionRef: "intro", afterItemRef: null }] })!;
     expect(n.customBlocks![0]).toEqual({ id: "custom_1", style: "text", text: { en: "a" }, sectionRef: "intro" });
+  });
+});
+
+describe("adapting text blocks of the catalog", () => {
+  it("the example brings title, subtitle, transition and closing blocks, all adaptable", () => {
+    const c = base();
+    for (const id of ["intro_note", "intro_subtitle", "anon_note", "part2_title", "part2_text", "closing_title", "closing_note"]) {
+      const it = c.items.find((i) => i.id === id);
+      expect(it?.response.kind, id).toBe("note");
+      expect(c.questionnaire.lockedNotes ?? [], id).not.toContain(id);
+    }
+    expect(c.questionnaire.sections.map((s) => s.id).at(-1)).toBe("closing");
+    const refs = c.questionnaire.sections.find((s) => s.id === "extras")!.itemRefs;
+    expect(refs.slice(0, 2)).toEqual(["part2_title", "part2_text"]);
+  });
+
+  it("applies an adapted wording to a note and leaves the catalog untouched", () => {
+    const c = base();
+    const before = JSON.stringify(c);
+    const r = applyCustomization(c, { noteOverrides: { closing_note: { "de-CH": "Merci vielmal!" } } });
+    expect(r.diagnostics).toEqual([]);
+    expect(r.catalog.items.find((i) => i.id === "closing_note")!.text).toEqual({ "de-CH": "Merci vielmal!" });
+    expect(JSON.stringify(c)).toBe(before);
+    expect(catalogNotes(c).map((i) => i.id)).toContain("closing_note");
+  });
+
+  it("ignores and reports a locked note and a target that is not a note", () => {
+    const c = base();
+    c.questionnaire.lockedNotes = ["anon_note"];
+    const r = applyCustomization(c, { noteOverrides: { anon_note: { en: "x" }, demo_01: { en: "y" }, nowhere: { en: "z" } } });
+    expect(r.diagnostics.map((d) => d.code).sort()).toEqual(["CUSTOM_NOTE_LOCKED", "CUSTOM_NOTE_NO_TARGET", "CUSTOM_NOTE_NO_TARGET"]);
+    expect(r.catalog.items.find((i) => i.id === "anon_note")!.text).toEqual(c.items.find((i) => i.id === "anon_note")!.text);
+    expect(r.catalog.items.find((i) => i.id === "demo_01")!.text).toEqual(c.items.find((i) => i.id === "demo_01")!.text);
+  });
+
+  it("round-trips through the project file and the wording reaches the export", () => {
+    const c: any = base();
+    c.catalog.status = "released";
+    const custom: Customization = { noteOverrides: { part2_text: { en: "Our own transition", "de-CH": "Unser Übergang" } } };
+    const eff = applyCustomization(c, custom).catalog;
+    const { project } = createProject(eff, all(eff), { language: "en", customization: custom });
+    expect(project!.customization).toEqual(custom);
+    const r = loadProject(serializeProject(project!), c);
+    expect(r.ok).toBe(true);
+    expect(r.catalog!.items.find((i) => i.id === "part2_text")!.text.en).toBe("Our own transition");
+    expect(buildNeutralCsv(eff, all(eff), { language: "en", mode: "native" }).content).toContain("Our own transition");
+  });
+
+  it("normalizes: empty note texts are dropped", () => {
+    expect(normalizeCustomization({ noteOverrides: { part2_text: { en: " " } } })).toBeUndefined();
   });
 });
 

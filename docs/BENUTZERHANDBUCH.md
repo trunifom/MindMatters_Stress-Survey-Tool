@@ -73,6 +73,7 @@ Oben rechts, auf jeder Seite: **Dunkel/Hell** wechselt das Farbschema, **A+/A−
 
 Im Schritt «Texte anpassen» ändern Sie Titel, Einleitung, Schlusstext, Datenschutzhinweis, Hilfs- und Beratungsangebote und die Einwilligungstexte. Unter jedem Feld steht der Originaltext des Katalogs, «Auf Original zurücksetzen» macht Ihre Änderung rückgängig. Eine Änderung wird übernommen, sobald Sie das Feld verlassen.
 
+- **Titel und Textblöcke des Katalogs** (Zwischentitel, Übergangstext zwischen zwei Skalen, Abschlussseite mit Dank) stehen unter «Titel und Textblöcke des Katalogs» und lassen sich genauso ändern. Die Beispieltexte sind dafür gedacht, dass Sie sie auf Ihre Schule anpassen.
 - **Gesperrte Texte** (Schloss) sind standardisierter Wortlaut, zum Beispiel aus dem Originalinstrument oder eine vorgeschriebene Einwilligung. Sie lassen sich nicht ändern.
 - **Fragen und Antwortoptionen** sind nie anpassbar.
 - Sie bearbeiten immer die Texte **einer Sprache** (die Sprache der Fragen im Katalogkopf). Fehlt Ihr Text in einer anderen Sprache des Katalogs, steht eine Warnung dort, und der Export in dieser Sprache meldet den fehlenden Text.

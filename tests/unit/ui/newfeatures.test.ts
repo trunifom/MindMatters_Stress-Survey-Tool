@@ -111,6 +111,20 @@ describe("adapt texts", () => {
     expect(m.store.get().customization.textOverrides ?? {}).toEqual({});
   });
 
+  it("lists the catalog's own titles and text blocks and lets the school adapt them", () => {
+    const m = loaded();
+    setView(m.store, "texts");
+    expect(m.qa("[data-note]").length).toBeGreaterThanOrEqual(7);
+    expect(m.q("#note-closing_note")).toBeTruthy();
+    change(m.q("#note-closing_note"), "Danke fürs Mitmachen an unserer Schule");
+    expect(m.store.get().customization.noteOverrides?.closing_note?.["de-CH"]).toBe("Danke fürs Mitmachen an unserer Schule");
+    setView(m.store, "preview");
+    expect(m.q("[data-item=closing_note]").textContent).toContain("an unserer Schule");
+    setView(m.store, "texts");
+    click(m.q("[data-focus=note-closing_note-reset]"));
+    expect(m.store.get().customization.noteOverrides ?? {}).toEqual({});
+  });
+
   it("adds an own block that appears in the list, the preview and the selection, and removes it again", () => {
     const m = loaded();
     setView(m.store, "texts");

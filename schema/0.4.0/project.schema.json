@@ -103,6 +103,16 @@
             }
           }
         },
+        "noteOverrides": {
+          "type": "object",
+          "description": "Adapted wording of text blocks (items of kind note) of the catalog, by item id. Blocks the catalog locks are ignored.",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]{0,63}$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/LocalizedText"
+          }
+        },
         "customBlocks": {
           "type": "array",
           "maxItems": 200,

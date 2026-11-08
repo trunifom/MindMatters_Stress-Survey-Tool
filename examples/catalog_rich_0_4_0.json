@@ -614,6 +614,126 @@
           "variableName": "demo04"
         }
       }
+    },
+    {
+      "id": "intro_subtitle",
+      "version": "1.0.0",
+      "text": {
+        "en": "A short survey for our school",
+        "de-CH": "Eine kurze Umfrage an unserer Schule"
+      },
+      "response": {
+        "kind": "note",
+        "style": "subtitle"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "intro_subtitle",
+      "constructRefs": [],
+      "origin": "own",
+      "rightsRef": "rights_own",
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "introsubtitle"
+        }
+      }
+    },
+    {
+      "id": "part2_title",
+      "version": "1.0.0",
+      "text": {
+        "en": "Part 2: What helps you?",
+        "de-CH": "Teil 2: Was hilft dir?"
+      },
+      "response": {
+        "kind": "note",
+        "style": "subtitle"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "part2_title",
+      "constructRefs": [],
+      "origin": "own",
+      "rightsRef": "rights_own",
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "parttwotitle"
+        }
+      }
+    },
+    {
+      "id": "part2_text",
+      "version": "1.0.0",
+      "text": {
+        "en": "Now come a few questions about what helps you. There are no right or wrong answers.",
+        "de-CH": "Jetzt folgen ein paar Fragen dazu, was dir hilft. Es gibt keine richtigen oder falschen Antworten."
+      },
+      "response": {
+        "kind": "note",
+        "style": "text"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "part2_text",
+      "constructRefs": [],
+      "origin": "own",
+      "rightsRef": "rights_own",
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "parttwotext"
+        }
+      }
+    },
+    {
+      "id": "closing_title",
+      "version": "1.0.0",
+      "text": {
+        "en": "Thank you very much!",
+        "de-CH": "Vielen Dank!"
+      },
+      "response": {
+        "kind": "note",
+        "style": "title"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "closing_title",
+      "constructRefs": [],
+      "origin": "own",
+      "rightsRef": "rights_own",
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "closingtitle"
+        }
+      }
+    },
+    {
+      "id": "closing_note",
+      "version": "1.0.0",
+      "text": {
+        "en": "You have finished the survey. Thank you for taking part. Your answers help us make our school better.",
+        "de-CH": "Du hast die Umfrage beendet. Danke fürs Mitmachen. Deine Antworten helfen uns, unsere Schule besser zu machen."
+      },
+      "response": {
+        "kind": "note",
+        "style": "text"
+      },
+      "inclusionRequired": false,
+      "answerRequired": false,
+      "defaultSelected": true,
+      "variableName": "closing_note",
+      "constructRefs": [],
+      "origin": "own",
+      "rightsRef": "rights_own",
+      "exportHints": {
+        "limesurvey": {
+          "variableName": "closingnote"
+        }
+      }
     }
   ],
   "scales": [],
@@ -687,6 +807,7 @@
         },
         "itemRefs": [
           "intro_note",
+          "intro_subtitle",
           "anon_note"
         ]
       },
@@ -712,11 +833,25 @@
         },
         "pageBreakBefore": true,
         "itemRefs": [
+          "part2_title",
+          "part2_text",
           "demo_02",
           "mood_slider",
           "rank_topics",
           "wants_help",
           "contact_email"
+        ]
+      },
+      {
+        "id": "closing",
+        "title": {
+          "en": "Closing",
+          "de-CH": "Abschluss"
+        },
+        "pageBreakBefore": true,
+        "itemRefs": [
+          "closing_title",
+          "closing_note"
         ]
       }
     ]

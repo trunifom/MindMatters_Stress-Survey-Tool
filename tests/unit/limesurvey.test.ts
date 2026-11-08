@@ -86,7 +86,7 @@ describe("LimeSurvey adapter: file structure", () => {
 
   it("writes one group per section with items, and the intro group for consent and privacy", () => {
     const groups = rows.filter((x) => x["class"] === "G");
-    expect(groups.length).toBe(4); // introduction + 3 sections
+    expect(groups.length).toBe(5); // introduction + 4 sections (intro, battery, extras, closing)
   });
 
   it("maps every kind to its type letter", () => {

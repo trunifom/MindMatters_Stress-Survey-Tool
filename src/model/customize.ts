@@ -77,6 +77,18 @@ export function isLocked(c: Catalog, key: CustomizableText): boolean {
   return (c.questionnaire.lockedTexts ?? []).includes(key);
 }
 
+/** The text blocks (notes) of the catalog itself, in questionnaire order, without the school's own blocks. */
+export function catalogNotes(c: Catalog): Item[] {
+  const order: string[] = [];
+  for (const s of c.questionnaire.sections) for (const id of s.itemRefs) if (!order.includes(id)) order.push(id);
+  const byId = new Map(c.items.map((i) => [i.id, i]));
+  return order.map((id) => byId.get(id)).filter((i): i is Item => !!i && i.response.kind === "note" && !isCustomId(i.id));
+}
+
+export function isNoteLocked(c: Catalog, id: string): boolean {
+  return (c.questionnaire.lockedNotes ?? []).includes(id);
+}
+
 /** Normalized form that is written to the project file (stable, without empty parts). Undefined if nothing is left. */
 export function normalizeCustomization(c: Customization | undefined): Customization | undefined {
   if (!c) return undefined;
@@ -87,8 +99,14 @@ export function normalizeCustomization(c: Customization | undefined): Customizat
     if (!text) continue;
     blocks.push({ id: b.id, style: b.style, text, sectionRef: b.sectionRef, ...(b.afterItemRef ? { afterItemRef: b.afterItemRef } : {}) });
   }
+  const notes: Record<string, LocalizedText> = {};
+  for (const [id, t] of Object.entries(c.noteOverrides ?? {})) {
+    const v = cleanText(t);
+    if (v) notes[id] = v;
+  }
   const out: Customization = {
     ...(Object.keys(overrides).length > 0 ? { textOverrides: overrides } : {}),
+    ...(Object.keys(notes).length > 0 ? { noteOverrides: notes } : {}),
     ...(blocks.length > 0 ? { customBlocks: blocks } : {}),
   };
   return Object.keys(out).length > 0 ? out : undefined;
@@ -142,6 +160,19 @@ export function applyCustomization(base: Catalog, custom: Customization | undefi
       continue;
     }
     setOverride(c, key, text);
+  }
+
+  for (const [id, text] of Object.entries(norm.noteOverrides ?? {})) {
+    const item = c.items.find((i) => i.id === id);
+    if (!item || item.response.kind !== "note") {
+      diagnostics.push(diag("selection", "warning", "CUSTOM_NOTE_NO_TARGET", `"${id}" is not a text block of this catalog, so the adaptation was ignored.`, { context: "project", itemRef: id }));
+      continue;
+    }
+    if (isNoteLocked(base, id)) {
+      diagnostics.push(diag("selection", "warning", "CUSTOM_NOTE_LOCKED", `The text block "${id}" is standardized wording of the catalog and cannot be changed. The adaptation was ignored.`, { context: "project", itemRef: id }));
+      continue;
+    }
+    item.text = text;
   }
 
   const blockIds: string[] = [];
